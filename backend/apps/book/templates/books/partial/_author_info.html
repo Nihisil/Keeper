@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-lg-2">
+    {% if author.photo %}
+      <img src="{{ author.photo.url }}" alt="{{ version.full_name }}" width="160px">
+    {% endif %}
+  </div>
+  <div class="col-lg-6">
+    <h3>{{ version.full_name }}</h3>
+    <table class="table table-bordered mt-4 table-sm book-info-table">
+      <tbody>
+      <tr>
+        <td>Actions</td>
+        <td><a href="{% url 'admin:book_author_change' author.id %}" target="_blank">edit</a></td>
+      </tr>
+      {% if author.birth_date %}
+        <tr>
+          <td>Birth date</td>
+          <td>{{ author.birth_date }}</td>
+        </tr>
+      {% endif %}
+      {% if author.original_country %}
+        <tr>
+          <td>Country</td>
+          <td>{{ author.original_country }}</td>
+        </tr>
+      {% endif %}
+      </tbody>
+    </table>
+    {% if version.biography %}
+      <p>{{ version.biography|linebreaksbr }}</p>
+    {% endif %}
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header">
+        Categorization
+      </div>
+      <div class="card-body">
+        <p>External:</p>
+        <ul>
+          {% for identifier in author.identifiers.all %}
+            <li><a href="{{ identifier.get_external_link }}" target="_blank">{{ identifier.get_type_display }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

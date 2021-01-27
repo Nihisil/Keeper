@@ -1,0 +1,34 @@
+<table class="table table-striped table-bordered">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Title</th>
+    <th scope="col">Series</th>
+    <th scope="col">Author</th>
+    <th scope="col">Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for book in books %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>
+        <a href="{% url 'book_details' book.id %}">{{ book.main_version.title }}</a>
+      </td>
+      <td>
+        {% with book.series.main_version as series %}
+          #{{ book.series_position }} {{ series.name }}
+        {% endwith %}
+      </td>
+      <td>
+        {% for author in book.authors.all %}
+          <a href="{% url 'author_details' author.id %}">{{ author.main_version.full_name }}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      </td>
+      <td>
+        {{ book.latest_status.get_status_display|default:'-' }}{% if book.summary %}, {{ book.summary.score }}/10{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
