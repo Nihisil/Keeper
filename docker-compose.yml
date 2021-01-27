@@ -1,13 +1,13 @@
 version: '3'
 
 volumes:
-  local_postgres_data: {}
+  keeper_postgres_data: {}
 
 services:
   web:
     build:
       context: .
-      dockerfile: ./docker/local/django/Dockerfile
+      dockerfile: ./docker/backend/Dockerfile
     image: keeper_web
     depends_on:
       - db
@@ -15,20 +15,15 @@ services:
       - .:/app
     env_file:
       - .envs/.local
-      - .envs/.postgres
     ports:
       - '8050:8050'
-    command: /start
+    command: python manage.py runserver 0.0.0.0:8050
 
   db:
-    build:
-      context: .
-      dockerfile: ./docker/postgres/Dockerfile
-    image: life_local_postgresql
+    image: postgres:13.1-alpine
     env_file:
-      - .envs/.postgres
+      - .envs/.local
     volumes:
-      - local_postgres_data:/var/lib/postgresql/data
-      - ./backups:/backups
+      - keeper_postgres_data:/var/lib/postgresql/data
     ports:
       - '8900:5432'

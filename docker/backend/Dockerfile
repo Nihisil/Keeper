@@ -1,22 +1,18 @@
-FROM python:3.8.3-alpine
+FROM python:3.8.7-alpine
 
 ENV PYTHONUNBUFFERED 1
 
-# Requirements are installed here to ensure they will be cached.
-COPY ./backend/requirements /requirements
+# requirements are installed here to ensure they will be cached.
+COPY ./backend/requirements.txt /requirements.txt
 RUN \
  apk add --no-cache postgresql-libs gettext-dev jpeg-dev zlib-dev && \
  apk add --no-cache --virtual .build-deps build-base linux-headers gcc musl-dev postgresql-dev && \
- python3 -m pip install -r /requirements/local.txt --no-cache-dir && \
+ python3 -m pip install -r /requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 
-COPY ./docker/local/django/entrypoint /entrypoint
+COPY ./docker/backend/entrypoint /entrypoint
 RUN sed -i 's/\r//' /entrypoint
 RUN chmod +x /entrypoint
-
-COPY ./docker/local/django/start /start
-RUN sed -i 's/\r//' /start
-RUN chmod +x /start
 
 RUN addgroup -S docker && adduser -S docker-user -G docker
 
