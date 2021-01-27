@@ -9,7 +9,7 @@ class ResponseSchema(BaseModel):
     data: Any
 
 
-def json_success_response(data: Optional[Any] = None):
+def json_success_response(data: Optional[Any] = None) -> JsonResponse:
     if data is None:
         data = {}
     return JsonResponse(ResponseSchema(success=True, data=data).dict())

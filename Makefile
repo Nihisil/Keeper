@@ -21,7 +21,7 @@ test-be:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web pytest
 
 format-be: format-isort format-black
-lint-be: lint-isort format-black lint-flake8
+lint-be: lint-isort format-black lint-flake8 lint-mypy
 
 format-isort:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web isort .
@@ -37,3 +37,6 @@ lint-flake8:
 
 lint-black:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web black --check .
+
+lint-mypy:
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web mypy --config-file ../mypy.ini .

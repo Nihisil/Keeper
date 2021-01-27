@@ -13,4 +13,5 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "keeper.settings")
 
-application = get_asgi_application()
+# TODO remove ignore after new django-stubs version release
+application = get_asgi_application()  # type: ignore

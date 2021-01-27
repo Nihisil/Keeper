@@ -2,10 +2,11 @@ from api.utils import json_success_response
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.http import HttpRequest, JsonResponse
 
 
-def send_login_email(request):
-    email = request.POST.get("email").strip().lower()
+def send_login_email(request: HttpRequest) -> JsonResponse:
+    email = request.POST.get("email", "").strip().lower()
 
     try:
         User.objects.get(email=email)
