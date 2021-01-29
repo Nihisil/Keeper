@@ -19,6 +19,16 @@ services:
       - '8050:8050'
     command: python manage.py runserver 0.0.0.0:8050
 
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+    image: keeper_frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - '3000:3000'
+
   db:
     image: postgres:13.1-alpine
     env_file:

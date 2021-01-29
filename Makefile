@@ -15,7 +15,12 @@ shell:
 
 ### Developemnt related commands
 
-check: format-be lint-be test-be
+check: format lint test-be
+format: format-be format-fe
+lint: lint-be lint-fe
+
+
+### Backend ###
 
 test-be:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web pytest
@@ -40,3 +45,11 @@ lint-black:
 
 lint-mypy:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web mypy --config-file ../mypy.ini .
+
+### Frontend ###
+
+format-fe:
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn format
+
+lint-fe:
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn lint

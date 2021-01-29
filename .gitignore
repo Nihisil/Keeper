@@ -1,12 +1,2 @@
 .pytest_cache
-__pycache__
-
-backups
-backend/media
-
-*.log
-__pycache__/
-*.py[cod]
-*$py.class
-
 .idea

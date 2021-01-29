@@ -1,0 +1,7 @@
+.mypy_cache
+
+media
+
+__pycache__
+*.py[cod]
+*$py.class
