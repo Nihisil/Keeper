@@ -1,11 +1,1 @@
-SECRET_KEY=_&kjzo+b3kxyzm67&=ob1^f_yae))$(gl693%qizd7w%wofd*3
-ALLOWED_HOST=0.0.0.0
 DEBUG=1
-TIME_ZONE=Asia/Irkutsk
-FROM_EMAIL=test@example.com
-
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
-POSTGRES_DB=LOCAL_DB
-POSTGRES_USER=keeper
-POSTGRES_PASSWORD=password

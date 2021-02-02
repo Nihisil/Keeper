@@ -1,6 +1,6 @@
 .mypy_cache
-
-media
+.pytest_cache
+env
 
 __pycache__
 *.py[cod]

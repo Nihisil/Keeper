@@ -1,23 +1,18 @@
 version: '3'
 
-volumes:
-  keeper_postgres_data: {}
-
 services:
-  web:
+  api:
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
-    image: keeper_web
-    depends_on:
-      - db
+    image: keeper_backend
     volumes:
-      - .:/app
+      - ./backend:/app
     env_file:
       - .envs/.local
     ports:
-      - '8050:8050'
-    command: python manage.py runserver 0.0.0.0:8050
+      - '8090:8090'
+    command: uvicorn api.main:app --reload --port 8090 --host 0.0.0.0
 
   frontend:
     build:
@@ -28,12 +23,3 @@ services:
       - ./frontend:/app
     ports:
       - '3000:3000'
-
-  db:
-    image: postgres:13.1-alpine
-    env_file:
-      - .envs/.local
-    volumes:
-      - keeper_postgres_data:/var/lib/postgresql/data
-    ports:
-      - '8900:5432'
