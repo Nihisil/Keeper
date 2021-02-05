@@ -24,11 +24,11 @@ lint: lint-be lint-fe
 ### Backend ###
 
 test-be:
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh -c "PYTHONPATH=/app ENVIRONMENT=TEST pytest"
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm api sh -c "pytest"
 
 # usage example "make test-single-be test=test_get_access_token_by_username_and_password"
 test-single-be:
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh -c "PYTHONPATH=/app ENVIRONMENT=TEST pytest -k $(test)"
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm api sh -c "pytest -k $(test)"
 
 format-be: format-isort format-black
 lint-be: lint-isort format-black lint-flake8 lint-mypy
