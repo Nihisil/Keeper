@@ -2,6 +2,8 @@ FROM python:3.8.7-alpine
 
 ENV PYTHONUNBUFFERED 1
 
+RUN python3 -m pip install pip==21.0.1
+
 # requirements are installed here to ensure they will be cached
 COPY ./backend/requirements.txt /requirements.txt
 RUN \

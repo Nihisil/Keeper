@@ -1,31 +1,14 @@
-from typing import Optional
-
 from pydantic import BaseModel
 
 
-class UserResponse(BaseModel):
+class User(BaseModel):
     username: str
-    email: Optional[str] = None
-    full_name: Optional[str] = None
+    email: str
 
 
-class UserDB(UserResponse):
+class UserWithHashedPassword(User):
     """
-    Model that should be used to store information about user in DB
+    Model for auth flow, in all other places we need to use User model
     """
 
     hashed_password: str
-
-
-class UserTokenRequest(BaseModel):
-    username: str
-    password: str
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: Optional[str] = None

@@ -1,4 +1,6 @@
-from lib.users.models import UserDB
+from typing import Optional
+
+from lib.users.models import User, UserWithHashedPassword
 
 fake_users_db = {
     "johndoe": {
@@ -10,7 +12,19 @@ fake_users_db = {
 }
 
 
-def get_user(username: str) -> UserDB:
-    if username in fake_users_db:
-        user_dict = fake_users_db[username]
-        return UserDB(**user_dict)
+def get_user(username: str) -> Optional[User]:
+    if username not in fake_users_db:
+        return None
+    user_dict = fake_users_db[username]
+    return User(**user_dict)
+
+
+def get_user_with_hashed_password(username: str) -> Optional[UserWithHashedPassword]:
+    """
+    This functions should be used only for auth flow,
+    in all other places we need to call get_user()
+    """
+    if username not in fake_users_db:
+        return None
+    user_dict = fake_users_db[username]
+    return UserWithHashedPassword(**user_dict)

@@ -2,19 +2,19 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from api.main import app
-from lib.users.models import UserTokenRequest
+from lib.auth import AuthRequest
 
 client = TestClient(app)
 
 
 def test_get_access_token_by_username_and_password():
-    response = client.post("/auth/", json=UserTokenRequest(username="johndoe", password="secret").dict())
+    response = client.post("/auth/", json=AuthRequest(username="johndoe", password="secret").dict())
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["access_token"] is not None
 
 
 def test_get_access_token_with_wrong_password():
-    response = client.post("/auth/", json=UserTokenRequest(username="not-exists", password="fake").dict())
+    response = client.post("/auth/", json=AuthRequest(username="not-exists", password="fake").dict())
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 

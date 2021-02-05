@@ -49,7 +49,7 @@ lint-black:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api black --check .
 
 lint-mypy:
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api mypy --config-file ../mypy.ini .
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api mypy -p api -p lib
 
 ### Frontend ###
 

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
@@ -6,9 +6,12 @@ from api.routers import auth, users
 from config import get_settings
 
 
-def create_app():
+def create_app() -> FastAPI:
     settings = get_settings()
-    _app = FastAPI()
+
+    default_responses = {status.HTTP_401_UNAUTHORIZED: {"description": "Incorrect auth credentials"}}
+
+    _app = FastAPI(responses=default_responses)  # type: ignore
 
     # there is no need to include these middlewares to the unit tests
     if settings.environment != "TEST":
