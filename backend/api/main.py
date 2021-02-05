@@ -11,7 +11,7 @@ def create_app() -> FastAPI:
 
     default_responses = {status.HTTP_401_UNAUTHORIZED: {"description": "Incorrect auth credentials"}}
 
-    _app = FastAPI(responses=default_responses)  # type: ignore
+    _app = FastAPI(responses=default_responses, redoc_url=None)  # type: ignore
 
     # there is no need to include these middlewares to the unit tests
     if settings.environment != "TEST":
