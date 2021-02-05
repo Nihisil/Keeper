@@ -1,22 +1,22 @@
 from typing import Optional
 
+from lib.db import db_find_one, db_insert_one
 from lib.users.models import User, UserWithHashedPassword
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-    }
-}
+
+def create_user(username: str, email: str, plain_password: str) -> User:
+    from lib.auth import hash_password
+
+    # TODO validate that email is valid and unique
+    data = UserWithHashedPassword(
+        username=username, email=email, hashed_password=hash_password(plain_password)
+    )
+    data = db_insert_one(data)
+    return User.parse_obj(data)
 
 
 def get_user(username: str) -> Optional[User]:
-    if username not in fake_users_db:
-        return None
-    user_dict = fake_users_db[username]
-    return User(**user_dict)
+    return db_find_one(User, {"username": username})
 
 
 def get_user_with_hashed_password(username: str) -> Optional[UserWithHashedPassword]:
@@ -24,7 +24,4 @@ def get_user_with_hashed_password(username: str) -> Optional[UserWithHashedPassw
     This functions should be used only for auth flow,
     in all other places we need to call get_user()
     """
-    if username not in fake_users_db:
-        return None
-    user_dict = fake_users_db[username]
-    return UserWithHashedPassword(**user_dict)
+    return db_find_one(UserWithHashedPassword, {"username": username})

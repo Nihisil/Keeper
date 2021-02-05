@@ -3,12 +3,14 @@ from fastapi.testclient import TestClient
 
 from api.main import app
 from lib.auth import AuthRequest
+from lib.users.crud import create_user
 
 client = TestClient(app)
 
 
 def test_get_access_token_by_username_and_password():
-    response = client.post("/auth/", json=AuthRequest(username="johndoe", password="secret").dict())
+    user = create_user("username", "test@example.com", plain_password="test")
+    response = client.post("/auth/", json=AuthRequest(username=user.username, password="test").dict())
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["access_token"] is not None
 
