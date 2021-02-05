@@ -17,9 +17,11 @@ shell:
 
 ### Development related commands
 
-check: format lint test-be
+check: format lint test
+
 format: format-be format-fe
 lint: lint-be lint-fe
+test: test-be
 
 ### Backend ###
 
