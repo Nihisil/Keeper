@@ -7,8 +7,7 @@ RUN python3 -m pip install pip==21.0.1
 # requirements are installed here to ensure they will be cached
 COPY ./backend/requirements.txt /requirements.txt
 RUN \
- apk add --no-cache openssl-dev libffi-dev && \
- apk add --no-cache --virtual .build-deps build-base linux-headers gcc && \
+ apk add --no-cache --virtual .build-deps build-base linux-headers gcc musl-dev python3-dev libffi-dev openssl-dev cargo && \
  python3 -m pip install -r /requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 

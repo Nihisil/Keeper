@@ -5,14 +5,16 @@ requests==2.25.1
 pymongo==3.11.3
 
 # auth and security
-python-jose[cryptography]==3.2.0
-passlib[bcrypt]==1.7.4
+python-jose==3.2.0
+cryptography==3.3.2 # 3.4+ version shows warnings in python-jose lib
+passlib==1.7.4
+bcrypt==3.2.0
 
 # to read pyproject.toml configuration
 toml==0.10.2
 
 # better terminal
-ipython==7.19.0
+ipython==7.20.0
 
 # for unit tests
 pytest==6.2.2
