@@ -23,6 +23,3 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 
-src/client/git_push.sh
-src/client/.openapi-generator
-
