@@ -17,6 +17,19 @@ import { Configuration } from "../configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import {
+  DUMMY_BASE_URL,
+  assertParamExists,
+  setApiKeyToObject,
+  setBasicAuthToObject,
+  setBearerAuthToObject,
+  setOAuthToObject,
+  setSearchParams,
+  serializeDataIfNeeded,
+  toPathString,
+  createRequestFunction,
+} from "../common";
+// @ts-ignore
+import {
   BASE_PATH,
   COLLECTION_FORMATS,
   RequestArgs,
@@ -49,15 +62,10 @@ export const AuthApiAxiosParamCreator = function (
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'authRequest' is not null or undefined
-      if (authRequest === null || authRequest === undefined) {
-        throw new RequiredError(
-          "authRequest",
-          "Required parameter authRequest was null or undefined when calling authenticateAuthPost."
-        );
-      }
+      assertParamExists("authenticateAuthPost", "authRequest", authRequest);
       const localVarPath = `/auth/`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, "https://example.com");
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
       if (configuration) {
         baseOptions = configuration.baseOptions;
@@ -73,14 +81,7 @@ export const AuthApiAxiosParamCreator = function (
 
       localVarHeaderParameter["Content-Type"] = "application/json";
 
-      const queryParameters = new URLSearchParams(localVarUrlObj.search);
-      for (const key in localVarQueryParameter) {
-        queryParameters.set(key, localVarQueryParameter[key]);
-      }
-      for (const key in options.query) {
-        queryParameters.set(key, options.query[key]);
-      }
-      localVarUrlObj.search = new URLSearchParams(queryParameters).toString();
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {};
       localVarRequestOptions.headers = {
@@ -88,20 +89,14 @@ export const AuthApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
-      const nonString = typeof authRequest !== "string";
-      const needsSerialization =
-        nonString && configuration && configuration.isJsonMime
-          ? configuration.isJsonMime(
-              localVarRequestOptions.headers["Content-Type"]
-            )
-          : nonString;
-      localVarRequestOptions.data = needsSerialization
-        ? JSON.stringify(authRequest !== undefined ? authRequest : {})
-        : authRequest || "";
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        authRequest,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
-        url:
-          localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+        url: toPathString(localVarUrlObj),
         options: localVarRequestOptions,
       };
     },
@@ -113,6 +108,7 @@ export const AuthApiAxiosParamCreator = function (
  * @export
  */
 export const AuthApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration);
   return {
     /**
      * Get user token by username and password
@@ -127,19 +123,16 @@ export const AuthApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>
     > {
-      const localVarAxiosArgs = await AuthApiAxiosParamCreator(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.authenticateAuthPost(
+        authRequest,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
         configuration
-      ).authenticateAuthPost(authRequest, options);
-      return (
-        axios: AxiosInstance = globalAxios,
-        basePath: string = BASE_PATH
-      ) => {
-        const axiosRequestArgs = {
-          ...localVarAxiosArgs.options,
-          url: (configuration?.basePath || basePath) + localVarAxiosArgs.url,
-        };
-        return axios.request(axiosRequestArgs);
-      };
+      );
     },
   };
 };
@@ -153,6 +146,7 @@ export const AuthApiFactory = function (
   basePath?: string,
   axios?: AxiosInstance
 ) {
+  const localVarFp = AuthApiFp(configuration);
   return {
     /**
      * Get user token by username and password
@@ -165,7 +159,7 @@ export const AuthApiFactory = function (
       authRequest: AuthRequest,
       options?: any
     ): AxiosPromise<Token> {
-      return AuthApiFp(configuration)
+      return localVarFp
         .authenticateAuthPost(authRequest, options)
         .then((request) => request(axios, basePath));
     },

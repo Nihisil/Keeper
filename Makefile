@@ -19,7 +19,7 @@ update-api-client:
 	docker run --rm --network host \
 		-u `id -u` \
 		-v "$(CURRENT_DIR)frontend/src/:/local" \
-		openapitools/openapi-generator-cli:v5.0.0 generate \
+		openapitools/openapi-generator-cli:v5.0.1 generate \
         -i http://0.0.0.0:8090/openapi.json \
         -g typescript-axios \
         -o /local/client/ \

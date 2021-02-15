@@ -17,6 +17,19 @@ import { Configuration } from "../configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import {
+  DUMMY_BASE_URL,
+  assertParamExists,
+  setApiKeyToObject,
+  setBasicAuthToObject,
+  setBearerAuthToObject,
+  setOAuthToObject,
+  setSearchParams,
+  serializeDataIfNeeded,
+  toPathString,
+  createRequestFunction,
+} from "../common";
+// @ts-ignore
+import {
   BASE_PATH,
   COLLECTION_FORMATS,
   RequestArgs,
@@ -42,7 +55,7 @@ export const UsersApiAxiosParamCreator = function (
     userInfoUsersMeGet: async (options: any = {}): Promise<RequestArgs> => {
       const localVarPath = `/users/me/`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, "https://example.com");
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
       if (configuration) {
         baseOptions = configuration.baseOptions;
@@ -56,14 +69,7 @@ export const UsersApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
-      const queryParameters = new URLSearchParams(localVarUrlObj.search);
-      for (const key in localVarQueryParameter) {
-        queryParameters.set(key, localVarQueryParameter[key]);
-      }
-      for (const key in options.query) {
-        queryParameters.set(key, options.query[key]);
-      }
-      localVarUrlObj.search = new URLSearchParams(queryParameters).toString();
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {};
       localVarRequestOptions.headers = {
@@ -73,8 +79,7 @@ export const UsersApiAxiosParamCreator = function (
       };
 
       return {
-        url:
-          localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+        url: toPathString(localVarUrlObj),
         options: localVarRequestOptions,
       };
     },
@@ -86,6 +91,7 @@ export const UsersApiAxiosParamCreator = function (
  * @export
  */
 export const UsersApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration);
   return {
     /**
      * Get current user profile information
@@ -98,19 +104,15 @@ export const UsersApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
-      const localVarAxiosArgs = await UsersApiAxiosParamCreator(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.userInfoUsersMeGet(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
         configuration
-      ).userInfoUsersMeGet(options);
-      return (
-        axios: AxiosInstance = globalAxios,
-        basePath: string = BASE_PATH
-      ) => {
-        const axiosRequestArgs = {
-          ...localVarAxiosArgs.options,
-          url: (configuration?.basePath || basePath) + localVarAxiosArgs.url,
-        };
-        return axios.request(axiosRequestArgs);
-      };
+      );
     },
   };
 };
@@ -124,6 +126,7 @@ export const UsersApiFactory = function (
   basePath?: string,
   axios?: AxiosInstance
 ) {
+  const localVarFp = UsersApiFp(configuration);
   return {
     /**
      * Get current user profile information
@@ -132,7 +135,7 @@ export const UsersApiFactory = function (
      * @throws {RequiredError}
      */
     userInfoUsersMeGet(options?: any): AxiosPromise<User> {
-      return UsersApiFp(configuration)
+      return localVarFp
         .userInfoUsersMeGet(options)
         .then((request) => request(axios, basePath));
     },
