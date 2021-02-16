@@ -1,6 +1,3 @@
-// for supporting experimental features types
-/// <reference types="react-dom/experimental" />
-
 import React from "react";
 import ReactDOM from "react-dom";
 import "index.scss";

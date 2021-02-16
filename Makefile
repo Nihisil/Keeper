@@ -16,17 +16,12 @@ shell:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh
 
 update-api-client:
-	docker run --rm --network host \
-		-u `id -u` \
-		-v "$(CURRENT_DIR)frontend/src/:/local" \
-		openapitools/openapi-generator-cli:v5.0.1 generate \
-        -i http://0.0.0.0:8090/openapi.json \
-        -g typescript-axios \
-        -o /local/client/ \
-        --additional-properties=withSeparateModelsAndApi=true \
-        --additional-properties=modelPackage=models \
-        --additional-properties=apiPackage=api \
-        --additional-properties=snapshot=true
+	curl http://0.0.0.0:8090/openapi.json > ./frontend/openapi.json
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend \
+		npx swagger-typescript-api \
+        -p /home/node/app/openapi.json \
+        -o /home/node/app/src/client/ \
+        --modular
 
 ### Development related commands
 
