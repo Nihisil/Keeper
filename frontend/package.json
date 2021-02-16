@@ -10,6 +10,7 @@
     "@types/node": "^14.14.27",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
+    "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "axios": "^0.21.1",
@@ -24,12 +25,17 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
-    "react": "^0.0.0-experimental-696e736be",
-    "react-dom": "^0.0.0-experimental-696e736be",
+    "react": "^0.0.0-experimental-6f8843837",
+    "react-dom": "^0.0.0-experimental-6f8843837",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.2",
     "swagger-typescript-api": "^5.1.2",
     "typescript": "^4.1.5",
     "web-vitals": "^1.1.0"
+  },
+  "resolutions": {
+    "//": "Can be removed after https://github.com/facebook/create-react-app/issues/9887#issuecomment-779081723 resolved",
+    "eslint-webpack-plugin": "2.4.3"
   },
   "scripts": {
     "start": "react-scripts start",

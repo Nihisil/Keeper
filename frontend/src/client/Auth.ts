@@ -12,22 +12,22 @@
 import { AuthRequest, HTTPValidationError, Token } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class Auth<
-  SecurityDataType = unknown
-> extends HttpClient<SecurityDataType> {
+export class Auth<SecurityDataType = unknown> {
+  constructor(private http: HttpClient<SecurityDataType>) {}
+
   /**
    * @description Get user token by username and password
    *
    * @tags auth
-   * @name AuthenticateAuthPost
+   * @name Authenticate
    * @summary Authenticate
    * @request POST:/auth/
    * @response `200` `Token` Successful Response
    * @response `401` `void` Incorrect auth credentials
    * @response `422` `HTTPValidationError` Validation Error
    */
-  authenticateAuthPost = (data: AuthRequest, params: RequestParams = {}) =>
-    this.request<Token, void | HTTPValidationError>({
+  authenticate = (data: AuthRequest, params: RequestParams = {}) =>
+    this.http.request<Token, void | HTTPValidationError>({
       path: `/auth/`,
       method: "POST",
       body: data,

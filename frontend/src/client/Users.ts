@@ -12,21 +12,21 @@
 import { User } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class Users<
-  SecurityDataType = unknown
-> extends HttpClient<SecurityDataType> {
+export class Users<SecurityDataType = unknown> {
+  constructor(private http: HttpClient<SecurityDataType>) {}
+
   /**
-   * @description Get current user profile information
+   * No description
    *
    * @tags users
-   * @name UserInfoUsersMeGet
-   * @summary User Info
+   * @name GetAuthUserInfo
+   * @summary Get Auth User Info
    * @request GET:/users/me/
    * @response `200` `User` Successful Response
    * @response `401` `void` Incorrect auth credentials
    */
-  userInfoUsersMeGet = (params: RequestParams = {}) =>
-    this.request<User, void>({
+  getAuthUserInfo = (params: RequestParams = {}) =>
+    this.http.request<User, void>({
       path: `/users/me/`,
       method: "GET",
       ...params,

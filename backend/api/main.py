@@ -1,9 +1,21 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.routing import APIRoute
 
 from api.routers import auth, users
 from config import get_settings
+
+
+def use_route_names_as_operation_ids(app: FastAPI) -> None:
+    """
+    Simplify operation IDs so that generated API clients have simpler function
+    names.
+
+    Should be called only after all routes have been added.
+    """
+    for route in app.routes:
+        if isinstance(route, APIRoute):
+            route.operation_id = route.name
 
 
 def create_app() -> FastAPI:
@@ -24,7 +36,6 @@ def create_app() -> FastAPI:
 
     # there is no need to include these middlewares to the unit tests
     if settings.environment != "TEST":
-        _app.add_middleware(TrustedHostMiddleware, allowed_hosts=[settings.allowed_client_host])
         _app.add_middleware(
             CORSMiddleware,
             allow_origins=[settings.allowed_client_host],
@@ -40,3 +51,4 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+use_route_names_as_operation_ids(app)

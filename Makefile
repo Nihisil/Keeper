@@ -22,7 +22,9 @@ update-api-client:
         -p /home/node/app/openapi.json \
         -o /home/node/app/src/client/ \
         --modular \
-        --responses
+        --responses \
+        --clean-output \
+        --single-http-client
 
 ### Development related commands
 
