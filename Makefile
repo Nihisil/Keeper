@@ -21,7 +21,8 @@ update-api-client:
 		npx swagger-typescript-api \
         -p /home/node/app/openapi.json \
         -o /home/node/app/src/client/ \
-        --modular
+        --modular \
+        --responses
 
 ### Development related commands
 

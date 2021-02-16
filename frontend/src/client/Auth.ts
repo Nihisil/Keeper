@@ -22,6 +22,9 @@ export class Auth<
    * @name AuthenticateAuthPost
    * @summary Authenticate
    * @request POST:/auth/
+   * @response `200` `Token` Successful Response
+   * @response `401` `void` Incorrect auth credentials
+   * @response `422` `HTTPValidationError` Validation Error
    */
   authenticateAuthPost = (data: AuthRequest, params: RequestParams = {}) =>
     this.request<Token, void | HTTPValidationError>({

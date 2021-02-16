@@ -22,6 +22,8 @@ export class Users<
    * @name UserInfoUsersMeGet
    * @summary User Info
    * @request GET:/users/me/
+   * @response `200` `User` Successful Response
+   * @response `401` `void` Incorrect auth credentials
    */
   userInfoUsersMeGet = (params: RequestParams = {}) =>
     this.request<User, void>({
