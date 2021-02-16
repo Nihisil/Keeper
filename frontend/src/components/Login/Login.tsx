@@ -4,7 +4,7 @@ import api from "api";
 import { Token } from "client/data-contracts";
 
 interface LoginProps {
-  setToken: (text: Token) => void;
+  setToken: (token: Token) => void;
 }
 
 export default function Login({ setToken }: LoginProps): JSX.Element {
@@ -18,6 +18,7 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
       .authenticate({ username, password })
       .then((data) => {
         setToken(data.data as Token);
+        window.location.href = "/";
       })
       .catch((error) => {
         if (error.status === 401) {
