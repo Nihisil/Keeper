@@ -26,7 +26,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
-    "react": "^0.0.0-experimental-6f8843837",
+    "react": "^0.14.0",
     "react-bootstrap": "^1.5.0",
     "react-dom": "^0.0.0-experimental-6f8843837",
     "react-router-dom": "^5.2.0",
