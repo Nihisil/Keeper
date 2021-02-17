@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     # auth
     secret_key: str
     jwt_algorithm: str
-    jwt_expire_time: int = 60 * 24 * 365
+    jwt_expire_minutes: int = 60
 
     # db
     mongodb_host: str

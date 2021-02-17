@@ -63,7 +63,10 @@ def authenticate_user(username: str, password: str) -> Optional[User]:
 
 
 def create_jwt_token_for_user(user: User) -> str:
-    to_encode = {"sub": user.username, "exp": datetime.utcnow() + timedelta(minutes=settings.jwt_expire_time)}
+    to_encode = {
+        "sub": user.username,
+        "exp": datetime.utcnow() + timedelta(minutes=settings.jwt_expire_minutes),
+    }
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.jwt_algorithm)
     return str(encoded_jwt)
 
