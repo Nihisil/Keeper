@@ -39,6 +39,9 @@
       {
         "endOfLine": "auto"
       }
-    ]
+    ],
+    "@typescript-eslint/no-empty-interface": "off",
+    "no-empty-pattern": "off",
+    "jsx-a11y/anchor-is-valid": "off"
   }
 }

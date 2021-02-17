@@ -43,7 +43,7 @@ export interface ApiConfig<SecurityDataType = unknown> {
 }
 
 /** Overrided Promise type. Needs for additional typings of `.catch` callback */
-export type TPromise<ResolveType, RejectType = any> = Omit<
+type TPromise<ResolveType, RejectType = any> = Omit<
   Promise<ResolveType>,
   "then" | "catch"
 > & {

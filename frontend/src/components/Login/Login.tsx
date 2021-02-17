@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import "components/Login/Login.scss";
-import api from "api";
-import { Token } from "client/data-contracts";
+import api from "utils/api";
+import { saveToken } from "utils/token";
 
-interface LoginProps {
-  setToken: (token: Token) => void;
-}
+interface LoginProps {}
 
-export default function Login({ setToken }: LoginProps): JSX.Element {
+export default function Login({}: LoginProps): JSX.Element {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
@@ -17,12 +15,13 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
     api.auth
       .authenticate({ username, password })
       .then((data) => {
-        setToken(data.data as Token);
+        saveToken(data.data);
+        // easiest way to refresh user state is reload whole page
         window.location.href = "/";
       })
       .catch((error) => {
         if (error.status === 401) {
-          setValidationError("Incorrect login or password");
+          setValidationError("Incorrect login or password.");
         } else {
           throw error;
         }
@@ -31,25 +30,43 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
 
   let errorBlock = null;
   if (validationError) {
-    errorBlock = <p>{validationError}</p>;
+    errorBlock = <p className="text-danger">{validationError}</p>;
   }
 
   return (
-    <div className="login-wrapper">
-      <h1>Please Log In</h1>
-
-      {errorBlock}
-
-      <form onSubmit={handleSubmit}>
-        <p>Username</p>
-        <input type="text" onChange={(e) => setUserName(e.target.value)} />
-
-        <p>Password</p>
-        <input type="password" onChange={(e) => setPassword(e.target.value)} />
-        <div>
-          <button type="submit">Submit</button>
+    <>
+      <main role="main" className="container">
+        <div className="row justify-content-md-center">
+          <div className="col-md-5 text-center">
+            <form className="login-form" onSubmit={handleSubmit}>
+              <h1 className="h3 mb-3 font-weight-normal">Please log in</h1>
+              {errorBlock}
+              <input
+                type="text"
+                id="inputUsername"
+                className="form-control"
+                placeholder="Username"
+                required
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <input
+                type="password"
+                id="inputPassword"
+                className="form-control"
+                placeholder="Password"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                className="btn btn-md btn-primary btn-block"
+                type="submit"
+              >
+                Sign in
+              </button>
+            </form>
+          </div>
         </div>
-      </form>
-    </div>
+      </main>
+    </>
   );
 }

@@ -1,8 +1,13 @@
+/*
+ * This module contains glue to work with auto-generated openapi client
+ * because of that it is hard to make it properly typed, let's disable warnings for this file.
+ * */
+/* eslint-disable */
+/* tslint:disable */
 import { Users } from "client/Users";
 import { ContentType, HttpClient } from "client/http-client";
 import { Auth } from "client/Auth";
-import { getToken } from "components/App/useToken";
-import { TPromise } from "client/http-client";
+import { getToken } from "utils/token";
 
 const httpClient = new HttpClient<string>({
   baseUrl: process.env.REACT_APP_API_HOST,
@@ -11,7 +16,7 @@ const httpClient = new HttpClient<string>({
       "Content-Type": ContentType.Json,
     },
   },
-  securityWorker: (token) => {
+  securityWorker: () => {
     const tokenObj = getToken();
     return tokenObj
       ? {
@@ -29,21 +34,7 @@ const api = {
   auth: new Auth(httpClient),
 };
 
-export function fetchData(func: any) {
-  const promise = func({ secure: true })
-    .then((res: any) => res.data)
-    .catch((error: any) => {
-      if (error.status === 401) {
-        // token was expired
-        return null;
-      } else {
-        throw error;
-      }
-    });
-  return wrapPromise(promise);
-}
-
-function wrapPromise(promise: TPromise<any, any>) {
+function wrapPromise(promise: Promise<any>): any {
   let status = "pending";
   let response: any;
 
@@ -70,6 +61,20 @@ function wrapPromise(promise: TPromise<any, any>) {
   };
 
   return { read };
+}
+
+export function fetchData(requestFunction: any): any {
+  const promise = requestFunction({ secure: true })
+    .then((res: any) => res.data)
+    .catch((error: any) => {
+      if (error.status === 401) {
+        // token was expired
+        return null;
+      }
+
+      throw error;
+    });
+  return wrapPromise(promise);
 }
 
 export default api;

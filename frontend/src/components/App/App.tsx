@@ -1,34 +1,36 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import "components/App/App.scss";
 import Finances from "components/Finances/Finances";
-import Preferences from "components/Preferences/Preferences";
 import Login from "components/Login/Login";
-import useToken from "components/App/useToken";
-import api, { fetchData } from "api";
+import api, { fetchData } from "utils/api";
+import Header from "components/App/Header";
+import Home from "components/App/Home";
 
 const resource = fetchData(api.users.getAuthUserInfo);
 
 export default function App(): JSX.Element {
-  let user = resource.read();
+  const user = resource.read();
   if (!user) {
-    const [_, setToken] = useToken();
-    return <Login setToken={setToken} />;
+    return <Login />;
   }
 
   return (
-    <div className="wrapper">
-      <h1>Application {user.username}</h1>
-      <BrowserRouter>
+    <>
+      <Header user={user} />
+      <main role="main" className="container">
         <Switch>
           <Route path="/finances">
             <Finances />
           </Route>
-          <Route path="/preferences">
-            <Preferences />
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/">
+            <Home />
           </Route>
         </Switch>
-      </BrowserRouter>
-    </div>
+      </main>
+    </>
   );
 }
