@@ -20,7 +20,7 @@ services:
     command: uvicorn api.main:app --reload --port 8090 --host 0.0.0.0
 
   mongodb:
-    image: mongo:4.4.3-bionic
+    image: mongo:4.4.4-bionic
     env_file:
       - .envs/.local
     volumes:
