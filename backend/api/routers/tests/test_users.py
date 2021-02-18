@@ -2,15 +2,13 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from api.main import app
-from lib.auth import create_jwt_token_for_user
-from lib.users.crud import create_user
+from lib.tests.utils import create_user_and_token_for_tests
 
 client = TestClient(app)
 
 
 def test_get_current_user_info():
-    user = create_user("test_username", "test@example.com", "password")
-    token = create_jwt_token_for_user(user)
+    user, token = create_user_and_token_for_tests()
     response = client.get(
         "/users/me/",
         headers={"Authorization": f"Bearer {token}"},
