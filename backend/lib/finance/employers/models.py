@@ -9,3 +9,4 @@ class Employer(DBClass):
     user_id: Optional[str]
     name: str
     archived: bool = False
+    is_deleted: bool = False

@@ -28,8 +28,8 @@ def test_get_list_of_employers():
     user, token = create_user_and_token_for_tests()
     number_of_employers = 4
     for i in range(number_of_employers):
-        employer_data = Employer(user_id=user.id, name=f"Test {i}")
-        create_employer(employer_data)
+        employer_data = Employer(name=f"Test {i}")
+        create_employer(employer_data, user)
     response = client.get(
         "/finance/employers/get-list",
         headers={"Authorization": f"Bearer {token}"},
@@ -37,3 +37,16 @@ def test_get_list_of_employers():
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
     assert len(response_data) == number_of_employers
+
+
+def test_delete_employer():
+    user, token = create_user_and_token_for_tests()
+    employer = create_employer(Employer(name="Test"), user)
+
+    response = client.delete(
+        f"/finance/employers/delete/{employer.id}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == status.HTTP_200_OK
+    response_data = response.json()
+    assert response_data["success"]

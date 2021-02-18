@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, Type, TypeVar
 
+from bson import ObjectId
 from pydantic import BaseModel
 from pymongo import MongoClient
 from pymongo.database import Database
@@ -32,9 +33,14 @@ class DBClass(BaseModel):
 
 def db_insert_one(obj: T) -> T:
     db = get_db()
-    db_result = db[obj.__db_collection__].insert_one(obj.dict())
-    obj.id = str(db_result.inserted_id)
+
     obj.updated = datetime.utcnow()
+    obj_data = obj.dict()
+    del obj_data["id"]
+
+    db_result = db[obj.__db_collection__].insert_one(obj.dict())
+
+    obj.id = str(db_result.inserted_id)
     return obj
 
 
@@ -47,6 +53,11 @@ def db_find_one(obj_class: Type[T], query: dict) -> Optional[T]:
     return obj_class(**data)
 
 
+def db_find_one_by_id(obj_class: Type[T], obj_id: str, query: dict) -> Optional[T]:
+    query.update({"_id": ObjectId(obj_id)})
+    return db_find_one(obj_class, query)
+
+
 def db_find_all(obj_class: Type[T], query: dict) -> List[T]:
     db = get_db()
     data = db[obj_class.__db_collection__].find(query)
@@ -55,6 +66,17 @@ def db_find_all(obj_class: Type[T], query: dict) -> List[T]:
         _map_id(x)
         results.append(obj_class(**x))
     return results
+
+
+def db_update_one_by_id(obj_class: Type[T], obj_id: str, fields_to_update: dict) -> None:
+    db = get_db()
+
+    fields_to_update["updated"] = datetime.utcnow()
+    del fields_to_update["id"]
+
+    db[obj_class.__db_collection__].update_one({"_id": ObjectId(obj_id)}, {"$set": fields_to_update})
+
+    return None
 
 
 def _map_id(data: dict) -> None:
