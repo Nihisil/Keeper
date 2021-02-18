@@ -25,6 +25,7 @@ update-api-client:
         --responses \
         --clean-output \
         --single-http-client
+	rm ./frontend/openapi.json
 
 ### Development related commands
 

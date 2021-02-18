@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { User } from "client/data-contracts";
 import { deleteToken } from "utils/token";
+import api, { fetchData } from "utils/api";
 
-interface HeaderProps {
-  user: User;
-}
+const resource = fetchData(api.users.getAuthUserInfo);
 
-export default function Header({ user }: HeaderProps): JSX.Element {
+export default function Header(): JSX.Element {
+  const user = resource.read();
+
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
     deleteToken();

@@ -4,10 +4,11 @@
  * */
 /* eslint-disable */
 /* tslint:disable */
-import { Users } from "client/Users";
 import { ContentType, HttpClient } from "client/http-client";
-import { Auth } from "client/Auth";
 import { getToken } from "utils/token";
+import { Users } from "client/Users";
+import { Auth } from "client/Auth";
+import { Finance } from "client/Finance";
 
 const httpClient = new HttpClient<string>({
   baseUrl: process.env.REACT_APP_API_HOST,
@@ -32,6 +33,7 @@ const api = {
   http: httpClient,
   users: new Users(httpClient),
   auth: new Auth(httpClient),
+  finance: new Finance(httpClient),
 };
 
 function wrapPromise(promise: Promise<any>): any {

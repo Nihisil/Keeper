@@ -1,23 +1,23 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import "components/App/App.scss";
 import Finances from "components/Finances/Finances";
 import Login from "components/Login/Login";
-import api, { fetchData } from "utils/api";
 import Header from "components/App/Header";
 import Home from "components/App/Home";
-
-const resource = fetchData(api.users.getAuthUserInfo);
+import { getToken } from "utils/token";
 
 export default function App(): JSX.Element {
-  const user = resource.read();
-  if (!user) {
+  const token = getToken();
+  if (!token) {
     return <Login />;
   }
 
   return (
     <>
-      <Header user={user} />
+      <Suspense fallback={<p className="general-loader">Loading...</p>}>
+        <Header />
+      </Suspense>
       <main role="main" className="container">
         <Switch>
           <Route path="/finances">

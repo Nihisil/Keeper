@@ -14,6 +14,17 @@ export interface AuthRequest {
   password: string;
 }
 
+export interface Employer {
+  id?: string;
+
+  /** @format date-time */
+  updated?: string;
+  user_id?: string;
+  name: string;
+  archived?: boolean;
+  is_deleted?: boolean;
+}
+
 export interface HTTPValidationError {
   detail?: ValidationError[];
 }
@@ -25,6 +36,9 @@ export interface Token {
 
 export interface User {
   id?: string;
+
+  /** @format date-time */
+  updated?: string;
   username: string;
   email: string;
 }

@@ -8,9 +8,7 @@ const root = document.getElementById("root") as HTMLElement;
 ReactDOM.unstable_createRoot(root).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Suspense fallback={<p className="general-loader">Loading...</p>}>
-        <App />
-      </Suspense>
+      <App />
     </BrowserRouter>
   </React.StrictMode>
 );
