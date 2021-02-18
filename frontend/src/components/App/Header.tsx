@@ -8,6 +8,12 @@ const resource = fetchData(api.users.getAuthUserInfo);
 export default function Header(): JSX.Element {
   const user = resource.read();
 
+  if (!user) {
+    deleteToken()
+    // easiest way to refresh user state is reload whole page
+    window.location.href = "/";
+  }
+
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
     deleteToken();
