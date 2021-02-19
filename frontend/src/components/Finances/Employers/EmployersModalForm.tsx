@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Employer } from "client/data-contracts";
 import api from "utils/api";
@@ -7,14 +7,20 @@ interface EmployersModalFormProps {
   show: boolean;
   onHide: any;
   afterSubmit: any;
+  defaultName: string;
 }
 
 export default function EmployersModalForm({
   show,
   onHide,
   afterSubmit,
+  defaultName,
 }: EmployersModalFormProps): JSX.Element {
-  const [employerName, setEmployerName] = useState("");
+  const [employerName, setEmployerName] = useState(defaultName);
+
+  useEffect(() => {
+    setEmployerName(defaultName);
+  }, [defaultName]);
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,6 +50,7 @@ export default function EmployersModalForm({
             <Form.Label>Employer name</Form.Label>
             <Form.Control
               type="name"
+              value={employerName}
               placeholder="Employer name"
               onChange={(e) => setEmployerName(e.target.value)}
               required

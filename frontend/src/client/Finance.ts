@@ -22,9 +22,6 @@ export class Finance<SecurityDataType = unknown> {
    * @name CreateEmployer
    * @summary Create Employer
    * @request POST:/finance/employers/create
-   * @response `200` `Employer` Successful Response
-   * @response `401` `void` Incorrect auth credentials
-   * @response `422` `HTTPValidationError` Validation Error
    */
   createEmployer = (data: Employer, params: RequestParams = {}) =>
     this.http.request<Employer, void | HTTPValidationError>({
@@ -41,8 +38,6 @@ export class Finance<SecurityDataType = unknown> {
    * @name GetListOfEmployers
    * @summary Get List Of Employers
    * @request GET:/finance/employers/get-list
-   * @response `200` `(Employer)[]` Successful Response
-   * @response `401` `void` Incorrect auth credentials
    */
   getListOfEmployers = (params: RequestParams = {}) =>
     this.http.request<Employer[], void>({
@@ -56,15 +51,30 @@ export class Finance<SecurityDataType = unknown> {
    * @tags employers
    * @name DeleteEmployer
    * @summary Delete Employer
-   * @request DELETE:/finance/employers/delete/{employer_id}
-   * @response `200` `any` Successful Response
-   * @response `401` `void` Incorrect auth credentials
-   * @response `422` `HTTPValidationError` Validation Error
+   * @request DELETE:/finance/employers/delete
    */
-  deleteEmployer = (employer_id: string, params: RequestParams = {}) =>
+  deleteEmployer = (data: Employer, params: RequestParams = {}) =>
     this.http.request<any, void | HTTPValidationError>({
-      path: `/finance/employers/delete/${employer_id}`,
+      path: `/finance/employers/delete`,
       method: "DELETE",
+      body: data,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags employers
+   * @name UpdateEmployer
+   * @summary Update Employer
+   * @request PUT:/finance/employers/update
+   */
+  updateEmployer = (data: Employer, params: RequestParams = {}) =>
+    this.http.request<Employer, void | HTTPValidationError>({
+      path: `/finance/employers/update`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
 }

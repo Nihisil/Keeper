@@ -1,11 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import "components/App/App.scss";
-import Finances from "components/Finances/Finances";
 import Login from "components/Login/Login";
 import Header from "components/App/Header";
 import Home from "components/App/Home";
-import { useToken } from "../../utils/token";
+import { useToken } from "utils/token";
+
+const Finances = React.lazy(() => import("components/Finances/Finances"));
 
 export default function App(): JSX.Element {
   const [token, setToken] = useToken();
@@ -17,7 +18,9 @@ export default function App(): JSX.Element {
     content = (
       <Switch>
         <Route path="/finances">
-          <Finances />
+          <Suspense fallback={<p>Loading...</p>}>
+            <Finances />
+          </Suspense>
         </Route>
         <Route path="/">
           <Home />

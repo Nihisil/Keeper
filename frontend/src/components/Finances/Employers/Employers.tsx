@@ -1,18 +1,28 @@
-import React, { Suspense, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import EmployersList from "components/Finances/Employers/EmployersList";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
-import api, { fetchData } from "utils/api";
 import { Employer } from "client/data-contracts";
-
-const initEmployers = fetchData(api.finance.getListOfEmployers);
+import api from "utils/api";
 
 export default function Employers(): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
-  const [employers, setEmployers] = useState(initEmployers.read());
+  const [employers, setEmployers] = useState([] as Array<Employer>);
+
+  useEffect(() => {
+    api.finance.getListOfEmployers({ secure: true }).then((data: any) => {
+      setEmployers(data.data);
+    });
+  }, []);
 
   const afterEmployerCreated = (employer: Employer) => {
-    setEmployers([...employers, employer]);
+    setEmployers([employer, ...employers]);
+  };
+
+  const afterEmployerDeleted = (employerId: string) => {
+    api.finance.deleteEmployer(employerId, { secure: true }).then(() => {
+      setEmployers(employers.filter((item) => item.id != employerId));
+    });
   };
 
   return (
@@ -23,13 +33,15 @@ export default function Employers(): JSX.Element {
           Create
         </Button>
       </h3>
-      <Suspense fallback={<p>Loading employers...</p>}>
-        <EmployersList employers={employers} />
-      </Suspense>
+      <EmployersList
+        employers={employers}
+        afterEmployerDeleted={afterEmployerDeleted}
+      />
       <EmployersModalForm
         show={modalShow}
         onHide={() => setModalShow(false)}
         afterSubmit={afterEmployerCreated}
+        defaultName=""
       />
     </>
   );

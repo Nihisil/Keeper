@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import Employers from "components/Finances/Employers/Employers";
 
 export default function Finances(): JSX.Element {
@@ -12,9 +12,7 @@ export default function Finances(): JSX.Element {
       </div>
       <div className="row">
         <div className="col">
-          <Suspense fallback={<p>Loading employers...</p>}>
-            <Employers />
-          </Suspense>
+          <Employers />
         </div>
       </div>
     </>

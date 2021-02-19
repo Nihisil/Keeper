@@ -22,9 +22,6 @@ export class Auth<SecurityDataType = unknown> {
    * @name Authenticate
    * @summary Authenticate
    * @request POST:/auth/
-   * @response `200` `Token` Successful Response
-   * @response `401` `void` Incorrect auth credentials
-   * @response `422` `HTTPValidationError` Validation Error
    */
   authenticate = (data: AuthRequest, params: RequestParams = {}) =>
     this.http.request<Token, void | HTTPValidationError>({

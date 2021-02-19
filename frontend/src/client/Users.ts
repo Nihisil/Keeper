@@ -22,8 +22,6 @@ export class Users<SecurityDataType = unknown> {
    * @name GetAuthUserInfo
    * @summary Get Auth User Info
    * @request GET:/users/me/
-   * @response `200` `User` Successful Response
-   * @response `401` `void` Incorrect auth credentials
    */
   getAuthUserInfo = (params: RequestParams = {}) =>
     this.http.request<User, void>({
