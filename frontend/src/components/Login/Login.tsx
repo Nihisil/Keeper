@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "components/Login/Login.scss";
 import api from "utils/api";
-import { saveToken } from "utils/token";
 
-interface LoginProps {}
+interface LoginProps {
+  setToken: any;
+}
 
-export default function Login({}: LoginProps): JSX.Element {
+export default function Login({ setToken }: LoginProps): JSX.Element {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
@@ -15,9 +16,7 @@ export default function Login({}: LoginProps): JSX.Element {
     api.auth
       .authenticate({ username, password })
       .then((data) => {
-        saveToken(data.data);
-        // easiest way to refresh user state is reload whole page
-        window.location.href = "/";
+        setToken(data.data);
       })
       .catch((error) => {
         if (error.status === 401) {

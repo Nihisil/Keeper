@@ -1,24 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { deleteToken } from "utils/token";
-import api, { fetchData } from "utils/api";
+import api from "utils/api";
 
-const resource = fetchData(api.users.getAuthUserInfo);
+interface HeaderProps {
+  setToken: any;
+}
 
-export default function Header(): JSX.Element {
-  const user = resource.read();
+export default function Header({ setToken }: HeaderProps): JSX.Element {
+  const [user, setUser] = useState({});
 
-  if (!user) {
-    deleteToken()
-    // easiest way to refresh user state is reload whole page
-    window.location.href = "/";
-  }
+  useEffect(() => {
+    api.users
+      .getAuthUserInfo({ secure: true })
+      .then((data) => {
+        setUser(data.data);
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          // token was expired
+          setToken(null);
+        }
+      });
+  }, []);
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
-    deleteToken();
-    // easiest way to refresh user state is reload whole page
-    window.location.href = "/";
+    setToken(null);
   };
 
   return (
@@ -36,7 +43,7 @@ export default function Header(): JSX.Element {
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
           <a href="#" className="nav-link" onClick={handleLogOut}>
-            {user.username} (logout)
+            logout
           </a>
         </li>
       </ul>

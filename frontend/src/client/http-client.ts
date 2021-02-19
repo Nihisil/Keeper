@@ -216,11 +216,11 @@ export class HttpClient<SecurityDataType = unknown> {
         queryString ? `?${queryString}` : ""
       }`,
       {
+        ...requestParams,
         headers: {
           ...(type ? { "Content-Type": type } : {}),
           ...(requestParams.headers || {}),
         },
-        ...requestParams,
         signal: cancelToken ? this.createAbortSignal(cancelToken) : void 0,
         body:
           typeof body === "undefined" || body === null
