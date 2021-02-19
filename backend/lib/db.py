@@ -58,9 +58,11 @@ def db_find_one_by_id(obj_class: Type[T], obj_id: str, query: dict) -> Optional[
     return db_find_one(obj_class, query)
 
 
-def db_find_all(obj_class: Type[T], query: dict) -> List[T]:
+def db_find_all(obj_class: Type[T], query: dict, sorting: Optional[list]) -> List[T]:
     db = get_db()
     data = db[obj_class.__db_collection__].find(query)
+    if sorting:
+        data = data.sort(*sorting)
     results = []
     for x in data:
         _map_id(x)
