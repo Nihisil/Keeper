@@ -21,7 +21,6 @@ def test_create_employer_api():
     response_data = response.json()
     assert response_data["id"] is not None
     assert response_data["name"] == employer_data.name
-    assert response_data["user_id"] == user.id
 
 
 def test_get_list_of_employers_api():
@@ -29,7 +28,7 @@ def test_get_list_of_employers_api():
     number_of_employers = 4
     for i in range(number_of_employers):
         employer_data = Employer(name=f"Test {i}")
-        create_employer(employer_data, user)
+        create_employer(employer_data)
     response = client.get(
         "/finance/employers/get-list",
         headers={"Authorization": f"Bearer {token}"},
@@ -41,7 +40,7 @@ def test_get_list_of_employers_api():
 
 def test_delete_employer_api():
     user, token = create_user_and_token_for_tests()
-    employer = create_employer(Employer(name="Test"), user)
+    employer = create_employer(Employer(name="Test"))
     response = client.delete(
         "/finance/employers/delete",
         json=employer.dict(exclude={"updated"}),
@@ -54,7 +53,7 @@ def test_delete_employer_api():
 
 def test_update_employer_api():
     user, token = create_user_and_token_for_tests()
-    employer = create_employer(Employer(name="Test"), user)
+    employer = create_employer(Employer(name="Test"))
     new_data = Employer(**employer.dict())
     new_data.name = "Updated"
     response = client.put(

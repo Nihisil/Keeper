@@ -2,7 +2,7 @@
 
 Project to keep information about read/watched books/comics/cinema/tv-shows/etc, and other different stuff (like personal bookkeeping).
 
-For back-end we are using Python + FastAPI + MongoDB, and for front-end React + TypeScript. 
+For backend we are using Python + FastAPI + MongoDB, and for frontend React + TypeScript.
 
 # Hot to run it locally
 
