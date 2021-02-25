@@ -116,7 +116,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
-      input !== null && typeof input === "object"
+      input !== null && (typeof input === "object" || typeof input === "string")
         ? JSON.stringify(input)
         : input,
     [ContentType.FormData]: (input: any) =>
@@ -195,7 +195,9 @@ export class HttpClient<SecurityDataType = unknown> {
       {
         ...requestParams,
         headers: {
-          ...(type ? { "Content-Type": type } : {}),
+          ...(type && type !== ContentType.FormData
+            ? { "Content-Type": type }
+            : {}),
           ...(requestParams.headers || {}),
         },
         signal: cancelToken ? this.createAbortSignal(cancelToken) : void 0,

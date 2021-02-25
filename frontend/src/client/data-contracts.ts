@@ -19,7 +19,6 @@ export interface Employer {
 
   /** @format date-time */
   updated?: string;
-  user_id?: string;
   name: string;
   archived?: boolean;
   is_deleted?: boolean;
