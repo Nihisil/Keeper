@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "utils/api";
+import { Token, User } from "../../client/data-contracts";
 
 interface HeaderProps {
-  setToken: any;
+  setToken(userToken: Token | null): void;
 }
 
 export default function Header({ setToken }: HeaderProps): JSX.Element {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     api.users
@@ -21,12 +22,24 @@ export default function Header({ setToken }: HeaderProps): JSX.Element {
           setToken(null);
         }
       });
-  }, []);
+  }, [setToken]);
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
     setToken(null);
   };
+
+  const logoutLink = user ? (
+    <ul className="navbar-nav ml-auto">
+      <li className="nav-item">
+        <a href="#" className="nav-link" onClick={handleLogOut}>
+          logout ({user.username})
+        </a>
+      </li>
+    </ul>
+  ) : (
+    ""
+  );
 
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -40,13 +53,7 @@ export default function Header({ setToken }: HeaderProps): JSX.Element {
           </Link>
         </li>
       </ul>
-      <ul className="navbar-nav ml-auto">
-        <li className="nav-item">
-          <a href="#" className="nav-link" onClick={handleLogOut}>
-            logout
-          </a>
-        </li>
-      </ul>
+      {logoutLink}
     </nav>
   );
 }

@@ -35,5 +35,6 @@ def update_employer(employer: Employer, user: User) -> Employer:
     # checks that we have permission to delete obj
     assert employer.user_id == user.id
 
-    db_update_one_by_id(Employer, str(employer.id), employer.dict())
+    updated = db_update_one_by_id(Employer, str(employer.id), employer.dict())
+    employer.updated = updated
     return employer

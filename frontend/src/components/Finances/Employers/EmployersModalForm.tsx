@@ -2,32 +2,53 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Employer } from "client/data-contracts";
 import api from "utils/api";
+import { EmployerAction } from "./Employers";
 
 interface EmployersModalFormProps {
   show: boolean;
-  onHide: any;
-  afterSubmit: any;
-  defaultName: string;
+  onHide(): void;
+  afterSubmit(action: EmployerAction): void;
+  entity?: Employer;
 }
+
+export type ModalData = {
+  show: boolean;
+  entity?: Employer;
+};
 
 export default function EmployersModalForm({
   show,
   onHide,
   afterSubmit,
-  defaultName,
+  entity,
 }: EmployersModalFormProps): JSX.Element {
-  const [employerName, setEmployerName] = useState(defaultName);
+  const [employerName, setEmployerName] = useState(entity?.name);
 
   useEffect(() => {
-    setEmployerName(defaultName);
-  }, [defaultName]);
+    setEmployerName(entity?.name);
+  }, [entity?.name]);
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const employer = { name: employerName } as Employer;
-    api.finance.createEmployer(employer, { secure: true }).then((data) => {
-      afterSubmit(data.data);
-      onHide(false);
+
+    let actionType: "create" | "update";
+    let employer: Employer;
+    if (entity) {
+      actionType = "update";
+      employer = entity;
+      employer.name = employerName as string;
+    } else {
+      actionType = "create";
+      employer = { name: employerName } as Employer;
+      setEmployerName("");
+    }
+    const action =
+      actionType === "create"
+        ? api.finance.createEmployer
+        : api.finance.updateEmployer;
+    action(employer, { secure: true }).then((data) => {
+      afterSubmit({ type: actionType, employer: data.data });
+      onHide();
     });
   };
 
@@ -58,7 +79,12 @@ export default function EmployersModalForm({
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onHide} variant="secondary">
+          <Button
+            onClick={() => {
+              onHide();
+            }}
+            variant="secondary"
+          >
             Close
           </Button>
           <Button type="submit">Save</Button>
@@ -67,3 +93,7 @@ export default function EmployersModalForm({
     </Modal>
   );
 }
+
+EmployersModalForm.defaultProps = {
+  entity: undefined,
+};

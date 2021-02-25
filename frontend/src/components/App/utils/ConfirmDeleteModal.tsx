@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 
 interface ConfirmDeleteModalProps {
   show: boolean;
-  onHide: any;
-  deleteAction: any;
+  onHide(): void;
+  deleteAction(employerId: string): void;
   toDeleteName: string;
   toDeleteId: string;
 }
@@ -16,7 +16,7 @@ export default function ConfirmDeleteModal({
   toDeleteName,
   toDeleteId,
 }: ConfirmDeleteModalProps): JSX.Element {
-  const handleDeleteButton = (e: React.MouseEvent) => {
+  const handleDeleteButton = () => {
     deleteAction(toDeleteId);
     onHide();
   };
@@ -34,7 +34,7 @@ export default function ConfirmDeleteModal({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to delete "{toDeleteName}"?</p>
+        <p>Are you sure you want to delete &quot;{toDeleteName}&quot;?</p>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={onHide} variant="secondary">

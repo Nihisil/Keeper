@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import "components/Login/Login.scss";
 import api from "utils/api";
+import "components/Login/Login.scss";
+import { Token } from "client/data-contracts";
 
 interface LoginProps {
-  setToken: any;
+  setToken(userToken: Token): void;
 }
 
 export default function Login({ setToken }: LoginProps): JSX.Element {

@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import { Employer } from "client/data-contracts";
 import { Button, Table } from "react-bootstrap";
-import { displayDate } from "utils/date";
+import displayDate from "utils/date";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
-import EmployersModalForm from "./EmployersModalForm";
+import EmployersModalForm, {
+  ModalData,
+} from "components/Finances/Employers/EmployersModalForm";
+import api from "utils/api";
+import { EmployerAction } from "./Employers";
 
 interface EmployersListProps {
   employers: Array<Employer>;
-  afterEmployerDeleted: any;
+  dispatchEmployers(action: EmployerAction): void;
 }
 
 export default function EmployersList({
   employers,
-  afterEmployerDeleted,
+  dispatchEmployers,
 }: EmployersListProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
@@ -21,11 +25,21 @@ export default function EmployersList({
   });
   const [editModal, setEditModal] = useState({
     show: false,
-    name: "",
-  });
+    entity: undefined,
+  } as ModalData);
 
-  const employerRows = employers.map((item, index) => (
-    <tr>
+  const deleteEmployer = (employerId: string) => {
+    const employer = employers.find((item) => item.id === employerId);
+    if (!employer) {
+      throw Error("Not correct employer id was passed to delete function");
+    }
+    api.finance.deleteEmployer(employer, { secure: true }).then(() => {
+      dispatchEmployers({ type: "delete", employer });
+    });
+  };
+
+  const employerRows = employers.map((item) => (
+    <tr key={item.id}>
       <td>{item.name}</td>
       <td>-</td>
       <td>{displayDate(item.updated)}</td>
@@ -34,7 +48,7 @@ export default function EmployersList({
           size="sm"
           className="mr-2"
           onClick={() => {
-            setEditModal({ show: true, name: item.name });
+            setEditModal({ show: true, entity: item });
           }}
         >
           Edit
@@ -84,13 +98,13 @@ export default function EmployersList({
         }
         toDeleteName={deleteModal.toDeleteName}
         toDeleteId={deleteModal.toDeleteId}
-        deleteAction={afterEmployerDeleted}
+        deleteAction={deleteEmployer}
       />
       <EmployersModalForm
         show={editModal.show}
-        onHide={() => setEditModal({ show: false, name: "" })}
-        afterSubmit={() => {}}
-        defaultName={editModal.name}
+        onHide={() => setEditModal({ show: false, entity: undefined })}
+        afterSubmit={dispatchEmployers}
+        entity={editModal.entity}
       />
     </>
   );

@@ -70,15 +70,16 @@ def db_find_all(obj_class: Type[T], query: dict, sorting: Optional[list]) -> Lis
     return results
 
 
-def db_update_one_by_id(obj_class: Type[T], obj_id: str, fields_to_update: dict) -> None:
+def db_update_one_by_id(obj_class: Type[T], obj_id: str, fields_to_update: dict) -> datetime:
     db = get_db()
 
-    fields_to_update["updated"] = datetime.utcnow()
+    updated = datetime.utcnow()
+    fields_to_update["updated"] = updated
     del fields_to_update["id"]
 
     db[obj_class.__db_collection__].update_one({"_id": ObjectId(obj_id)}, {"$set": fields_to_update})
 
-    return None
+    return updated
 
 
 def _map_id(data: dict) -> None:

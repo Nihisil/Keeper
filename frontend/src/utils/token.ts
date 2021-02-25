@@ -15,7 +15,7 @@ const deleteToken = (): void => {
   localStorage.removeItem(TOKEN_KEY);
 };
 
-export function useToken() {
+export function useToken(): [Token | null, (userToken: Token) => void] {
   const [token, setToken] = useState(getToken());
 
   const saveToken = (userToken: Token) => {
