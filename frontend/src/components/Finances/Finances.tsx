@@ -1,5 +1,5 @@
-import React from "react";
 import Employers from "components/Finances/Employers/Employers";
+import React from "react";
 
 export default function Finances(): JSX.Element {
   return (

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Token } from "client/data-contracts";
+import { useState } from "react";
 
 const TOKEN_KEY = "token";
 

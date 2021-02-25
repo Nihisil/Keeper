@@ -1,13 +1,13 @@
-import React, { useState } from "react";
 import { Employer } from "client/data-contracts";
-import { Button, Table } from "react-bootstrap";
-import displayDate from "utils/date";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
+import { EmployerAction } from "components/Finances/Employers/Employers";
 import EmployersModalForm, {
   ModalData,
 } from "components/Finances/Employers/EmployersModalForm";
+import React, { useState } from "react";
+import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
-import { EmployerAction } from "./Employers";
+import displayDate from "utils/date";
 
 interface EmployersListProps {
   employers: Array<Employer>;

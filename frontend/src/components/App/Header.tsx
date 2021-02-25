@@ -1,7 +1,7 @@
+import { Token, User } from "client/data-contracts";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "utils/api";
-import { Token, User } from "../../client/data-contracts";
 
 interface HeaderProps {
   setToken(userToken: Token | null): void;

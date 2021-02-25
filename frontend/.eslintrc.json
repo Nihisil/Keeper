@@ -10,7 +10,9 @@
   "plugins": [
     "react",
     "@typescript-eslint",
-    "jest"
+    "jest",
+    "simple-import-sort",
+    "import"
   ],
   "env": {
     "browser": true,
@@ -40,6 +42,13 @@
     ],
     "@typescript-eslint/no-empty-interface": "off",
     "no-empty-pattern": "off",
-    "jsx-a11y/anchor-is-valid": "off"
+    "jsx-a11y/anchor-is-valid": "off",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "sort-imports": "off",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    "import/no-relative-parent-imports": "error"
   }
 }

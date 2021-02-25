@@ -1,8 +1,8 @@
+import { Employer } from "client/data-contracts";
+import { EmployerAction } from "components/Finances/Employers/Employers";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { Employer } from "client/data-contracts";
 import api from "utils/api";
-import { EmployerAction } from "./Employers";
 
 interface EmployersModalFormProps {
   show: boolean;

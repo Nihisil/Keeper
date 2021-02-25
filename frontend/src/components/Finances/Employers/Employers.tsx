@@ -1,8 +1,8 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Employer } from "client/data-contracts";
 import EmployersList from "components/Finances/Employers/EmployersList";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
-import { Employer } from "client/data-contracts";
+import React, { useEffect, useReducer, useState } from "react";
+import { Button } from "react-bootstrap";
 import api from "utils/api";
 
 export type EmployerAction =

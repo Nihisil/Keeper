@@ -1,7 +1,8 @@
+import "components/Login/Login.scss";
+
+import { Token } from "client/data-contracts";
 import React, { useState } from "react";
 import api from "utils/api";
-import "components/Login/Login.scss";
-import { Token } from "client/data-contracts";
 
 interface LoginProps {
   setToken(userToken: Token): void;

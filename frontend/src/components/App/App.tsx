@@ -1,9 +1,10 @@
-import React, { Suspense } from "react";
-import { Switch, Route } from "react-router-dom";
 import "components/App/App.scss";
-import Login from "components/Login/Login";
+
 import Header from "components/App/Header";
 import Home from "components/App/Home";
+import Login from "components/Login/Login";
+import React, { Suspense } from "react";
+import { Route, Switch } from "react-router-dom";
 import { useToken } from "utils/token";
 
 const Finances = React.lazy(() => import("components/Finances/Finances"));
