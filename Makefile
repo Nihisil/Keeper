@@ -22,6 +22,7 @@ update-api-client:
         -p /home/node/app/openapi.json \
         -o /home/node/app/src/client/ \
         --modular \
+        --axios \
         --single-http-client
 	rm ./frontend/openapi.json
 

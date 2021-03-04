@@ -29,6 +29,7 @@ export class Auth<SecurityDataType = unknown> {
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
       ...params,
     });
 }

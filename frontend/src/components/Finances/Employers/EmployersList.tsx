@@ -28,14 +28,13 @@ export default function EmployersList({
     entity: undefined,
   } as ModalData);
 
-  const deleteEmployer = (employerId: string) => {
+  const deleteEmployer = async (employerId: string) => {
     const employer = employers.find((item) => item.id === employerId);
     if (!employer) {
       throw Error("Not correct employer id was passed to delete function");
     }
-    api.finance.deleteEmployer(employer, { secure: true }).then(() => {
-      dispatchEmployers({ type: "delete", employer });
-    });
+    await api.finance.deleteEmployer(employer, { secure: true });
+    dispatchEmployers({ type: "delete", employer });
   };
 
   const employerRows = employers.map((item) => (

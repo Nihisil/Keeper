@@ -29,6 +29,7 @@ export class Finance<SecurityDataType = unknown> {
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
       ...params,
     });
   /**
@@ -43,6 +44,7 @@ export class Finance<SecurityDataType = unknown> {
     this.http.request<Employer[], void>({
       path: `/finance/employers/get-list`,
       method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -59,6 +61,7 @@ export class Finance<SecurityDataType = unknown> {
       method: "DELETE",
       body: data,
       type: ContentType.Json,
+      format: "json",
       ...params,
     });
   /**
@@ -75,6 +78,7 @@ export class Finance<SecurityDataType = unknown> {
       method: "PUT",
       body: data,
       type: ContentType.Json,
+      format: "json",
       ...params,
     });
 }

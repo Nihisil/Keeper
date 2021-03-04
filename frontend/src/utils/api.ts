@@ -4,19 +4,13 @@
  * */
 /* eslint-disable */
 /* tslint:disable */
-import { ContentType, HttpClient } from "client/http-client";
+import { HttpClient } from "client/http-client";
 import { getToken } from "utils/token";
 import { Users } from "client/Users";
 import { Auth } from "client/Auth";
 import { Finance } from "client/Finance";
 
 const httpClient = new HttpClient<string>({
-  baseUrl: process.env.REACT_APP_API_HOST,
-  baseApiParams: {
-    headers: {
-      "Content-Type": ContentType.Json,
-    },
-  },
   securityWorker: () => {
     const tokenObj = getToken();
     return tokenObj
@@ -27,6 +21,7 @@ const httpClient = new HttpClient<string>({
         }
       : {};
   },
+  ...{ baseURL: process.env.REACT_APP_API_HOST },
 });
 
 const api = {

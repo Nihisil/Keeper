@@ -11,17 +11,17 @@ export default function Header({ setToken }: HeaderProps): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    api.users
-      .getAuthUserInfo({ secure: true })
-      .then((data) => {
-        setUser(data.data);
-      })
-      .catch((error) => {
-        if (error.status === 401) {
+    (async () => {
+      try {
+        const response = await api.users.getAuthUserInfo({ secure: true });
+        setUser(response.data);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
           // token was expired
           setToken(null);
         }
-      });
+      }
+    })();
   }, [setToken]);
 
   const handleLogOut = (e: React.MouseEvent) => {

@@ -35,9 +35,10 @@ export default function Employers(): JSX.Element {
   const [employers, dispatchEmployers] = useReducer(reducer, []);
 
   useEffect(() => {
-    api.finance.getListOfEmployers({ secure: true }).then((data) => {
-      dispatchEmployers({ type: "load", employers: data.data });
-    });
+    (async () => {
+      const response = await api.finance.getListOfEmployers({ secure: true });
+      dispatchEmployers({ type: "load", employers: response.data });
+    })();
   }, []);
 
   return (

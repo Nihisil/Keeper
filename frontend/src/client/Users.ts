@@ -27,6 +27,7 @@ export class Users<SecurityDataType = unknown> {
     this.http.request<User, void>({
       path: `/users/me/`,
       method: "GET",
+      format: "json",
       ...params,
     });
 }

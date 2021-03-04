@@ -13,20 +13,19 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    api.auth
-      .authenticate({ username, password })
-      .then((data) => {
-        setToken(data.data);
-      })
-      .catch((error) => {
-        if (error.status === 401) {
-          setValidationError("Incorrect login or password.");
-        } else {
-          throw error;
-        }
-      });
+
+    try {
+      const response = await api.auth.authenticate({ username, password });
+      setToken(response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setValidationError("Incorrect login or password.");
+      } else {
+        throw error;
+      }
+    }
   };
 
   let errorBlock = null;

@@ -28,7 +28,7 @@ export default function EmployersModalForm({
     setEmployerName(entity?.name);
   }, [entity?.name]);
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let actionType: "create" | "update";
@@ -46,10 +46,10 @@ export default function EmployersModalForm({
       actionType === "create"
         ? api.finance.createEmployer
         : api.finance.updateEmployer;
-    action(employer, { secure: true }).then((data) => {
-      afterSubmit({ type: actionType, employer: data.data });
-      onHide();
-    });
+
+    const response = await action(employer, { secure: true });
+    afterSubmit({ type: actionType, employer: response.data });
+    onHide();
   };
 
   return (
