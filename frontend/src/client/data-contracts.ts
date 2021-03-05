@@ -9,9 +9,43 @@
  * ---------------------------------------------------------------
  */
 
+export interface Account {
+  id?: string;
+
+  /** @format date-time */
+  updated?: string;
+  name: string;
+
+  /** An enumeration. */
+  currency: Currency;
+
+  /** An enumeration. */
+  account_type: AccountType;
+  is_deleted?: boolean;
+}
+
+/**
+ * An enumeration.
+ */
+export enum AccountType {
+  BANK = "BANK",
+  CASH = "CASH",
+  INVESTING = "INVESTING",
+  OTHER = "OTHER",
+}
+
 export interface AuthRequest {
   username: string;
   password: string;
+}
+
+/**
+ * An enumeration.
+ */
+export enum Currency {
+  USD = "USD",
+  RUB = "RUB",
+  EUR = "EUR",
 }
 
 export interface Employer {

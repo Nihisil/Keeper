@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { Employer, HTTPValidationError } from "./data-contracts";
+import { Account, Employer, HTTPValidationError } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Finance<SecurityDataType = unknown> {
@@ -75,6 +75,72 @@ export class Finance<SecurityDataType = unknown> {
   updateEmployer = (data: Employer, params: RequestParams = {}) =>
     this.http.request<Employer, void | HTTPValidationError>({
       path: `/finance/employers/update`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags accounts
+   * @name CreateAccount
+   * @summary Create Account
+   * @request POST:/finance/accounts/create
+   */
+  createAccount = (data: Account, params: RequestParams = {}) =>
+    this.http.request<Account, void | HTTPValidationError>({
+      path: `/finance/accounts/create`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags accounts
+   * @name GetListOfAccounts
+   * @summary Get List Of Accounts
+   * @request GET:/finance/accounts/get-list
+   */
+  getListOfAccounts = (params: RequestParams = {}) =>
+    this.http.request<Account[], void>({
+      path: `/finance/accounts/get-list`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags accounts
+   * @name DeleteAccount
+   * @summary Delete Account
+   * @request DELETE:/finance/accounts/delete
+   */
+  deleteAccount = (data: Account, params: RequestParams = {}) =>
+    this.http.request<any, void | HTTPValidationError>({
+      path: `/finance/accounts/delete`,
+      method: "DELETE",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags accounts
+   * @name UpdateAccount
+   * @summary Update Account
+   * @request PUT:/finance/accounts/update
+   */
+  updateAccount = (data: Account, params: RequestParams = {}) =>
+    this.http.request<Account, void | HTTPValidationError>({
+      path: `/finance/accounts/update`,
       method: "PUT",
       body: data,
       type: ContentType.Json,

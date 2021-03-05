@@ -1,3 +1,4 @@
+import Accounts from "components/Finances/Accounts/Accounts";
 import Employers from "components/Finances/Employers/Employers";
 import React from "react";
 
@@ -8,6 +9,11 @@ export default function Finances(): JSX.Element {
         <div className="col">
           <h2>Finances</h2>
           <hr />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <Accounts />
         </div>
       </div>
       <div className="row">
