@@ -28,6 +28,10 @@ export default function EmployersModalForm({
     setEmployerName(entity?.name);
   }, [entity?.name]);
 
+  const cleanUpForm = () => {
+    setEmployerName("");
+  };
+
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -40,13 +44,16 @@ export default function EmployersModalForm({
     } else {
       actionType = "create";
       employer = { name: employerName } as Employer;
-      setEmployerName("");
     }
     const action = actionType === "create" ? api.finance.createEmployer : api.finance.updateEmployer;
 
     const response = await action(employer, { secure: true });
     afterSubmit({ type: actionType, employer: response.data });
     onHide();
+
+    if (!entity) {
+      cleanUpForm();
+    }
   };
 
   return (

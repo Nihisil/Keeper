@@ -18,10 +18,6 @@ build-docker:
 shell:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh
 
-build-fe:
-	rm -r ./frontend/build/
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn build
-
 update-api-client:
 	curl http://0.0.0.0:8090/openapi.json > ./frontend/openapi.json
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend \
