@@ -32,7 +32,7 @@ check: format lint test
 
 format: format-be format-fe
 lint: lint-be lint-fe
-test: test-be
+test: test-be test-fe
 
 ### Backend ###
 
@@ -71,3 +71,6 @@ format-fe:
 
 lint-fe:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn lint
+
+test-fe:
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn test

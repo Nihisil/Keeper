@@ -4,7 +4,7 @@ import Header from "components/App/Header";
 import Home from "components/App/Home";
 import Login from "components/Login/Login";
 import React, { Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useToken } from "utils/token";
 
 const Finances = React.lazy(() => import("components/Finances/Finances"));
@@ -32,10 +32,12 @@ export default function App(): JSX.Element {
 
   return (
     <>
-      <Header setToken={setToken} />
-      <main role="main" className="container">
-        {content}
-      </main>
+      <BrowserRouter>
+        <Header setToken={setToken} />
+        <main role="main" className="container">
+          {content}
+        </main>
+      </BrowserRouter>
     </>
   );
 }
