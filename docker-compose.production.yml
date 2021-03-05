@@ -14,11 +14,11 @@ services:
     depends_on:
       - mongodb
     restart: always
-      logging:
-        driver: json-file
-        options:
-          max-size: '10m'
-          max-file: '5'
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
     env_file:
       - .envs/.production
     ports:
@@ -28,11 +28,11 @@ services:
   mongodb:
     image: mongo:4.4.4-bionic
     restart: always
-      logging:
-        driver: json-file
-        options:
-          max-size: '10m'
-          max-file: '5'
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
     env_file:
       - .envs/.production
     volumes:
