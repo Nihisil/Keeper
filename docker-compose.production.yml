@@ -1,0 +1,40 @@
+version: '3'
+
+volumes:
+  mongodb_data: {}
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    image: keeper_backend
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongodb
+    restart: always
+      logging:
+        driver: json-file
+        options:
+          max-size: '10m'
+          max-file: '5'
+    env_file:
+      - .envs/.production
+    ports:
+      - '8090:8090'
+    command: uvicorn api.main:app --workers 2 --port 8090 --host 0.0.0.0
+
+  mongodb:
+    image: mongo:4.4.4-bionic
+    restart: always
+      logging:
+        driver: json-file
+        options:
+          max-size: '10m'
+          max-file: '5'
+    env_file:
+      - .envs/.production
+    volumes:
+      - mongodb_data:/data/db
+    command: mongod --auth

@@ -1,10 +1,13 @@
-COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), docker-compose.yml)
+COMPOSE_FILE=$(or $(KEEPER_COMPOSE_FILE), docker-compose.yml)
 
 MAKE_FILE_PATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_DIR=$(dir $(MAKE_FILE_PATH))
 
 up:
 	docker-compose -f $(COMPOSE_FILE) up
+
+up-daemon:
+	docker-compose -f $(COMPOSE_FILE) up -d
 
 down:
 	docker-compose -f $(COMPOSE_FILE) down
@@ -14,6 +17,10 @@ build-docker:
 
 shell:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh
+
+build-fe:
+	rm -r ./frontend/build/
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn build
 
 update-api-client:
 	curl http://0.0.0.0:8090/openapi.json > ./frontend/openapi.json
@@ -26,7 +33,8 @@ update-api-client:
         --single-http-client
 	rm ./frontend/openapi.json
 
-### Development related commands
+
+### Linters and formatters ###
 
 check: format lint test
 
