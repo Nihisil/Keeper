@@ -57,10 +57,7 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
                 required
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button
-                className="btn btn-md btn-primary btn-block"
-                type="submit"
-              >
+              <button className="btn btn-md btn-primary btn-block" type="submit">
                 Sign in
               </button>
             </form>

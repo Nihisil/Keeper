@@ -1,9 +1,7 @@
 import { Employer } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
 import { EmployerAction } from "components/Finances/Employers/Employers";
-import EmployersModalForm, {
-  ModalData,
-} from "components/Finances/Employers/EmployersModalForm";
+import EmployersModalForm, { ModalData } from "components/Finances/Employers/EmployersModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
@@ -14,10 +12,7 @@ interface EmployersListProps {
   dispatchEmployers(action: EmployerAction): void;
 }
 
-export default function EmployersList({
-  employers,
-  dispatchEmployers,
-}: EmployersListProps): JSX.Element {
+export default function EmployersList({ employers, dispatchEmployers }: EmployersListProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
     toDeleteName: "",
@@ -71,13 +66,7 @@ export default function EmployersList({
 
   return (
     <>
-      <Table
-        responsive
-        bordered
-        striped
-        size="sm"
-        data-testid="employers-table"
-      >
+      <Table responsive bordered striped size="sm" data-testid="employers-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -98,9 +87,7 @@ export default function EmployersList({
       </Table>
       <ConfirmDeleteModal
         show={deleteModal.show}
-        onHide={() =>
-          setDeleteModal({ show: false, toDeleteName: "", toDeleteId: "" })
-        }
+        onHide={() => setDeleteModal({ show: false, toDeleteName: "", toDeleteId: "" })}
         toDeleteName={deleteModal.toDeleteName}
         toDeleteId={deleteModal.toDeleteId}
         deleteAction={deleteEmployer}

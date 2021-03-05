@@ -19,9 +19,7 @@ function reducer(employers: Employer[], action: EmployerAction): Employer[] {
       return [action.employer, ...employers];
     case "update":
       return employers
-        .map((item) =>
-          item.id === action.employer.id ? action.employer : item
-        )
+        .map((item) => (item.id === action.employer.id ? action.employer : item))
         .sort((a, b) => ((a.updated || 0) > (b.updated || 0) ? -1 : 1));
     case "delete":
       return employers.filter((item) => item.id !== action.employer.id);
@@ -45,19 +43,11 @@ export default function Employers(): JSX.Element {
     <>
       <h3>
         Employers
-        <Button
-          variant="success"
-          className="ml-4"
-          size="sm"
-          onClick={() => setModalShow(true)}
-        >
+        <Button variant="success" className="ml-4" size="sm" onClick={() => setModalShow(true)}>
           Create
         </Button>
       </h3>
-      <EmployersList
-        employers={employers}
-        dispatchEmployers={dispatchEmployers}
-      />
+      <EmployersList employers={employers} dispatchEmployers={dispatchEmployers} />
       <EmployersModalForm
         show={modalShow}
         onHide={() => setModalShow(false)}

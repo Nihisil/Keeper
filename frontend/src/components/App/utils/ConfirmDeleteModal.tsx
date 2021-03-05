@@ -21,17 +21,9 @@ export default function ConfirmDeleteModal({
     onHide();
   };
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Confirm deleteion
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Confirm deleteion</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>Are you sure you want to delete &quot;{toDeleteName}&quot;?</p>

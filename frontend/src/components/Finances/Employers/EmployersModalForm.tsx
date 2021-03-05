@@ -42,10 +42,7 @@ export default function EmployersModalForm({
       employer = { name: employerName } as Employer;
       setEmployerName("");
     }
-    const action =
-      actionType === "create"
-        ? api.finance.createEmployer
-        : api.finance.updateEmployer;
+    const action = actionType === "create" ? api.finance.createEmployer : api.finance.updateEmployer;
 
     const response = await action(employer, { secure: true });
     afterSubmit({ type: actionType, employer: response.data });
@@ -53,17 +50,9 @@ export default function EmployersModalForm({
   };
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Create Employer
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Create Employer</Modal.Title>
       </Modal.Header>
       <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
