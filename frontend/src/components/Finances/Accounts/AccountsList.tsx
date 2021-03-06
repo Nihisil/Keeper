@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import displayDate from "utils/date";
+import { displayMoney } from "utils/finances";
 
 interface AccountsListProps {
   accounts: Array<Account>;
@@ -35,6 +36,9 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsLis
   const accountRows = accounts.map((item) => (
     <tr key={item.id}>
       <td>{item.name}</td>
+      <td>{displayMoney(item.balance as number)}</td>
+      <td>{item.currency}</td>
+      <td>{item.account_type}</td>
       <td>{displayDate(item.updated)}</td>
       <td>
         <Button
@@ -69,6 +73,9 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsLis
         <thead>
           <tr>
             <th>Name</th>
+            <th>Balance</th>
+            <th>Currency</th>
+            <th>Type</th>
             <th>Updated</th>
             <th>Actions</th>
           </tr>
@@ -78,7 +85,7 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsLis
             accountRows
           ) : (
             <tr>
-              <td colSpan={3}>No data</td>
+              <td colSpan={5}>No data</td>
             </tr>
           )}
         </tbody>

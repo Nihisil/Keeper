@@ -18,6 +18,7 @@ class Account(DBClass):
     currency: Currency
     account_type: AccountType
     is_deleted: bool = False
+    balance: int = 0
 
     class Config:
         use_enum_values = True

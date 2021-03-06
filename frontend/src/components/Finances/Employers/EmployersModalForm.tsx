@@ -63,7 +63,7 @@ export default function EmployersModalForm({
       </Modal.Header>
       <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
-          <Form.Group controlId="formBasicEmail">
+          <Form.Group controlId="name">
             <Form.Label>Employer name</Form.Label>
             <Form.Control
               type="name"

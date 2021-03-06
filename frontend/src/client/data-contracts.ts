@@ -22,6 +22,7 @@ export interface Account {
   /** An enumeration. */
   account_type: AccountType;
   is_deleted?: boolean;
+  balance?: number;
 }
 
 /**
@@ -43,8 +44,8 @@ export interface AuthRequest {
  * An enumeration.
  */
 export enum Currency {
-  USD = "USD",
   RUB = "RUB",
+  USD = "USD",
   EUR = "EUR",
 }
 
