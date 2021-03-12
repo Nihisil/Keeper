@@ -1,4 +1,17 @@
-node_modules
-build
-.dockerignore
+# general
 .git
+.dockerignore
+
+# front-end image
+frontend/node_modules
+frontend/build
+
+# back-end image
+**/__pycache__
+backend/.gitignore
+backend/.mypy_cache
+backend/.pytest_cache
+backend/.flake8
+backend/mypy.ini
+backend/pyproject.toml
+backend/conftest.py
