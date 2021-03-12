@@ -82,5 +82,11 @@ def db_update_one_by_id(obj_class: Type[T], obj_id: str, fields_to_update: dict)
     return updated
 
 
+def db_delete_one_by_id(obj_class: Type[T], obj_id: str) -> None:
+    db = get_db()
+    db[obj_class.__db_collection__].delete_one({"_id": ObjectId(obj_id)})
+    return None
+
+
 def _map_id(data: dict) -> None:
     data["id"] = str(data["_id"])
