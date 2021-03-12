@@ -32,4 +32,4 @@ services:
       - .envs/.production
     volumes:
       - mongodb_data:/data/db
-    command: mongod --auth
+    command: mongod --auth --quiet
