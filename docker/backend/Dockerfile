@@ -17,6 +17,7 @@ RUN chmod +x /entrypoint
 
 RUN addgroup -S docker && adduser -S docker-user -G docker
 
+COPY ./backend/ /app/
 WORKDIR /app/
 
 ENTRYPOINT ["/entrypoint"]

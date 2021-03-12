@@ -5,12 +5,7 @@ volumes:
 
 services:
   api:
-    build:
-      context: .
-      dockerfile: ./docker/backend/Dockerfile
-    image: keeper_backend
-    volumes:
-      - ./backend:/app
+    image: ghcr.io/nihisil/keeper_backend:0.0.2
     depends_on:
       - mongodb
     restart: always
