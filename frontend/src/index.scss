@@ -1,9 +1,12 @@
 @import "~bootstrap/scss/bootstrap";
+@import "scss/variables";
+
+html {
+  position: relative;
+  min-height: 100%;
+}
 
 body {
   margin-top: 70px;
-}
-
-.general-loader {
-  text-align: center;
+  margin-bottom: $footer-height;
 }

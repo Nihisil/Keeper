@@ -32,7 +32,7 @@ def create_app() -> FastAPI:
         ),
         responses=default_responses,  # type: ignore
         redoc_url=None,
-        version="0.0.2",
+        version=settings.version,
     )
 
     # there is no need to include these middlewares to the unit tests

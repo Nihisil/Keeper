@@ -14,6 +14,7 @@ services:
     depends_on:
       - mongodb
     env_file:
+      - VERSION
       - .envs/.local
     ports:
       - '8090:8090'
@@ -25,7 +26,7 @@ services:
       - .envs/.local
     volumes:
       - mongodb_data:/data/db
-    command: mongod --auth
+    command: mongod --auth --quiet
 
   frontend:
     build:
@@ -33,6 +34,7 @@ services:
       dockerfile: ./docker/frontend/Dockerfile
     image: keeper_frontend
     env_file:
+      - VERSION
       - .envs/.local
     volumes:
       - ./frontend:/home/node/app

@@ -1,5 +1,6 @@
 import "components/App/App.scss";
 
+import Footer from "components/App/Footer";
 import Header from "components/App/Header";
 import Home from "components/App/Home";
 import Login from "components/Login/Login";
@@ -37,6 +38,7 @@ export default function App(): JSX.Element {
         <main role="main" className="container">
           {content}
         </main>
+        <Footer />
       </BrowserRouter>
     </>
   );

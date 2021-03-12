@@ -6,6 +6,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     environment: str
     allowed_client_host: str
+    version: str
 
     # auth
     secret_key: str

@@ -1,6 +1,5 @@
 {
   "name": "keeper",
-  "version": "0.0.2",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^7.30.0",
@@ -40,11 +39,11 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
+    "start": "REACT_APP_VERSION=$VERSION react-scripts start",
+    "build": "REACT_APP_VERSION=$VERSION react-scripts build",
+    "//": "Linters and tests:",
     "analyze": "source-map-explorer 'build/static/js/*.js' --html tree.html",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "CI=true react-scripts test",
-    "eject": "react-scripts eject",
     "format": "eslint src/**/*.ts{,x} --fix && prettier --write src/**/*.ts{,x}",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x} --max-warnings=0"
   },
