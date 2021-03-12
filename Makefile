@@ -13,7 +13,7 @@ down:
 	docker-compose -f $(COMPOSE_FILE) down
 
 build-docker:
-	docker-compose -f $(COMPOSE_FILE) build
+	docker-compose -f $(COMPOSE_FILE) build --no-cache
 
 shell:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh
