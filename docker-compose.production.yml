@@ -5,7 +5,7 @@ volumes:
 
 services:
   api:
-    image: ghcr.io/nihisil/keeper_backend:0.0.2
+    image: ghcr.io/nihisil/keeper_backend:latest
     depends_on:
       - mongodb
     restart: always
