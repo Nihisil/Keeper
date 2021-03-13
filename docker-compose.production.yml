@@ -15,6 +15,7 @@ services:
         max-size: '10m'
         max-file: '5'
     env_file:
+      - VERSION
       - .envs/.production
     ports:
       - '8090:8090'
