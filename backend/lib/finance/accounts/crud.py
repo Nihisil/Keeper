@@ -17,7 +17,8 @@ def get_account_by_id(account_id: str) -> Optional[Account]:
 
 def get_accounts_list(include_deleted: bool = False) -> List[Account]:
     sorting = ["updated", pymongo.DESCENDING]
-    return db_find_all(Account, {"is_deleted": include_deleted}, sorting)
+    data, _ = db_find_all(Account, {"is_deleted": include_deleted}, sorting)
+    return data
 
 
 def delete_account(account: Account) -> None:

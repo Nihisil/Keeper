@@ -28,8 +28,7 @@ def main():
 
 
 def download_history_data():
-    # start_date = datetime(2015, 1, 1).strftime('%Y-%m-%d')
-    start_date = datetime(2021, 3, 1).strftime(DATE_FORMAT)
+    start_date = datetime(2015, 1, 1).strftime("%Y-%m-%d")
     end_date = datetime.utcnow().strftime(DATE_FORMAT)
     main_symbol = Currency.RUB.value
     other_symbols = [x.value for x in list(Currency) if x.value != Currency.RUB.value]

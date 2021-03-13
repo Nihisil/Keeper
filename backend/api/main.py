@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
 from api.routers import auth, users
-from api.routers.finance import accounts, employers
+from api.routers.finance import accounts, currency_exchange_rates, employers
 from config import get_settings
 
 
@@ -49,6 +49,7 @@ def create_app() -> FastAPI:
     _app.include_router(users.router)
     _app.include_router(employers.router)
     _app.include_router(accounts.router)
+    _app.include_router(currency_exchange_rates.router)
 
     return _app
 

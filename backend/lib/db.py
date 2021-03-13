@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional, Type, TypeVar
+from typing import List, Optional, Tuple, Type, TypeVar
 
 from bson import ObjectId
 from pydantic import BaseModel
@@ -58,16 +58,34 @@ def db_find_one_by_id(obj_class: Type[T], obj_id: str, query: dict) -> Optional[
     return db_find_one(obj_class, query)
 
 
-def db_find_all(obj_class: Type[T], query: dict, sorting: Optional[list]) -> List[T]:
+def db_find_all(
+    obj_class: Type[T],
+    query: dict,
+    sorting: Optional[list],
+    limit: Optional[int] = None,
+    offset: Optional[int] = None,
+) -> Tuple[List[T], int]:
     db = get_db()
     data = db[obj_class.__db_collection__].find(query)
+
+    if limit is not None and offset is not None:
+        data = data.skip(offset).limit(limit)
+
     if sorting:
         data = data.sort(*sorting)
+
     results = []
     for x in data:
         _map_id(x)
         results.append(obj_class(**x))
-    return results
+
+    count = len(results)
+    # for limited queries we need to know the total number of documents
+    # to be able build pagination on client side
+    if limit is not None and offset is not None:
+        count = db[obj_class.__db_collection__].count_documents(query)
+
+    return results, count
 
 
 def db_update_one_by_id(obj_class: Type[T], obj_id: str, fields_to_update: dict) -> datetime:

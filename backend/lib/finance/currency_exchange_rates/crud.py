@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import pymongo
 
@@ -12,9 +12,12 @@ def create_currency_exchange_rate(currency_exchange_rate_data: CurrencyExchangeR
     return data
 
 
-def get_currency_exchange_rates_list_by_pair(
-    from_currency: Currency, to_currency: Currency
-) -> List[CurrencyExchangeRate]:
+def get_currency_exchange_rates_list_for_pair(
+    from_currency: Currency, to_currency: Currency, per_page: int = 25, page: int = 1
+) -> Tuple[List[CurrencyExchangeRate], int]:
+    assert page > 0
+    assert per_page > 0
+    offset = (page - 1) * per_page
     sorting = ["date", pymongo.DESCENDING]
     return db_find_all(
         CurrencyExchangeRate,
@@ -23,6 +26,8 @@ def get_currency_exchange_rates_list_by_pair(
             "to_currency": to_currency.value,
         },
         sorting,
+        limit=per_page,
+        offset=offset,
     )
 
 

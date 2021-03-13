@@ -17,7 +17,8 @@ def get_employer_by_id(employer_id: str) -> Optional[Employer]:
 
 def get_employers_list(include_deleted: bool = False) -> List[Employer]:
     sorting = ["updated", pymongo.DESCENDING]
-    return db_find_all(Employer, {"is_deleted": include_deleted}, sorting)
+    data, _ = db_find_all(Employer, {"is_deleted": include_deleted}, sorting)
+    return data
 
 
 def delete_employer(employer: Employer) -> None:
