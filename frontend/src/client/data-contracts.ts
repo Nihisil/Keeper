@@ -49,6 +49,30 @@ export enum Currency {
   EUR = "EUR",
 }
 
+export interface CurrencyExchangeRate {
+  id?: string;
+
+  /** @format date-time */
+  updated?: string;
+
+  /** An enumeration. */
+  from_currency: Currency;
+
+  /** An enumeration. */
+  to_currency: Currency;
+  rate: number;
+
+  /** @format date-time */
+  date: string;
+}
+
+export interface CurrencyExchangeRateResponseModel {
+  items: CurrencyExchangeRate[];
+  page: number;
+  per_page: number;
+  count: number;
+}
+
 export interface Employer {
   id?: string;
 

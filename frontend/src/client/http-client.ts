@@ -13,8 +13,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType }
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams
-  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -31,10 +30,9 @@ export interface FullRequestParams
 
 export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
-export interface ApiConfig<SecurityDataType = unknown>
-  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
-    securityData: SecurityDataType | null
+    securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
 }
 
@@ -80,8 +78,7 @@ export class HttpClient<SecurityDataType = unknown> {
     body,
     ...params
   }: FullRequestParams): Promise<AxiosResponse<T>> => {
-    const secureParams =
-      (secure && this.securityWorker && (await this.securityWorker(this.securityData))) || {};
+    const secureParams = (secure && this.securityWorker && (await this.securityWorker(this.securityData))) || {};
     const requestParams = this.mergeRequestParams(params, secureParams);
 
     return this.instance.request({

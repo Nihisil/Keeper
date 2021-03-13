@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { Account, Employer, HTTPValidationError } from "./data-contracts";
+import { Account, Currency, CurrencyExchangeRateResponseModel, Employer, HTTPValidationError } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Finance<SecurityDataType = unknown> {
@@ -144,6 +144,25 @@ export class Finance<SecurityDataType = unknown> {
       method: "PUT",
       body: data,
       type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags currency_exchange_rates
+   * @name GetListOfCurrencyExchangeRatesForSpecifiedPair
+   * @summary Get List Of Currency Exchange Rates For Specified Pair
+   * @request GET:/finance/currency-exchange-rates/get-list
+   */
+  getListOfCurrencyExchangeRatesForSpecifiedPair = (
+    query: { from_currency: Currency; to_currency: Currency; page?: number },
+    params: RequestParams = {},
+  ) =>
+    this.http.request<CurrencyExchangeRateResponseModel, void | HTTPValidationError>({
+      path: `/finance/currency-exchange-rates/get-list`,
+      method: "GET",
+      query: query,
       format: "json",
       ...params,
     });
