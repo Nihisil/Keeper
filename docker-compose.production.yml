@@ -36,7 +36,7 @@ services:
     volumes:
       - ./backend:/app
     user: root
-    command: [ 'crond', '-l', '0', '-d', '0', '-f' ]
+    command: [ 'crond', '-f' ]
 
   mongodb:
     image: mongo:4.4.4-bionic
