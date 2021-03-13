@@ -4,6 +4,7 @@ from lib.finance.constants import Currency
 from lib.finance.currency_exchange_rates.crud import (
     create_currency_exchange_rate,
     delete_all_currency_exchange_rates,
+    get_currency_exchange_rate_for_date,
     get_currency_exchange_rates_list_for_pair,
 )
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
@@ -54,3 +55,14 @@ def test_delete_all_currency_exchange_rate():
 
     currency_exchange_rates, _ = get_currency_exchange_rates_list_for_pair(Currency.RUB, Currency.USD)
     assert len(currency_exchange_rates) == 0
+
+
+def test_get_currency_exchange_rate_for_date():
+    date = datetime.utcnow()
+    currency_exchange_rate_data = CurrencyExchangeRate(
+        from_currency=Currency.RUB, to_currency=Currency.USD, rate=1.50, date=datetime.utcnow()
+    )
+    create_currency_exchange_rate(currency_exchange_rate_data)
+
+    data = get_currency_exchange_rate_for_date(Currency.RUB, Currency.USD, date)
+    assert data.id is not None

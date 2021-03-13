@@ -1,8 +1,9 @@
-from typing import List, Tuple
+from datetime import datetime
+from typing import List, Optional, Tuple
 
 import pymongo
 
-from lib.db import db_drop_collection, db_find_all, db_insert_one
+from lib.db import db_drop_collection, db_find_all, db_find_one, db_insert_one
 from lib.finance.constants import Currency
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
 
@@ -33,3 +34,12 @@ def get_currency_exchange_rates_list_for_pair(
 
 def delete_all_currency_exchange_rates() -> None:
     return db_drop_collection(CurrencyExchangeRate)
+
+
+def get_currency_exchange_rate_for_date(
+    from_currency: Currency, to_currency: Currency, date: datetime
+) -> Optional[CurrencyExchangeRate]:
+    return db_find_one(
+        CurrencyExchangeRate,
+        {"from_currency": from_currency.value, "to_currency": to_currency.value, "date": date},
+    )

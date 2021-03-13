@@ -1,5 +1,6 @@
 import argparse
 from datetime import datetime
+from typing import Dict
 
 import requests
 
@@ -7,11 +8,15 @@ from lib.finance.constants import Currency
 from lib.finance.currency_exchange_rates.crud import (
     create_currency_exchange_rate,
     delete_all_currency_exchange_rates,
+    get_currency_exchange_rate_for_date,
 )
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
 
 DATE_FORMAT = "%Y-%m-%d"
 BASE_URL = "https://api.exchangeratesapi.io"
+
+MAIN_SYMBOL = Currency.RUB.value
+OTHER_SYMBOLS = [x.value for x in list(Currency) if x.value != Currency.RUB.value]
 
 
 def main():
@@ -30,29 +35,46 @@ def main():
 def download_history_data():
     start_date = datetime(2015, 1, 1).strftime("%Y-%m-%d")
     end_date = datetime.utcnow().strftime(DATE_FORMAT)
-    main_symbol = Currency.RUB.value
-    other_symbols = [x.value for x in list(Currency) if x.value != Currency.RUB.value]
 
     data = requests.get(
         f"{BASE_URL}/history",
         params={
             "start_at": start_date,
             "end_at": end_date,
-            "base": main_symbol,
-            "symbols": ",".join(other_symbols),
+            "base": MAIN_SYMBOL,
+            "symbols": ",".join(OTHER_SYMBOLS),
         },
     ).json()["rates"]
 
-    for date, value in data.items():
+    for date, rates in data.items():
         date = datetime.strptime(date, DATE_FORMAT)
-        for symbol in other_symbols:
-            rate = 1 / value[symbol]
-            item = CurrencyExchangeRate(from_currency=main_symbol, to_currency=symbol, rate=rate, date=date)
-            create_currency_exchange_rate(item)
+        _insert_currency_record(date, rates)
 
 
 def download_daily_update():
-    pass
+    data = requests.get(
+        f"{BASE_URL}/latest",
+        params={
+            "base": MAIN_SYMBOL,
+            "symbols": ",".join(OTHER_SYMBOLS),
+        },
+    ).json()
+
+    date = datetime.strptime(data["date"], DATE_FORMAT)
+    _insert_currency_record(date, data["rates"])
+
+
+def _insert_currency_record(date: datetime, rates: Dict):
+    for symbol in OTHER_SYMBOLS:
+        exist_record = get_currency_exchange_rate_for_date(
+            from_currency=Currency(MAIN_SYMBOL), to_currency=Currency(symbol), date=date
+        )
+        if exist_record:
+            continue
+
+        rate = 1 / rates[symbol]
+        item = CurrencyExchangeRate(from_currency=MAIN_SYMBOL, to_currency=symbol, rate=rate, date=date)
+        create_currency_exchange_rate(item)
 
 
 if __name__ == "__main__":
