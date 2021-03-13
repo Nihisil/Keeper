@@ -88,5 +88,11 @@ def db_delete_one_by_id(obj_class: Type[T], obj_id: str) -> None:
     return None
 
 
+def db_drop_collection(obj_class: Type[T]) -> None:
+    db = get_db()
+    db.drop_collection(obj_class.__db_collection__)
+    return None
+
+
 def _map_id(data: dict) -> None:
     data["id"] = str(data["_id"])
