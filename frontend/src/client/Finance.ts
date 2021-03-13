@@ -9,7 +9,13 @@
  * ---------------------------------------------------------------
  */
 
-import { Account, Currency, CurrencyExchangeRateResponseModel, Employer, HTTPValidationError } from "./data-contracts";
+import {
+  Account,
+  Currency,
+  CurrencyExchangeRateResponseModel,
+  Employer,
+  HTTPValidationError,
+} from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Finance<SecurityDataType = unknown> {
@@ -157,7 +163,7 @@ export class Finance<SecurityDataType = unknown> {
    */
   getListOfCurrencyExchangeRatesForSpecifiedPair = (
     query: { from_currency: Currency; to_currency: Currency; page?: number },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
     this.http.request<CurrencyExchangeRateResponseModel, void | HTTPValidationError>({
       path: `/finance/currency-exchange-rates/get-list`,

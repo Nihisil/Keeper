@@ -5,7 +5,7 @@ import AccountsModalForm, { ModalData } from "components/Finances/Accounts/Accou
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
-import displayDate from "utils/date";
+import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
 interface AccountsListProps {
@@ -39,7 +39,7 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsLis
       <td>{displayMoney(item.balance as number)}</td>
       <td>{item.currency}</td>
       <td>{item.account_type}</td>
-      <td>{displayDate(item.updated)}</td>
+      <td>{displayDatetime(item.updated)}</td>
       <td>
         <Button
           size="sm"

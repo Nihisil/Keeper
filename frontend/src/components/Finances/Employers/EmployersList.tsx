@@ -5,7 +5,7 @@ import EmployersModalForm, { ModalData } from "components/Finances/Employers/Emp
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
-import displayDate from "utils/date";
+import { displayDatetime } from "utils/date";
 
 interface EmployersListProps {
   employers: Array<Employer>;
@@ -36,7 +36,7 @@ export default function EmployersList({ employers, dispatchEmployers }: Employer
     <tr key={item.id}>
       <td>{item.name}</td>
       <td>-</td>
-      <td>{displayDate(item.updated)}</td>
+      <td>{displayDatetime(item.updated)}</td>
       <td>
         <Button
           size="sm"

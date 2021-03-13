@@ -1,10 +1,17 @@
+import { Dayjs } from "dayjs";
 import dayjs from "utils/dayjs";
 
 /*
-  Display UTC date that we got from server in the user current timezone format
+  Convert date that we got from server to the user current timezone
  */
-const displayDate = (date?: string): string => {
-  return dayjs.utc(date).tz(dayjs.tz.guess()).format("YYYY-MM-DD HH:mm");
+const convertDateToUserTimezone = (date: string): Dayjs => {
+  return dayjs.utc(date).tz(dayjs.tz.guess());
 };
 
-export default displayDate;
+export const displayDatetime = (date?: string): string => {
+  return convertDateToUserTimezone(date as string).format("YYYY-MM-DD HH:mm");
+};
+
+export const displayDate = (date?: string): string => {
+  return convertDateToUserTimezone(date as string).format("YYYY-MM-DD");
+};

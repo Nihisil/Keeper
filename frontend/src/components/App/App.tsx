@@ -9,6 +9,9 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useToken } from "utils/token";
 
 const Finances = React.lazy(() => import("components/Finances/Finances"));
+const CurrencyExchangeRates = React.lazy(
+  () => import("components/Finances/CurrencyExchangeRates/CurrencyExchangeRates")
+);
 
 export default function App(): JSX.Element {
   const [token, setToken] = useToken();
@@ -19,6 +22,11 @@ export default function App(): JSX.Element {
   } else {
     content = (
       <Switch>
+        <Route path="/finances/currency-exchange-rates">
+          <Suspense fallback={<p>Loading...</p>}>
+            <CurrencyExchangeRates />
+          </Suspense>
+        </Route>
         <Route path="/finances">
           <Suspense fallback={<p>Loading...</p>}>
             <Finances />
