@@ -22,6 +22,8 @@ COPY ./docker/backend/entrypoint /entrypoint
 RUN sed -i 's/\r//' /entrypoint
 RUN chmod +x /entrypoint
 
+ADD ./docker/backend/crontab /etc/crontabs/root
+
 RUN addgroup -S docker && adduser -S docker-user -G docker
 
 COPY ./backend/ /app/

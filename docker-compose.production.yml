@@ -20,6 +20,24 @@ services:
       - '8090:8090'
     command: uvicorn api.main:app --workers 2 --port 8090 --host 0.0.0.0
 
+  cron:
+    image: keeper_backend
+    depends_on:
+      - mongodb
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+    env_file:
+      - VERSION
+      - .envs/.local
+    volumes:
+      - ./backend:/app
+    user: root
+    command: [ 'crond', '-l', '0', '-d', '0', '-f' ]
+
   mongodb:
     image: mongo:4.4.4-bionic
     restart: always
