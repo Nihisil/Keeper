@@ -1,11 +1,15 @@
+import "components/Finances/CurrencyExchangeRates/CurrencyExchangeRates.scss";
+
 import { Currency, CurrencyExchangeRate } from "client/data-contracts";
 import React, { useEffect, useState } from "react";
 import { Badge, Table } from "react-bootstrap";
 import api from "utils/api";
+import { Nullish } from "utils/base";
 import { displayDate } from "utils/date";
 
 interface CurrencyExchangeRatesProp {}
 
+// TODO load these constants from server side
 const DEFAULT_CURRENCY = Currency.RUB;
 const CURRENCY_PAIRS = Object.keys(Currency).filter((item) => item !== DEFAULT_CURRENCY);
 
@@ -28,12 +32,30 @@ export default function CurrencyExchangeRates({}: CurrencyExchangeRatesProp): JS
     })();
   }, [selectedPair]);
 
-  const rows = rates.map((item) => (
-    <tr key={item.id}>
-      <td>{displayDate(item.date)}</td>
-      <td>{item.rate.toFixed(4)}</td>
-    </tr>
-  ));
+  const formatDelta = (currentItem: CurrencyExchangeRate, previousItem: CurrencyExchangeRate) => {
+    const delta = currentItem.rate - previousItem.rate;
+    let deltaString = delta.toFixed(2);
+    if (delta > 0) {
+      deltaString = `+${deltaString}`;
+    }
+    return (
+      <Badge className="currency-delta" variant={delta > 0 ? "success" : "danger"}>
+        {deltaString}
+      </Badge>
+    );
+  };
+
+  let previousItem: Nullish<CurrencyExchangeRate>;
+  const rows = rates.map((item, index) => {
+    previousItem = rates[index + 1];
+    return (
+      <tr key={item.id}>
+        <td>{displayDate(item.date)}</td>
+        <td>{item.rate.toFixed(4)}</td>
+        <td>{previousItem ? formatDelta(item, previousItem) : "-"}</td>
+      </tr>
+    );
+  });
 
   const currencyOptions = CURRENCY_PAIRS.map((item) => (
     <Badge
@@ -65,6 +87,7 @@ export default function CurrencyExchangeRates({}: CurrencyExchangeRatesProp): JS
           <tr>
             <th>Date</th>
             <th>Rate</th>
+            <th>Delta</th>
           </tr>
         </thead>
         <tbody>
@@ -72,7 +95,7 @@ export default function CurrencyExchangeRates({}: CurrencyExchangeRatesProp): JS
             rows
           ) : (
             <tr>
-              <td colSpan={2}>No data</td>
+              <td colSpan={3}>No data</td>
             </tr>
           )}
         </tbody>
