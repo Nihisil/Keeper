@@ -2,13 +2,14 @@ import { Token, User } from "client/data-contracts";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "utils/api";
+import { Nullish } from "utils/base";
 
 interface HeaderProps {
-  setToken(userToken: Token | null): void;
+  setToken(userToken: Nullish<Token>): void;
 }
 
 export default function Header({ setToken }: HeaderProps): JSX.Element {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Nullish<User>>(null);
 
   useEffect(() => {
     (async () => {

@@ -1,9 +1,10 @@
 import { Token } from "client/data-contracts";
 import { useState } from "react";
+import { Nullish } from "utils/base";
 
 const TOKEN_KEY = "token";
 
-export const getToken = (): Token | null => {
+export const getToken = (): Nullish<Token> => {
   const tokenString = localStorage.getItem(TOKEN_KEY);
   if (!tokenString) {
     return null;
@@ -15,7 +16,7 @@ const deleteToken = (): void => {
   localStorage.removeItem(TOKEN_KEY);
 };
 
-export function useToken(): [Token | null, (userToken: Token) => void] {
+export function useToken(): [Nullish<Token>, (userToken: Token) => void] {
   const [token, setToken] = useState(getToken());
 
   const saveToken = (userToken: Token) => {
