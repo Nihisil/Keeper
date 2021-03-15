@@ -14,7 +14,7 @@ RUN echo "Mode=$mode"
 RUN if [ "$mode" != "production" ] ; then cat /base.txt /dev.txt > /requirements.txt ; fi
 
 RUN \
- apk add --no-cache --virtual .build-deps build-base linux-headers gcc musl-dev python3-dev libffi-dev openssl-dev cargo && \
+ apk add --no-cache --virtual .build-deps libffi-dev openssl-dev cargo && \
  python3 -m pip install -r /requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 
