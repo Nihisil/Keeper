@@ -6,8 +6,8 @@ from lib.db import db_find_all, db_find_one_by_id, db_insert_one, db_update_one_
 from lib.finance.accounts.models import Account
 
 
-def create_account(account_data: Account) -> Account:
-    data = db_insert_one(account_data)
+def create_account(account: Account) -> Account:
+    data = db_insert_one(account)
     return data
 
 

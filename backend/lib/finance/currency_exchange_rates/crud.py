@@ -8,8 +8,8 @@ from lib.finance.constants import Currency
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
 
 
-def create_currency_exchange_rate(currency_exchange_rate_data: CurrencyExchangeRate) -> CurrencyExchangeRate:
-    data = db_insert_one(currency_exchange_rate_data)
+def create_currency_exchange_rate(currency_exchange_rate: CurrencyExchangeRate) -> CurrencyExchangeRate:
+    data = db_insert_one(currency_exchange_rate)
     return data
 
 

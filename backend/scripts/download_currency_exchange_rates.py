@@ -4,7 +4,7 @@ from typing import Dict
 
 import requests
 
-from lib.finance.constants import Currency
+from lib.finance.constants import MAIN_SYMBOL, OTHER_SYMBOLS, Currency
 from lib.finance.currency_exchange_rates.crud import (
     create_currency_exchange_rate,
     delete_all_currency_exchange_rates,
@@ -14,9 +14,6 @@ from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
 
 DATE_FORMAT = "%Y-%m-%d"
 BASE_URL = "https://api.exchangeratesapi.io"
-
-MAIN_SYMBOL = Currency.RUB.value
-OTHER_SYMBOLS = [x.value for x in list(Currency) if x.value != Currency.RUB.value]
 
 
 def main():

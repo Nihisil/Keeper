@@ -6,8 +6,8 @@ from lib.db import db_find_all, db_find_one_by_id, db_insert_one, db_update_one_
 from lib.finance.employers.models import Employer
 
 
-def create_employer(employer_data: Employer) -> Employer:
-    data = db_insert_one(employer_data)
+def create_employer(employer: Employer) -> Employer:
+    data = db_insert_one(employer)
     return data
 
 
