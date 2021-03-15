@@ -2,7 +2,7 @@
 toml==0.10.2
 
 # better terminal
-ipython==7.20.0
+ipython==7.21.0
 
 # for unit tests
 pytest==6.2.2
@@ -10,8 +10,8 @@ pytest==6.2.2
 # for formatting and linters
 isort==5.7.0
 black==20.8b1
-flake8==3.8.4
-flake8-bugbear==20.11.1
+flake8==3.9.0
+flake8-bugbear==21.3.2
 
 # for types checking
 mypy==0.812
