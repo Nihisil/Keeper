@@ -33,7 +33,7 @@ services:
         max-file: '5'
     env_file:
       - VERSION
-      - .envs/.local
+      - .envs/.production
     user: root
     command: [ 'crond', '-f' ]
 
