@@ -3,14 +3,28 @@ from pydantic import ValidationError
 
 from lib.finance.accounts.crud import get_account_by_id
 from lib.finance.constants import Currency, TransactionType
-from lib.finance.transactions.crud import delete_transaction, get_transactions_list
+from lib.finance.transactions.crud import (
+    create_transaction,
+    delete_transaction,
+    get_transactions_list,
+    update_transaction,
+)
 from lib.finance.transactions.models import Transaction
 from lib.tests.utils import create_account_for_tests, create_employer_for_tests, create_transaction_for_tests
 
 
 def test_create_income_transaction():
     amount = 100
-    transaction = create_transaction_for_tests(amount)
+    account = create_account_for_tests()
+    employer = create_employer_for_tests()
+    transaction_data = Transaction(
+        type=TransactionType.INCOME,
+        amount=amount,
+        currency=Currency.USD,
+        account_id=account.id,
+        from_employer_id=employer.id,
+    )
+    transaction = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
     account = get_account_by_id(transaction.account_id)
@@ -63,3 +77,16 @@ def test_delete_transaction():
 
     account = get_account_by_id(transaction.account_id)
     assert account.balance == 0
+
+
+def test_update_transaction_amount():
+    old_amount = 100
+    transaction = create_transaction_for_tests(old_amount)
+    account = get_account_by_id(transaction.account_id)
+    assert account.balance == old_amount
+
+    new_amount = 200
+    transaction.amount = new_amount
+    update_transaction(transaction, old_amount)
+    account = get_account_by_id(transaction.account_id)
+    assert account.balance == new_amount
