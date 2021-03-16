@@ -5,6 +5,7 @@ from lib.finance.currency_exchange_rates.crud import (
     create_currency_exchange_rate,
     delete_all_currency_exchange_rates,
     get_currency_exchange_rate_for_date,
+    get_currency_exchange_rate_for_nearest_date,
     get_currency_exchange_rates_list_for_pair,
 )
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
@@ -66,3 +67,25 @@ def test_get_currency_exchange_rate_for_date():
 
     data = get_currency_exchange_rate_for_date(Currency.RUB, Currency.USD, date)
     assert data.id is not None
+
+
+def test_get_currency_exchange_rate_for_nearest_date():
+    dates = [
+        datetime(2020, 1, 10),
+        datetime(2020, 1, 11),
+        datetime(2020, 1, 14),
+    ]
+    rates = []
+    for i, date in enumerate(dates):
+        currency_exchange_rate_data = CurrencyExchangeRate(
+            date=date, from_currency=Currency.RUB, to_currency=Currency.USD, rate=i
+        )
+        rates.append(create_currency_exchange_rate(currency_exchange_rate_data))
+
+    date = datetime(2020, 1, 13)
+    data = get_currency_exchange_rate_for_nearest_date(Currency.RUB, Currency.USD, date)
+    assert data.date.strftime("%Y-%m-%d") == "2020-01-11"
+
+    date = datetime(2020, 1, 14)
+    data = get_currency_exchange_rate_for_nearest_date(Currency.RUB, Currency.USD, date)
+    assert data.date.strftime("%Y-%m-%d") == "2020-01-14"

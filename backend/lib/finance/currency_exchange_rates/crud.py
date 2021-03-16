@@ -43,3 +43,20 @@ def get_currency_exchange_rate_for_date(
         CurrencyExchangeRate,
         {"from_currency": from_currency.value, "to_currency": to_currency.value, "date": date},
     )
+
+
+def get_currency_exchange_rate_for_nearest_date(
+    from_currency: Currency, to_currency: Currency, date: datetime
+) -> Optional[CurrencyExchangeRate]:
+    """
+    Sometimes there is no rate on specified date.
+    In this case we need to load rate on nearest date before.
+    """
+    results, _ = db_find_all(
+        CurrencyExchangeRate,
+        {"from_currency": from_currency.value, "to_currency": to_currency.value, "date": {"$lte": date}},
+        ["date", pymongo.DESCENDING],
+        limit=1,
+    )
+    assert len(results), "Empty nearest exchange rate query"
+    return results[0]
