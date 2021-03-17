@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, Optional
 
 from pydantic import validator
@@ -11,6 +12,7 @@ class Transaction(DBClass):
     __db_collection__ = "finance_transaction"
 
     amount: int
+    date: datetime
 
     # for income transaction
     from_employer_id: Optional[str]
@@ -18,6 +20,8 @@ class Transaction(DBClass):
 
     type: TransactionType
     currency: Currency
+
+    main_currency_equivalent: Optional[int]
 
     @validator("type")
     def validate_type(cls, value: str, values: Dict) -> str:

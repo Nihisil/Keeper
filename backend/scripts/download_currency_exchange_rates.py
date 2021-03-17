@@ -4,7 +4,7 @@ from typing import Dict
 
 import requests
 
-from lib.finance.constants import MAIN_SYMBOL, OTHER_SYMBOLS, Currency
+from lib.finance.constants import MAIN_CURRENCY, OTHER_CURRENCIES, Currency
 from lib.finance.currency_exchange_rates.crud import (
     create_currency_exchange_rate,
     delete_all_currency_exchange_rates,
@@ -38,8 +38,8 @@ def download_history_data():
         params={
             "start_at": start_date,
             "end_at": end_date,
-            "base": MAIN_SYMBOL,
-            "symbols": ",".join(OTHER_SYMBOLS),
+            "base": MAIN_CURRENCY.value,
+            "symbols": ",".join(OTHER_CURRENCIES),
         },
     ).json()["rates"]
 
@@ -52,8 +52,8 @@ def download_daily_update():
     data = requests.get(
         f"{BASE_URL}/latest",
         params={
-            "base": MAIN_SYMBOL,
-            "symbols": ",".join(OTHER_SYMBOLS),
+            "base": MAIN_CURRENCY.value,
+            "symbols": ",".join(OTHER_CURRENCIES),
         },
     ).json()
 
@@ -62,15 +62,17 @@ def download_daily_update():
 
 
 def _insert_currency_record(date: datetime, rates: Dict):
-    for symbol in OTHER_SYMBOLS:
+    for symbol in OTHER_CURRENCIES:
         exist_record = get_currency_exchange_rate_for_date(
-            from_currency=Currency(MAIN_SYMBOL), to_currency=Currency(symbol), date=date
+            from_currency=MAIN_CURRENCY, to_currency=Currency(symbol), date=date
         )
         if exist_record:
             continue
 
         rate = 1 / rates[symbol]
-        item = CurrencyExchangeRate(from_currency=MAIN_SYMBOL, to_currency=symbol, rate=rate, date=date)
+        item = CurrencyExchangeRate(
+            from_currency=MAIN_CURRENCY.value, to_currency=symbol, rate=rate, date=date
+        )
         create_currency_exchange_rate(item)
 
 

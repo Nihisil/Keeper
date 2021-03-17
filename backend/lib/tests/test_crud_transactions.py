@@ -1,8 +1,10 @@
+from datetime import datetime
+
 import pytest
 from pydantic import ValidationError
 
 from lib.finance.accounts.crud import get_account_by_id
-from lib.finance.constants import Currency, TransactionType
+from lib.finance.constants import MONEY_DIGITS, Currency, TransactionType
 from lib.finance.transactions.crud import (
     create_transaction,
     delete_transaction,
@@ -10,10 +12,18 @@ from lib.finance.transactions.crud import (
     update_transaction,
 )
 from lib.finance.transactions.models import Transaction
-from lib.tests.utils import create_account_for_tests, create_employer_for_tests, create_transaction_for_tests
+from lib.tests.utils import (
+    create_account_for_tests,
+    create_currency_exchange_rate_for_tests,
+    create_employer_for_tests,
+    create_transaction_for_tests,
+)
 
 
-def test_create_income_transaction():
+def test_create_income_transaction_without_main_currency_equivalent():
+    rate = 80
+    create_currency_exchange_rate_for_tests(rate)
+
     amount = 100
     account = create_account_for_tests()
     employer = create_employer_for_tests()
@@ -23,10 +33,38 @@ def test_create_income_transaction():
         currency=Currency.USD,
         account_id=account.id,
         from_employer_id=employer.id,
+        date=datetime.utcnow(),
     )
     transaction = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
+    assert transaction.main_currency_equivalent == (rate * amount) * MONEY_DIGITS
+
+    account = get_account_by_id(transaction.account_id)
+    assert account.balance == amount
+
+
+def test_create_income_transaction_with_manually_set_main_currency_equivalent():
+    rate = 80
+    create_currency_exchange_rate_for_tests(rate)
+
+    amount = 100
+    account = create_account_for_tests()
+    employer = create_employer_for_tests()
+    transaction_data = Transaction(
+        type=TransactionType.INCOME,
+        amount=amount,
+        currency=Currency.USD,
+        account_id=account.id,
+        from_employer_id=employer.id,
+        date=datetime.utcnow(),
+        main_currency_equivalent=123,
+    )
+    transaction = create_transaction(transaction_data)
+    assert transaction.id is not None
+    assert transaction.updated is not None
+    assert transaction.main_currency_equivalent == 123
+
     account = get_account_by_id(transaction.account_id)
     assert account.balance == amount
 
@@ -39,6 +77,7 @@ def test_create_income_transaction_without_employer():
             amount=100,
             currency=Currency.USD,
             account_id=account.id,
+            date=datetime.utcnow(),
         )
     assert "from_employer_id should be set for income transactions" in str(e.value)
 
@@ -53,6 +92,7 @@ def test_create_income_transaction_with_not_matched_currency():
             currency=Currency.RUB,
             account_id=account.id,
             from_employer_id=employer.id,
+            date=datetime.utcnow(),
         )
     assert "account currency didn't match transaction currency" in str(e.value)
 

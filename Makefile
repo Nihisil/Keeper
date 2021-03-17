@@ -32,7 +32,9 @@ update-api-client:
 
 ### Linters and formatters ###
 
-check: format lint test
+check: check-be check-fe
+check-be: format-be lint-be test-be
+check-fe: format-fe lint-fe test-fe
 
 format: format-be format-fe
 lint: lint-be lint-fe

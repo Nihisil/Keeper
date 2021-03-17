@@ -1,5 +1,7 @@
 from enum import Enum
 
+MONEY_DIGITS = 100
+
 
 class Currency(str, Enum):
     RUB = "RUB"
@@ -7,8 +9,8 @@ class Currency(str, Enum):
     EUR = "EUR"
 
 
-MAIN_SYMBOL = Currency.RUB.value
-OTHER_SYMBOLS = [x.value for x in list(Currency) if x.value != Currency.RUB.value]
+MAIN_CURRENCY = Currency.RUB
+OTHER_CURRENCIES = [x.value for x in list(Currency) if x.value != MAIN_CURRENCY.value]
 
 
 class TransactionType(str, Enum):

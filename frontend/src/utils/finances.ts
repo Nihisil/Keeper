@@ -1,3 +1,4 @@
+// TODO load it from BE as settings
 const MONEY_DIGITS = 100;
 
 /**
