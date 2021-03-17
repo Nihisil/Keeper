@@ -1,15 +1,16 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import pymongo
 
 from lib.db import db_delete_one_by_id, db_find_all, db_find_one_by_id, db_insert_one, db_update_one_by_id
 from lib.finance.accounts.crud import get_account_by_id, update_account
+from lib.finance.accounts.models import Account
 from lib.finance.constants import MAIN_CURRENCY, MONEY_DIGITS
 from lib.finance.currency_exchange_rates.crud import get_currency_exchange_rate_for_nearest_date
 from lib.finance.transactions.models import Transaction
 
 
-def create_transaction(transaction: Transaction) -> Transaction:
+def create_transaction(transaction: Transaction) -> Tuple[Transaction, Account]:
     if not transaction.main_currency_equivalent and transaction.currency != MAIN_CURRENCY:
         currency_exchange_rate = get_currency_exchange_rate_for_nearest_date(
             MAIN_CURRENCY, transaction.currency, transaction.date
@@ -19,9 +20,9 @@ def create_transaction(transaction: Transaction) -> Transaction:
             (transaction.amount * currency_exchange_rate.rate) * MONEY_DIGITS
         )
 
-    data = db_insert_one(transaction)
-    _update_related_account_balance(transaction.account_id, transaction.amount, increase=True)
-    return data
+    transaction = db_insert_one(transaction)
+    account = _update_related_account_balance(transaction.account_id, transaction.amount, increase=True)
+    return transaction, account
 
 
 def get_transaction_by_id(transaction_id: str) -> Optional[Transaction]:
@@ -40,15 +41,15 @@ def delete_transaction(transaction: Transaction) -> None:
     return None
 
 
-def update_transaction(transaction: Transaction, old_amount: int) -> Transaction:
+def update_transaction(transaction: Transaction, old_amount: int) -> Tuple[Transaction, Account]:
     updated = db_update_one_by_id(Transaction, str(transaction.id), transaction.dict())
     transaction.updated = updated
     account_amount = -old_amount + transaction.amount
-    _update_related_account_balance(transaction.account_id, account_amount, increase=True)
-    return transaction
+    account = _update_related_account_balance(transaction.account_id, account_amount, increase=True)
+    return transaction, account
 
 
-def _update_related_account_balance(account_id: str, amount: int, increase: bool) -> None:
+def _update_related_account_balance(account_id: str, amount: int, increase: bool) -> Account:
     account = get_account_by_id(account_id)
     assert account
 
@@ -59,4 +60,4 @@ def _update_related_account_balance(account_id: str, amount: int, increase: bool
 
     update_account(account)
 
-    return None
+    return account

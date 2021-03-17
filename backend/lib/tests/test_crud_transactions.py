@@ -35,7 +35,7 @@ def test_create_income_transaction_without_main_currency_equivalent():
         from_employer_id=employer.id,
         date=datetime.utcnow(),
     )
-    transaction = create_transaction(transaction_data)
+    transaction, _ = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
     assert transaction.main_currency_equivalent == (rate * amount) * MONEY_DIGITS
@@ -60,7 +60,7 @@ def test_create_income_transaction_with_manually_set_main_currency_equivalent():
         date=datetime.utcnow(),
         main_currency_equivalent=123,
     )
-    transaction = create_transaction(transaction_data)
+    transaction, _ = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
     assert transaction.main_currency_equivalent == 123
@@ -107,7 +107,7 @@ def test_get_transactions_list():
 
 def test_delete_transaction():
     amount = 100
-    transaction = create_transaction_for_tests(amount)
+    transaction, _ = create_transaction_for_tests(amount)
 
     account = get_account_by_id(transaction.account_id)
     assert account.balance == amount
@@ -121,7 +121,7 @@ def test_delete_transaction():
 
 def test_update_transaction_amount():
     old_amount = 100
-    transaction = create_transaction_for_tests(old_amount)
+    transaction, _ = create_transaction_for_tests(old_amount)
     account = get_account_by_id(transaction.account_id)
     assert account.balance == old_amount
 
