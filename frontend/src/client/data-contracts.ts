@@ -92,6 +92,39 @@ export interface Token {
   token_type: string;
 }
 
+export interface Transaction {
+  id?: string;
+
+  /** @format date-time */
+  updated?: string;
+  amount: number;
+
+  /** @format date-time */
+  date: string;
+  from_employer_id?: string;
+  account_id: string;
+
+  /** An enumeration. */
+  type: TransactionType;
+
+  /** An enumeration. */
+  currency: Currency;
+  main_currency_equivalent?: number;
+}
+
+/**
+ * An enumeration.
+ */
+export enum TransactionType {
+  REGULAR = "REGULAR",
+  INCOME = "INCOME",
+}
+
+export interface TransactionUpdatedResponse {
+  transaction: Transaction;
+  account: Account;
+}
+
 export interface User {
   id?: string;
 

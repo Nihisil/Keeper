@@ -15,6 +15,8 @@ import {
   CurrencyExchangeRateResponseModel,
   Employer,
   HTTPValidationError,
+  Transaction,
+  TransactionUpdatedResponse,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
@@ -169,6 +171,72 @@ export class Finance<SecurityDataType = unknown> {
       path: `/finance/currency-exchange-rates/get-list`,
       method: "GET",
       query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags transactions
+   * @name CreateTransaction
+   * @summary Create Transaction
+   * @request POST:/finance/transactions/create
+   */
+  createTransaction = (data: Transaction, params: RequestParams = {}) =>
+    this.http.request<TransactionUpdatedResponse, void | HTTPValidationError>({
+      path: `/finance/transactions/create`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags transactions
+   * @name GetListOfTransactions
+   * @summary Get List Of Transactions
+   * @request GET:/finance/transactions/get-list
+   */
+  getListOfTransactions = (params: RequestParams = {}) =>
+    this.http.request<Transaction[], void>({
+      path: `/finance/transactions/get-list`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags transactions
+   * @name DeleteTransaction
+   * @summary Delete Transaction
+   * @request DELETE:/finance/transactions/delete
+   */
+  deleteTransaction = (data: Transaction, params: RequestParams = {}) =>
+    this.http.request<any, void | HTTPValidationError>({
+      path: `/finance/transactions/delete`,
+      method: "DELETE",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags transactions
+   * @name UpdateTransaction
+   * @summary Update Transaction
+   * @request PUT:/finance/transactions/update
+   */
+  updateTransaction = (data: Transaction, params: RequestParams = {}) =>
+    this.http.request<TransactionUpdatedResponse, void | HTTPValidationError>({
+      path: `/finance/transactions/update`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });
