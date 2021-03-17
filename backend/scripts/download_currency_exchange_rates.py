@@ -11,9 +11,13 @@ from lib.finance.currency_exchange_rates.crud import (
     get_currency_exchange_rate_for_date,
 )
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
+from lib.logger import set_up_logging
 
 DATE_FORMAT = "%Y-%m-%d"
 BASE_URL = "https://api.exchangeratesapi.io"
+
+
+logger = set_up_logging()
 
 
 def main():
@@ -30,6 +34,8 @@ def main():
 
 
 def download_history_data():
+    logger.info("Starting historical currency data downloading")
+
     start_date = datetime(2015, 1, 1).strftime("%Y-%m-%d")
     end_date = datetime.utcnow().strftime(DATE_FORMAT)
 
@@ -47,8 +53,12 @@ def download_history_data():
         date = datetime.strptime(date, DATE_FORMAT)
         _insert_currency_record(date, rates)
 
+    logger.info("Finishing historical data downloading")
+
 
 def download_daily_update():
+    logger.info("Starting daily currency data downloading")
+
     data = requests.get(
         f"{BASE_URL}/latest",
         params={
@@ -56,9 +66,14 @@ def download_daily_update():
             "symbols": ",".join(OTHER_CURRENCIES),
         },
     ).json()
+    date = data["date"]
 
-    date = datetime.strptime(data["date"], DATE_FORMAT)
+    logger.info(f"Found new data on {date}")
+
+    date = datetime.strptime(date, DATE_FORMAT)
     _insert_currency_record(date, data["rates"])
+
+    logger.info("Finishing daily currency data downloading")
 
 
 def _insert_currency_record(date: datetime, rates: Dict):
