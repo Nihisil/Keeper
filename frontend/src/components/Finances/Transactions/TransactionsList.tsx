@@ -1,10 +1,8 @@
 import { Transaction } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import { TransactionAction } from "components/Finances/Transactions/Transactions";
-import TransactionsModalForm, {
-  TransactionModalData,
-} from "components/Finances/Transactions/TransactionsModalForm";
+import { TransactionsAction } from "components/Finances/Transactions/Transactions";
+import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
@@ -13,8 +11,13 @@ import { displayMoney } from "utils/finances";
 
 interface TransactionsListProps extends AccountsProps {
   transactions: Array<Transaction>;
-  dispatchTransactions(action: TransactionAction): void;
+  dispatchTransactions(action: TransactionsAction): void;
 }
+
+export type TransactionsModalData = {
+  show: boolean;
+  entity?: Transaction;
+};
 
 export default function TransactionsList({
   transactions,
@@ -30,7 +33,7 @@ export default function TransactionsList({
   const [editModal, setEditModal] = useState({
     show: false,
     entity: undefined,
-  } as TransactionModalData);
+  } as TransactionsModalData);
 
   const deleteTransaction = async (transactionId: string) => {
     const transaction = transactions.find((item) => item.id === transactionId);

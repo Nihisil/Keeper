@@ -6,13 +6,13 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "utils/api";
 
-export type EmployerAction =
+export type EmployersAction =
   | { type: "load"; employers: Employer[] }
   | { type: "create"; employer: Employer }
   | { type: "update"; employer: Employer }
   | { type: "delete"; employer: Employer };
 
-function reducer(employers: Employer[], action: EmployerAction): Employer[] {
+function employersReducer(employers: Employer[], action: EmployersAction): Employer[] {
   switch (action.type) {
     case "load":
       return action.employers;
@@ -31,7 +31,7 @@ function reducer(employers: Employer[], action: EmployerAction): Employer[] {
 
 export default function Employers({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
-  const [employers, dispatchEmployers] = useReducer(reducer, []);
+  const [employers, dispatchEmployers] = useReducer(employersReducer, []);
 
   useEffect(() => {
     (async () => {

@@ -6,13 +6,13 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "utils/api";
 
-export type TransactionAction =
+export type TransactionsAction =
   | { type: "load"; transactions: Transaction[] }
   | { type: "create"; transaction: Transaction }
   | { type: "update"; transaction: Transaction }
   | { type: "delete"; transaction: Transaction };
 
-function reducer(transactions: Transaction[], action: TransactionAction): Transaction[] {
+function transactionsReducer(transactions: Transaction[], action: TransactionsAction): Transaction[] {
   switch (action.type) {
     case "load":
       return action.transactions;
@@ -25,13 +25,13 @@ function reducer(transactions: Transaction[], action: TransactionAction): Transa
     case "delete":
       return transactions.filter((item) => item.id !== action.transaction.id);
     default:
-      throw Error("Unknown transactions reducer action.");
+      throw Error("Unknown transactions transactionsReducer action.");
   }
 }
 
 export default function Transactions({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
-  const [transactions, dispatchTransactions] = useReducer(reducer, []);
+  const [transactions, dispatchTransactions] = useReducer(transactionsReducer, []);
 
   useEffect(() => {
     (async () => {

@@ -7,13 +7,11 @@ import api from "utils/api";
 import { Nullish } from "utils/base";
 import { displayDate } from "utils/date";
 
-interface CurrencyExchangeRatesProp {}
-
 // TODO load these constants from server side
 const DEFAULT_CURRENCY = Currency.RUB;
 const CURRENCY_PAIRS = Object.keys(Currency).filter((item) => item !== DEFAULT_CURRENCY);
 
-export default function CurrencyExchangeRates({}: CurrencyExchangeRatesProp): JSX.Element {
+export default function CurrencyExchangeRates(): JSX.Element {
   const [rates, setRates] = useState<CurrencyExchangeRate[]>([]);
   const [selectedPair, setSelectedPair] = useState(CURRENCY_PAIRS[0]);
   const page = 1;

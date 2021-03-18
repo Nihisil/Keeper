@@ -2,10 +2,10 @@ import { Account } from "client/data-contracts";
 
 export interface AccountsProps {
   accounts: Array<Account>;
-  dispatchAccounts(action: AccountAction): void;
+  dispatchAccounts(action: AccountsAction): void;
 }
 
-export function accountsReducer(accounts: Account[], action: AccountAction): Account[] {
+export function accountsReducer(accounts: Account[], action: AccountsAction): Account[] {
   switch (action.type) {
     case "load":
       return action.accounts;
@@ -22,7 +22,7 @@ export function accountsReducer(accounts: Account[], action: AccountAction): Acc
   }
 }
 
-export type AccountAction =
+export type AccountsAction =
   | { type: "load"; accounts: Account[] }
   | { type: "create"; account: Account }
   | { type: "update"; account: Account }

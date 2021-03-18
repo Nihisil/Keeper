@@ -1,11 +1,17 @@
+import { Account } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import AccountsModalForm, { ModalData } from "components/Finances/Accounts/AccountsModalForm";
+import AccountsModalForm from "components/Finances/Accounts/AccountsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
+
+interface AccountsModalData {
+  show: boolean;
+  entity?: Account;
+}
 
 export default function AccountsList({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
@@ -16,7 +22,7 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
   const [editModal, setEditModal] = useState({
     show: false,
     entity: undefined,
-  } as ModalData);
+  } as AccountsModalData);
 
   const deleteAccount = async (accountId: string) => {
     const account = accounts.find((item) => item.id === accountId);

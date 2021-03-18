@@ -1,5 +1,5 @@
 import { Account, AccountType, Currency } from "client/data-contracts";
-import { AccountAction } from "components/Finances/Accounts/AccountsHelpers";
+import { AccountsAction } from "components/Finances/Accounts/AccountsHelpers";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
@@ -8,14 +8,9 @@ import { convertMoneyToNumber, convertNumberToMoney } from "utils/finances";
 interface AccountsModalFormProps {
   show: boolean;
   onHide(): void;
-  afterSubmit(action: AccountAction): void;
+  afterSubmit(action: AccountsAction): void;
   entity?: Account;
 }
-
-export type ModalData = {
-  show: boolean;
-  entity?: Account;
-};
 
 export default function AccountsModalForm({
   show,
@@ -45,29 +40,23 @@ export default function AccountsModalForm({
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let actionType: "create" | "update";
-    let account = {
-      name: accountName,
-      currency: accountCurrency,
-      account_type: accountType,
-      balance: convertNumberToMoney(accountBalance as number),
+    const actionType: "create" | "update" = entity?.id ? "update" : "create";
+    const account = {
+      ...entity,
+      ...{
+        name: accountName,
+        currency: accountCurrency,
+        account_type: accountType,
+        balance: convertNumberToMoney(accountBalance as number),
+      },
     } as Account;
-    if (entity) {
-      actionType = "update";
-      account = { ...entity, ...account };
-    } else {
-      actionType = "create";
-    }
+    const action = entity?.id ? api.finance.updateAccount : api.finance.createAccount;
 
-    const action = actionType === "create" ? api.finance.createAccount : api.finance.updateAccount;
     const response = await action(account, { secure: true });
-
     afterSubmit({ type: actionType, account: response.data });
-    onHide();
 
-    if (!entity) {
-      cleanUpForm();
-    }
+    onHide();
+    cleanUpForm();
   };
 
   const currencyOptions = Object.keys(Currency).map((item) => (

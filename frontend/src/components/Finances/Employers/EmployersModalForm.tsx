@@ -1,5 +1,5 @@
 import { Employer } from "client/data-contracts";
-import { EmployerAction } from "components/Finances/Employers/Employers";
+import { EmployersAction } from "components/Finances/Employers/Employers";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
@@ -7,14 +7,9 @@ import api from "utils/api";
 interface EmployersModalFormProps {
   show: boolean;
   onHide(): void;
-  afterSubmit(action: EmployerAction): void;
+  afterSubmit(action: EmployersAction): void;
   entity?: Employer;
 }
-
-export type ModalData = {
-  show: boolean;
-  entity?: Employer;
-};
 
 export default function EmployersModalForm({
   show,
@@ -24,6 +19,7 @@ export default function EmployersModalForm({
 }: EmployersModalFormProps): JSX.Element {
   const [employerName, setEmployerName] = useState(entity?.name);
 
+  // set form defaults when edit entity
   useEffect(() => {
     setEmployerName(entity?.name);
   }, [entity?.name]);
@@ -35,23 +31,15 @@ export default function EmployersModalForm({
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let actionType: "create" | "update";
-    let employer = { name: employerName } as Employer;
-    if (entity) {
-      actionType = "update";
-      employer = { ...entity, ...employer };
-    } else {
-      actionType = "create";
-    }
-    const action = actionType === "create" ? api.finance.createEmployer : api.finance.updateEmployer;
+    const actionType: "create" | "update" = entity?.id ? "update" : "create";
+    const employer = { ...entity, ...{ name: employerName } } as Employer;
+    const action = entity?.id ? api.finance.updateEmployer : api.finance.createEmployer;
 
     const response = await action(employer, { secure: true });
     afterSubmit({ type: actionType, employer: response.data });
-    onHide();
 
-    if (!entity) {
-      cleanUpForm();
-    }
+    onHide();
+    cleanUpForm();
   };
 
   return (

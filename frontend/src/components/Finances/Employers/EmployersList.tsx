@@ -1,11 +1,10 @@
 import { Employer, Transaction, TransactionType } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import { EmployerAction } from "components/Finances/Employers/Employers";
-import EmployersModalForm, { ModalData } from "components/Finances/Employers/EmployersModalForm";
-import TransactionsModalForm, {
-  TransactionModalData,
-} from "components/Finances/Transactions/TransactionsModalForm";
+import { EmployersAction } from "components/Finances/Employers/Employers";
+import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
+import { TransactionsModalData } from "components/Finances/Transactions/TransactionsList";
+import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
@@ -13,7 +12,12 @@ import { displayDatetime } from "utils/date";
 
 interface EmployersListProps extends AccountsProps {
   employers: Array<Employer>;
-  dispatchEmployers(action: EmployerAction): void;
+  dispatchEmployers(action: EmployersAction): void;
+}
+
+interface EmployersModalData {
+  show: boolean;
+  entity?: Employer;
 }
 
 export default function EmployersList({
@@ -30,12 +34,11 @@ export default function EmployersList({
   const [editModal, setEditModal] = useState({
     show: false,
     entity: undefined,
-  } as ModalData);
-
+  } as EmployersModalData);
   const [transactionModal, setTransactionModal] = useState({
     show: false,
     entity: undefined,
-  } as TransactionModalData);
+  } as TransactionsModalData);
 
   const deleteEmployer = async (employerId: string) => {
     const employer = employers.find((item) => item.id === employerId);

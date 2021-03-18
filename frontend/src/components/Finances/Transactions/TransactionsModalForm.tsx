@@ -1,6 +1,6 @@
 import { Transaction } from "client/data-contracts";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import { TransactionAction } from "components/Finances/Transactions/Transactions";
+import { TransactionsAction } from "components/Finances/Transactions/Transactions";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
@@ -10,14 +10,9 @@ import { convertNumberToMoney } from "utils/finances";
 interface TransactionsModalFormProps extends AccountsProps {
   show: boolean;
   onHide(): void;
-  afterSubmit(action: TransactionAction): void;
+  afterSubmit(action: TransactionsAction): void;
   entity?: Transaction;
 }
-
-export type TransactionModalData = {
-  show: boolean;
-  entity?: Transaction;
-};
 
 export default function TransactionsModalForm({
   show,
@@ -49,7 +44,7 @@ export default function TransactionsModalForm({
       return;
     }
 
-    let actionType: "create" | "update";
+    const actionType: "create" | "update" = entity?.id ? "update" : "create";
     const transaction = {
       ...entity,
       ...{
@@ -59,12 +54,7 @@ export default function TransactionsModalForm({
         currency: account.currency,
       },
     } as Transaction;
-    if (entity?.id) {
-      actionType = "update";
-    } else {
-      actionType = "create";
-    }
-    const action = actionType === "create" ? api.finance.createTransaction : api.finance.updateTransaction;
+    const action = entity?.id ? api.finance.updateTransaction : api.finance.createTransaction;
 
     try {
       const response = await action(transaction, { secure: true });
@@ -73,10 +63,7 @@ export default function TransactionsModalForm({
       dispatchAccounts({ type: "update", account: response.data.account });
 
       onHide();
-
-      if (!entity) {
-        cleanUpForm();
-      }
+      cleanUpForm();
     } catch (requestError) {
       setError(JSON.stringify(requestError.response.data, null, 2));
     }
