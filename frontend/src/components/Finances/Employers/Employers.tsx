@@ -1,4 +1,5 @@
 import { Employer } from "client/data-contracts";
+import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import EmployersList from "components/Finances/Employers/EmployersList";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
 import React, { useEffect, useReducer, useState } from "react";
@@ -28,7 +29,7 @@ function reducer(employers: Employer[], action: EmployerAction): Employer[] {
   }
 }
 
-export default function Employers(): JSX.Element {
+export default function Employers({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
   const [employers, dispatchEmployers] = useReducer(reducer, []);
 
@@ -47,7 +48,12 @@ export default function Employers(): JSX.Element {
           Create
         </Button>
       </h3>
-      <EmployersList employers={employers} dispatchEmployers={dispatchEmployers} />
+      <EmployersList
+        employers={employers}
+        dispatchEmployers={dispatchEmployers}
+        accounts={accounts}
+        dispatchAccounts={dispatchAccounts}
+      />
       <EmployersModalForm
         show={modalShow}
         onHide={() => setModalShow(false)}

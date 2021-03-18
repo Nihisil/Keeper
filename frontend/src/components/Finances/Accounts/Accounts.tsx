@@ -1,43 +1,19 @@
-import { Account } from "client/data-contracts";
+import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import AccountsList from "components/Finances/Accounts/AccountsList";
 import AccountsModalForm from "components/Finances/Accounts/AccountsModalForm";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "utils/api";
 
-export type AccountAction =
-  | { type: "load"; accounts: Account[] }
-  | { type: "create"; account: Account }
-  | { type: "update"; account: Account }
-  | { type: "delete"; account: Account };
-
-function reducer(accounts: Account[], action: AccountAction): Account[] {
-  switch (action.type) {
-    case "load":
-      return action.accounts;
-    case "create":
-      return [action.account, ...accounts];
-    case "update":
-      return accounts
-        .map((item) => (item.id === action.account.id ? action.account : item))
-        .sort((a, b) => ((a.updated || 0) > (b.updated || 0) ? -1 : 1));
-    case "delete":
-      return accounts.filter((item) => item.id !== action.account.id);
-    default:
-      throw Error("Unknown accounts reducer action.");
-  }
-}
-
-export default function Accounts(): JSX.Element {
+export default function Accounts({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
-  const [accounts, dispatchAccounts] = useReducer(reducer, []);
 
   useEffect(() => {
     (async () => {
       const response = await api.finance.getListOfAccounts({ secure: true });
       dispatchAccounts({ type: "load", accounts: response.data });
     })();
-  }, []);
+  }, [dispatchAccounts]);
 
   return (
     <>

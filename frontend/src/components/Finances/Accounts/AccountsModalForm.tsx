@@ -1,5 +1,5 @@
 import { Account, AccountType, Currency } from "client/data-contracts";
-import { AccountAction } from "components/Finances/Accounts/Accounts";
+import { AccountAction } from "components/Finances/Accounts/AccountsHelpers";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
@@ -99,7 +99,7 @@ export default function AccountsModalForm({
               required
             />
           </Form.Group>
-          <Form.Group controlId="name">
+          <Form.Group controlId="balance">
             <Form.Label>Balance</Form.Label>
             <Form.Control
               type="number"
@@ -119,8 +119,7 @@ export default function AccountsModalForm({
               required
             >
               <option disabled selected>
-                {" "}
-                -- select an option --{" "}
+                -- select an option --
               </option>
               {currencyOptions}
             </Form.Control>
@@ -134,8 +133,7 @@ export default function AccountsModalForm({
               required
             >
               <option disabled selected>
-                {" "}
-                -- select an option --{" "}
+                -- select an option --
               </option>
               {accountTypeOptions}
             </Form.Control>

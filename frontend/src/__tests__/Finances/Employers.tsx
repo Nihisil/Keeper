@@ -4,7 +4,7 @@ import React from "react";
 
 // TODO add mocks for tests data
 it("renders list of employers", () => {
-  render(<Employers />);
+  render(<Employers accounts={[]} dispatchAccounts={() => {}} />);
   expect(screen.getByText("Employers")).toBeInTheDocument();
 
   const table = screen.getByTestId("employers-table");

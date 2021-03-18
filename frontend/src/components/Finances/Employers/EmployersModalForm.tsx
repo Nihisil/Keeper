@@ -36,14 +36,12 @@ export default function EmployersModalForm({
     e.preventDefault();
 
     let actionType: "create" | "update";
-    let employer: Employer;
+    let employer = { name: employerName } as Employer;
     if (entity) {
       actionType = "update";
-      employer = entity;
-      employer.name = employerName as string;
+      employer = { ...entity, ...employer };
     } else {
       actionType = "create";
-      employer = { name: employerName } as Employer;
     }
     const action = actionType === "create" ? api.finance.createEmployer : api.finance.updateEmployer;
 

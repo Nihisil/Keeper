@@ -1,13 +1,27 @@
+import { Transaction } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import AccountsModalForm, { ModalData } from "components/Finances/Accounts/AccountsModalForm";
+import { TransactionAction } from "components/Finances/Transactions/Transactions";
+import TransactionsModalForm, {
+  TransactionModalData,
+} from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
-export default function AccountsList({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
+interface TransactionsListProps extends AccountsProps {
+  transactions: Array<Transaction>;
+  dispatchTransactions(action: TransactionAction): void;
+}
+
+export default function TransactionsList({
+  transactions,
+  dispatchTransactions,
+  accounts,
+  dispatchAccounts,
+}: TransactionsListProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
     toDeleteName: "",
@@ -16,23 +30,22 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
   const [editModal, setEditModal] = useState({
     show: false,
     entity: undefined,
-  } as ModalData);
+  } as TransactionModalData);
 
-  const deleteAccount = async (accountId: string) => {
-    const account = accounts.find((item) => item.id === accountId);
-    if (!account) {
-      throw Error("Not correct account id was passed to delete function");
+  const deleteTransaction = async (transactionId: string) => {
+    const transaction = transactions.find((item) => item.id === transactionId);
+    if (!transaction) {
+      throw Error("Not correct transaction id was passed to delete function");
     }
-    await api.finance.deleteAccount(account, { secure: true });
-    dispatchAccounts({ type: "delete", account });
+    await api.finance.deleteTransaction(transaction, { secure: true });
+    dispatchTransactions({ type: "delete", transaction });
   };
 
-  const accountRows = accounts.map((item) => (
+  const transactionRows = transactions.map((item) => (
     <tr key={item.id}>
-      <td>{item.name}</td>
-      <td>{displayMoney(item.balance as number)}</td>
+      <td>{displayMoney(item.amount as number)}</td>
       <td>{item.currency}</td>
-      <td>{item.account_type}</td>
+      <td>{item.type}</td>
       <td>{displayDatetime(item.updated)}</td>
       <td>
         <Button
@@ -50,7 +63,7 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
           onClick={() =>
             setDeleteModal({
               show: true,
-              toDeleteName: item.name,
+              toDeleteName: item.id as string,
               toDeleteId: item.id as string,
             })
           }
@@ -63,11 +76,10 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
 
   return (
     <>
-      <Table responsive bordered striped size="sm" data-testid="accounts-table">
+      <Table responsive bordered striped size="sm" data-testid="transactions-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Balance</th>
+            <th>Amount</th>
             <th>Currency</th>
             <th>Type</th>
             <th>Updated</th>
@@ -75,8 +87,8 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
           </tr>
         </thead>
         <tbody>
-          {accounts.length ? (
-            accountRows
+          {transactions.length ? (
+            transactionRows
           ) : (
             <tr>
               <td colSpan={5}>No data</td>
@@ -89,13 +101,15 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
         onHide={() => setDeleteModal({ show: false, toDeleteName: "", toDeleteId: "" })}
         toDeleteName={deleteModal.toDeleteName}
         toDeleteId={deleteModal.toDeleteId}
-        deleteAction={deleteAccount}
+        deleteAction={deleteTransaction}
       />
-      <AccountsModalForm
+      <TransactionsModalForm
         show={editModal.show}
         onHide={() => setEditModal({ show: false, entity: undefined })}
-        afterSubmit={dispatchAccounts}
+        afterSubmit={dispatchTransactions}
         entity={editModal.entity}
+        accounts={accounts}
+        dispatchAccounts={dispatchAccounts}
       />
     </>
   );

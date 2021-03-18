@@ -1,0 +1,164 @@
+import { Transaction } from "client/data-contracts";
+import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
+import { TransactionAction } from "components/Finances/Transactions/Transactions";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
+import api from "utils/api";
+import dayjs from "utils/dayjs";
+import { convertNumberToMoney } from "utils/finances";
+
+interface TransactionsModalFormProps extends AccountsProps {
+  show: boolean;
+  onHide(): void;
+  afterSubmit(action: TransactionAction): void;
+  entity?: Transaction;
+}
+
+export type TransactionModalData = {
+  show: boolean;
+  entity?: Transaction;
+};
+
+export default function TransactionsModalForm({
+  show,
+  onHide,
+  afterSubmit,
+  entity,
+  accounts,
+  dispatchAccounts,
+}: TransactionsModalFormProps): JSX.Element {
+  const date = entity?.date || dayjs().format("YYYY-MM-DD");
+  const [error, setError] = useState<string>("");
+  const [transactionAmount, setTransactionAmount] = useState(entity?.amount);
+  const [transactionDate, setTransactionDate] = useState(date);
+  const [accountId, setAccountId] = useState(entity?.account_id);
+
+  useEffect(() => {
+    setTransactionAmount(entity?.amount);
+  }, [entity]);
+
+  const cleanUpForm = () => {
+    setTransactionAmount(undefined);
+  };
+
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const account = accounts.find((item) => item.id === accountId);
+    if (!account) {
+      return;
+    }
+
+    let actionType: "create" | "update";
+    const transaction = {
+      ...entity,
+      ...{
+        amount: convertNumberToMoney(transactionAmount as number),
+        date: dayjs(transactionDate).toISOString(),
+        account_id: accountId,
+        currency: account.currency,
+      },
+    } as Transaction;
+    if (entity?.id) {
+      actionType = "update";
+    } else {
+      actionType = "create";
+    }
+    const action = actionType === "create" ? api.finance.createTransaction : api.finance.updateTransaction;
+
+    try {
+      const response = await action(transaction, { secure: true });
+
+      afterSubmit({ type: actionType, transaction: response.data.transaction });
+      dispatchAccounts({ type: "update", account: response.data.account });
+
+      onHide();
+
+      if (!entity) {
+        cleanUpForm();
+      }
+    } catch (requestError) {
+      setError(JSON.stringify(requestError.response.data, null, 2));
+    }
+  };
+
+  const accountOptions = accounts.map((item) => (
+    <option key={item.id} value={item.id}>
+      {item.name}
+    </option>
+  ));
+
+  const errorInfo = error ? (
+    <>
+      <span className="small">Error:</span>
+      <code>
+        <pre>{error}</pre>
+      </code>
+    </>
+  ) : (
+    ""
+  );
+
+  return (
+    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Create Transaction</Modal.Title>
+      </Modal.Header>
+      <Form onSubmit={handleOnSubmit}>
+        <Modal.Body>
+          {errorInfo}
+          <Form.Group controlId="account">
+            <Form.Label>Account</Form.Label>
+            <Form.Control
+              as="select"
+              value={accountId}
+              onChange={(e) => setAccountId(e.target.value as string)}
+              required
+            >
+              <option disabled selected>
+                -- select an option --
+              </option>
+              {accountOptions}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="amount">
+            <Form.Label>Amount</Form.Label>
+            <Form.Control
+              type="number"
+              value={transactionAmount}
+              placeholder="Amount"
+              step=".01"
+              onChange={(e) => setTransactionAmount((e.target.value as unknown) as number)}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="date">
+            <Form.Label>Date</Form.Label>
+            <Form.Control
+              type="date"
+              value={transactionDate}
+              placeholder="Date"
+              onChange={(e) => setTransactionDate((e.target.value as unknown) as string)}
+              required
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={() => {
+              onHide();
+            }}
+            variant="secondary"
+          >
+            Close
+          </Button>
+          <Button type="submit">Save</Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
+  );
+}
+
+TransactionsModalForm.defaultProps = {
+  entity: undefined,
+};

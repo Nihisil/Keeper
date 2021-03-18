@@ -1,18 +1,27 @@
-import { Employer } from "client/data-contracts";
+import { Employer, Transaction, TransactionType } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
+import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import { EmployerAction } from "components/Finances/Employers/Employers";
 import EmployersModalForm, { ModalData } from "components/Finances/Employers/EmployersModalForm";
+import TransactionsModalForm, {
+  TransactionModalData,
+} from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import { displayDatetime } from "utils/date";
 
-interface EmployersListProps {
+interface EmployersListProps extends AccountsProps {
   employers: Array<Employer>;
   dispatchEmployers(action: EmployerAction): void;
 }
 
-export default function EmployersList({ employers, dispatchEmployers }: EmployersListProps): JSX.Element {
+export default function EmployersList({
+  employers,
+  dispatchEmployers,
+  accounts,
+  dispatchAccounts,
+}: EmployersListProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
     toDeleteName: "",
@@ -22,6 +31,11 @@ export default function EmployersList({ employers, dispatchEmployers }: Employer
     show: false,
     entity: undefined,
   } as ModalData);
+
+  const [transactionModal, setTransactionModal] = useState({
+    show: false,
+    entity: undefined,
+  } as TransactionModalData);
 
   const deleteEmployer = async (employerId: string) => {
     const employer = employers.find((item) => item.id === employerId);
@@ -46,6 +60,22 @@ export default function EmployersList({ employers, dispatchEmployers }: Employer
           }}
         >
           Edit
+        </Button>
+        <Button
+          variant="success"
+          size="sm"
+          className="mr-2"
+          onClick={() => {
+            setTransactionModal({
+              show: true,
+              entity: {
+                from_employer_id: item.id as string,
+                type: TransactionType.INCOME,
+              } as Transaction,
+            });
+          }}
+        >
+          Add income
         </Button>
         <Button
           variant="danger"
@@ -97,6 +127,14 @@ export default function EmployersList({ employers, dispatchEmployers }: Employer
         onHide={() => setEditModal({ show: false, entity: undefined })}
         afterSubmit={dispatchEmployers}
         entity={editModal.entity}
+      />
+      <TransactionsModalForm
+        show={transactionModal.show}
+        onHide={() => setTransactionModal({ show: false, entity: undefined })}
+        afterSubmit={() => {}}
+        entity={transactionModal.entity}
+        accounts={accounts}
+        dispatchAccounts={dispatchAccounts}
       />
     </>
   );
