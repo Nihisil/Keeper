@@ -1,8 +1,11 @@
+import { AxiosError } from "axios";
 import { Account, AccountType, Currency } from "client/data-contracts";
+import DisplayError from "components/App/DisplayError";
 import { AccountsAction } from "components/Finances/Accounts/AccountsHelpers";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
+import { Nullish } from "utils/base";
 import { convertMoneyToNumber, convertNumberToMoney } from "utils/finances";
 
 interface AccountsModalFormProps {
@@ -18,11 +21,13 @@ export default function AccountsModalForm({
   afterSubmit,
   entity,
 }: AccountsModalFormProps): JSX.Element {
+  const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [accountName, setAccountName] = useState(entity?.name);
   const [accountCurrency, setAccountCurrency] = useState(entity?.currency);
   const [accountType, setAccountType] = useState(entity?.account_type);
   const [accountBalance, setAccountBalance] = useState(entity?.balance);
 
+  // set form defaults when edit entity
   useEffect(() => {
     setAccountName(entity?.name);
     setAccountCurrency(entity?.currency);
@@ -52,11 +57,15 @@ export default function AccountsModalForm({
     } as Account;
     const action = entity?.id ? api.finance.updateAccount : api.finance.createAccount;
 
-    const response = await action(account, { secure: true });
-    afterSubmit({ type: actionType, account: response.data });
+    try {
+      const response = await action(account, { secure: true });
+      afterSubmit({ type: actionType, account: response.data });
 
-    onHide();
-    cleanUpForm();
+      onHide();
+      cleanUpForm();
+    } catch (requestError) {
+      setFormError(requestError);
+    }
   };
 
   const currencyOptions = Object.keys(Currency).map((item) => (
@@ -78,6 +87,7 @@ export default function AccountsModalForm({
       </Modal.Header>
       <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
+          <DisplayError error={formError} />
           <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control

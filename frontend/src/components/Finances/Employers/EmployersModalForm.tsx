@@ -1,8 +1,11 @@
+import { AxiosError } from "axios";
 import { Employer } from "client/data-contracts";
+import DisplayError from "components/App/DisplayError";
 import { EmployersAction } from "components/Finances/Employers/Employers";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
+import { Nullish } from "utils/base";
 
 interface EmployersModalFormProps {
   show: boolean;
@@ -17,6 +20,7 @@ export default function EmployersModalForm({
   afterSubmit,
   entity,
 }: EmployersModalFormProps): JSX.Element {
+  const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [employerName, setEmployerName] = useState(entity?.name);
 
   // set form defaults when edit entity
@@ -35,11 +39,15 @@ export default function EmployersModalForm({
     const employer = { ...entity, ...{ name: employerName } } as Employer;
     const action = entity?.id ? api.finance.updateEmployer : api.finance.createEmployer;
 
-    const response = await action(employer, { secure: true });
-    afterSubmit({ type: actionType, employer: response.data });
+    try {
+      const response = await action(employer, { secure: true });
+      afterSubmit({ type: actionType, employer: response.data });
 
-    onHide();
-    cleanUpForm();
+      onHide();
+      cleanUpForm();
+    } catch (requestError) {
+      setFormError(requestError);
+    }
   };
 
   return (
@@ -49,6 +57,7 @@ export default function EmployersModalForm({
       </Modal.Header>
       <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
+          <DisplayError error={formError} />
           <Form.Group controlId="name">
             <Form.Label>Employer name</Form.Label>
             <Form.Control

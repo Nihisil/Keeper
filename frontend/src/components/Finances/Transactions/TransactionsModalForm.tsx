@@ -1,9 +1,12 @@
+import { AxiosError } from "axios";
 import { Transaction } from "client/data-contracts";
+import DisplayError from "components/App/DisplayError";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import { TransactionsAction } from "components/Finances/Transactions/Transactions";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
+import { Nullish } from "utils/base";
 import dayjs from "utils/dayjs";
 import { convertNumberToMoney } from "utils/finances";
 
@@ -23,11 +26,12 @@ export default function TransactionsModalForm({
   dispatchAccounts,
 }: TransactionsModalFormProps): JSX.Element {
   const date = entity?.date || dayjs().format("YYYY-MM-DD");
-  const [error, setError] = useState<string>("");
+  const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [transactionAmount, setTransactionAmount] = useState(entity?.amount);
   const [transactionDate, setTransactionDate] = useState(date);
   const [accountId, setAccountId] = useState(entity?.account_id);
 
+  // set form defaults when edit entity
   useEffect(() => {
     setTransactionAmount(entity?.amount);
   }, [entity]);
@@ -65,7 +69,7 @@ export default function TransactionsModalForm({
       onHide();
       cleanUpForm();
     } catch (requestError) {
-      setError(JSON.stringify(requestError.response.data, null, 2));
+      setFormError(requestError);
     }
   };
 
@@ -75,17 +79,6 @@ export default function TransactionsModalForm({
     </option>
   ));
 
-  const errorInfo = error ? (
-    <>
-      <span className="small">Error:</span>
-      <code>
-        <pre>{error}</pre>
-      </code>
-    </>
-  ) : (
-    ""
-  );
-
   return (
     <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
@@ -93,7 +86,7 @@ export default function TransactionsModalForm({
       </Modal.Header>
       <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
-          {errorInfo}
+          <DisplayError error={formError} />
           <Form.Group controlId="account">
             <Form.Label>Account</Form.Label>
             <Form.Control
