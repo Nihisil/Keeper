@@ -1,4 +1,7 @@
+from typing import Optional
+
 from lib.db import DBClass
+from lib.finance.constants import Currency
 
 
 class Employer(DBClass):
@@ -7,3 +10,9 @@ class Employer(DBClass):
     name: str
     archived: bool = False
     is_deleted: bool = False
+
+    earnings: int = 0
+    earnings_currency: Optional[Currency] = None
+
+    class CustomConfig:
+        read_only_fields = DBClass.CustomConfig.read_only_fields | {"earnings", "earnings_currency"}

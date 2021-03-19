@@ -3,12 +3,14 @@ import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import { EmployersAction } from "components/Finances/Employers/Employers";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
+import { TransactionsAction } from "components/Finances/Transactions/Transactions";
 import { TransactionsModalData } from "components/Finances/Transactions/TransactionsList";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import { displayDatetime } from "utils/date";
+import { displayMoney } from "utils/finances";
 
 interface EmployersListProps extends AccountsProps {
   employers: Array<Employer>;
@@ -49,10 +51,25 @@ export default function EmployersList({
     dispatchEmployers({ type: "delete", employer });
   };
 
+  const updateEmployerEarnings = (action: TransactionsAction) => {
+    if (action.type !== "create") {
+      return;
+    }
+    const employer = employers.find((item) => item.id === action.transaction.from_employer_id);
+    if (employer && employer.earnings) {
+      employer.earnings += action.transaction.amount;
+      dispatchEmployers({
+        type: "update",
+        employer,
+      });
+    }
+  };
+
   const employerRows = employers.map((item) => (
     <tr key={item.id}>
       <td>{item.name}</td>
-      <td>-</td>
+      <td>{displayMoney(item.earnings as number)}</td>
+      <td>{item.earnings_currency ? item.earnings_currency : "-"}</td>
       <td>{displayDatetime(item.updated)}</td>
       <td>
         <Button
@@ -104,6 +121,7 @@ export default function EmployersList({
           <tr>
             <th>Name</th>
             <th>Earnings</th>
+            <th>Currency</th>
             <th>Updated</th>
             <th>Actions</th>
           </tr>
@@ -113,7 +131,7 @@ export default function EmployersList({
             employerRows
           ) : (
             <tr>
-              <td colSpan={4}>No data</td>
+              <td colSpan={5}>No data</td>
             </tr>
           )}
         </tbody>
@@ -134,7 +152,9 @@ export default function EmployersList({
       <TransactionsModalForm
         show={transactionModal.show}
         onHide={() => setTransactionModal({ show: false, entity: undefined })}
-        afterSubmit={() => {}}
+        afterSubmit={(action) => {
+          updateEmployerEarnings(action);
+        }}
         entity={transactionModal.entity}
         accounts={accounts}
         dispatchAccounts={dispatchAccounts}

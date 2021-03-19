@@ -81,6 +81,10 @@ export interface Employer {
   name: string;
   archived?: boolean;
   is_deleted?: boolean;
+  earnings?: number;
+
+  /** An enumeration. */
+  earnings_currency?: Currency;
 }
 
 export interface HTTPValidationError {

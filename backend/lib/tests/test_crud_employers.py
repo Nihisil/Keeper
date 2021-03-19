@@ -1,5 +1,6 @@
 from lib.finance.employers.crud import create_employer, delete_employer, get_employers_list, update_employer
 from lib.finance.employers.models import Employer
+from lib.tests.utils import create_transaction_for_tests
 
 
 def test_create_employer():
@@ -12,10 +13,16 @@ def test_create_employer():
 def test_get_employers_list():
     number_of_employers = 4
     for i in range(number_of_employers):
-        employer_data = Employer(name=f"Test {i}")
-        create_employer(employer_data)
+        employer = create_employer(Employer(name=f"Test {i}"))
+        create_transaction_for_tests(amount=i, employer=employer)
+
     employers = get_employers_list()
     assert len(employers) == number_of_employers
+    assert employers[0].earnings == 3
+    assert employers[0].earnings_currency is not None
+    assert employers[1].earnings == 2
+    assert employers[2].earnings == 1
+    assert employers[3].earnings == 0
 
 
 def test_delete_employer():

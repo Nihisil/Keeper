@@ -34,9 +34,10 @@ def create_account_for_tests(currency: Optional[Currency] = None):
     return create_account(data)
 
 
-def create_transaction_for_tests(amount: int):
+def create_transaction_for_tests(amount: int, employer: Optional[Employer] = None):
     account = create_account_for_tests()
-    employer = create_employer_for_tests()
+    if not employer:
+        employer = create_employer_for_tests()
     transaction_data = Transaction(
         type=TransactionType.INCOME,
         amount=amount,
