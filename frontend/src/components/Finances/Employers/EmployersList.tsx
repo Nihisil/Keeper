@@ -1,5 +1,5 @@
 import { Employer, Transaction, TransactionType } from "client/data-contracts";
-import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
+import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import { EmployersAction } from "components/Finances/Employers/Employers";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";

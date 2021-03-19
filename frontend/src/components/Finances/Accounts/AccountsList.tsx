@@ -1,5 +1,5 @@
 import { Account } from "client/data-contracts";
-import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
+import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import AccountsModalForm from "components/Finances/Accounts/AccountsModalForm";
 import React, { useState } from "react";

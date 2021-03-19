@@ -1,5 +1,5 @@
 import { Transaction } from "client/data-contracts";
-import ConfirmDeleteModal from "components/App/utils/ConfirmDeleteModal";
+import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
 import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import { TransactionsAction } from "components/Finances/Transactions/Transactions";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
