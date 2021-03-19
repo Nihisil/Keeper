@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import pymongo
 
-from lib.db import db_find_all, db_find_one_by_id, db_insert_one, db_update_one_by_id
+from lib.db import db_find_all, db_find_one_by_id, db_insert_one, db_update_one
 from lib.finance.accounts.models import Account
 
 
@@ -23,11 +23,9 @@ def get_accounts_list(include_deleted: bool = False) -> List[Account]:
 
 def delete_account(account: Account) -> None:
     account.is_deleted = True
-    db_update_one_by_id(Account, str(account.id), account.dict())
+    db_update_one(account)
     return None
 
 
 def update_account(account: Account) -> Account:
-    updated = db_update_one_by_id(Account, str(account.id), account.dict())
-    account.updated = updated
-    return account
+    return db_update_one(account)

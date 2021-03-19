@@ -30,16 +30,15 @@ class DBClass(BaseModel):
     id: Optional[str]
     updated: Optional[datetime]
 
+    class CustomConfig:
+        read_only_fields = {"id"}
+
 
 def db_insert_one(obj: T) -> T:
     db = get_db()
-
     obj.updated = datetime.utcnow()
-    obj_data = obj.dict()
-    del obj_data["id"]
-
-    db_result = db[obj.__db_collection__].insert_one(obj.dict())
-
+    obj_data = obj.dict(exclude=obj.CustomConfig.read_only_fields)
+    db_result = db[obj.__db_collection__].insert_one(obj_data)
     obj.id = str(db_result.inserted_id)
     return obj
 
@@ -88,16 +87,13 @@ def db_find_all(
     return results, count
 
 
-def db_update_one_by_id(obj_class: Type[T], obj_id: str, fields_to_update: dict) -> datetime:
+def db_update_one(obj: T) -> T:
     db = get_db()
-
-    updated = datetime.utcnow()
-    fields_to_update["updated"] = updated
-    del fields_to_update["id"]
-
-    db[obj_class.__db_collection__].update_one({"_id": ObjectId(obj_id)}, {"$set": fields_to_update})
-
-    return updated
+    obj.updated = datetime.utcnow()
+    obj_data = obj.dict(exclude=obj.CustomConfig.read_only_fields)
+    result = db[obj.__db_collection__].update_one({"_id": ObjectId(obj.id)}, {"$set": obj_data})
+    assert result.matched_count == 1
+    return obj
 
 
 def db_delete_one_by_id(obj_class: Type[T], obj_id: Optional[str]) -> None:

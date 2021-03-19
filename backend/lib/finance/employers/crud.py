@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import pymongo
 
-from lib.db import db_find_all, db_find_one_by_id, db_insert_one, db_update_one_by_id
+from lib.db import db_find_all, db_find_one_by_id, db_insert_one, db_update_one
 from lib.finance.employers.models import Employer
 
 
@@ -23,11 +23,9 @@ def get_employers_list(include_deleted: bool = False) -> List[Employer]:
 
 def delete_employer(employer: Employer) -> None:
     employer.is_deleted = True
-    db_update_one_by_id(Employer, str(employer.id), employer.dict())
+    db_update_one(employer)
     return None
 
 
 def update_employer(employer: Employer) -> Employer:
-    updated = db_update_one_by_id(Employer, str(employer.id), employer.dict())
-    employer.updated = updated
-    return employer
+    return db_update_one(employer)

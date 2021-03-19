@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple
 
 import pymongo
 
-from lib.db import db_delete_one_by_id, db_find_all, db_find_one_by_id, db_insert_one, db_update_one_by_id
+from lib.db import db_delete_one_by_id, db_find_all, db_find_one_by_id, db_insert_one, db_update_one
 from lib.finance.accounts.crud import get_account_by_id, update_account
 from lib.finance.accounts.models import Account
 from lib.finance.constants import MAIN_CURRENCY, MONEY_DIGITS
@@ -42,8 +42,7 @@ def delete_transaction(transaction: Transaction) -> None:
 
 
 def update_transaction(transaction: Transaction, old_amount: int) -> Tuple[Transaction, Account]:
-    updated = db_update_one_by_id(Transaction, str(transaction.id), transaction.dict())
-    transaction.updated = updated
+    transaction = db_update_one(transaction)
     account_amount = -old_amount + transaction.amount
     account = _update_related_account_balance(transaction.account_id, account_amount, increase=True)
     return transaction, account
@@ -58,6 +57,4 @@ def _update_related_account_balance(account_id: str, amount: int, increase: bool
     else:
         account.balance -= amount
 
-    update_account(account)
-
-    return account
+    return update_account(account)
