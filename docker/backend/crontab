@@ -1,2 +1,2 @@
-# is equal to 16-10 CET, which is time when European Central Bank is updating rates
-10 15 * * * python /app/scripts/download_currency_exchange_rates.py
+# is equal to 16-30 CET, which is time when European Central Bank is updating exchange rates
+30 15 * * * python /app/scripts/download_currency_exchange_rates.py
