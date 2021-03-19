@@ -35,7 +35,6 @@ def test_create_transaction_api():
         data=transaction_data.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
-    print(response.json())
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
     assert response_data["transaction"]["id"] is not None

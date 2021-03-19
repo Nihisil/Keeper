@@ -1,6 +1,9 @@
 import argparse
 
+from lib.logger import set_up_logging
 from lib.users.crud import create_user
+
+logger = set_up_logging()
 
 
 def main():
@@ -11,7 +14,7 @@ def main():
     args = parser.parse_args()
 
     user = create_user(args.username, args.email, args.password)
-    print(f"{user.id} created!")
+    logger.info(f"{user.id} created!")
 
 
 if __name__ == "__main__":
