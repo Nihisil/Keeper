@@ -14,7 +14,7 @@ def test_create_employer_api():
     employer_data = Employer(name="Test")
     response = client.post(
         "/finance/employers/create",
-        json=employer_data.dict(),
+        data=employer_data.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK
@@ -43,7 +43,7 @@ def test_delete_employer_api():
     employer = create_employer(Employer(name="Test"))
     response = client.delete(
         "/finance/employers/delete",
-        json=employer.dict(exclude={"updated"}),
+        data=employer.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK
@@ -58,7 +58,7 @@ def test_update_employer_api():
     new_data.name = "Updated"
     response = client.put(
         "/finance/employers/update",
-        json=new_data.dict(exclude={"updated"}),
+        data=new_data.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK

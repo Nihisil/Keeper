@@ -11,13 +11,13 @@ client = TestClient(app)
 def test_get_access_token_by_username_and_password():
     password = "test"
     user = create_user_for_tests(password)
-    response = client.post("/auth/", json=AuthRequest(username=user.username, password=password).dict())
+    response = client.post("/auth/", data=AuthRequest(username=user.username, password=password).json())
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["access_token"] is not None
 
 
 def test_get_access_token_with_wrong_password():
-    response = client.post("/auth/", json=AuthRequest(username="not-exists", password="fake").dict())
+    response = client.post("/auth/", data=AuthRequest(username="not-exists", password="fake").json())
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 

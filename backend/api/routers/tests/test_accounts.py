@@ -15,7 +15,7 @@ def test_create_account_api():
     account_data = Account(name="Test", currency=Currency.USD, account_type=AccountType.BANK)
     response = client.post(
         "/finance/accounts/create",
-        json=account_data.dict(),
+        data=account_data.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK
@@ -44,7 +44,7 @@ def test_delete_account_api():
     account = create_account(Account(name="Test", currency=Currency.USD, account_type=AccountType.BANK))
     response = client.delete(
         "/finance/accounts/delete",
-        json=account.dict(exclude={"updated"}),
+        data=account.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK
@@ -59,7 +59,7 @@ def test_update_account_api():
     new_data.name = "Updated"
     response = client.put(
         "/finance/accounts/update",
-        json=new_data.dict(exclude={"updated"}),
+        data=new_data.json(),
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK
