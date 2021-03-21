@@ -46,10 +46,9 @@ def get_transactions_list(
     return data
 
 
-def delete_transaction(transaction: Transaction) -> None:
+def delete_transaction(transaction: Transaction) -> Account:
     db_delete_one_by_id(Transaction, transaction.id)
-    _update_related_account_balance(transaction.account_id, transaction.amount, increase=False)
-    return None
+    return _update_related_account_balance(transaction.account_id, transaction.amount, increase=False)
 
 
 def update_transaction(transaction: Transaction, old_amount: int) -> Tuple[Transaction, Account]:

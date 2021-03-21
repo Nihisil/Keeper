@@ -7,8 +7,9 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
 import { Nullish } from "utils/base";
+import { DATE_INPUT_FORMAT, displayDate } from "utils/date";
 import dayjs from "utils/dayjs";
-import { convertNumberToMoney } from "utils/finances";
+import { convertMoneyToNumber, convertNumberToMoney } from "utils/finances";
 
 interface TransactionsModalFormProps extends AccountsProps {
   show: boolean;
@@ -25,19 +26,22 @@ export default function TransactionsModalForm({
   accounts,
   dispatchAccounts,
 }: TransactionsModalFormProps): JSX.Element {
-  const date = entity?.date || dayjs().format("YYYY-MM-DD");
   const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [transactionAmount, setTransactionAmount] = useState(entity?.amount);
-  const [transactionDate, setTransactionDate] = useState(date);
+  const [transactionDate, setTransactionDate] = useState<string>(dayjs().format(DATE_INPUT_FORMAT));
   const [accountId, setAccountId] = useState(entity?.account_id);
 
   // set form defaults when edit entity
   useEffect(() => {
-    setTransactionAmount(entity?.amount);
-  }, [entity]);
+    setTransactionAmount(convertMoneyToNumber(entity?.amount as number));
+    setTransactionDate(displayDate(entity?.date));
+    setAccountId(entity?.account_id);
+  }, [entity?.amount, entity?.date, entity?.account_id]);
 
   const cleanUpForm = () => {
     setTransactionAmount(undefined);
+    setAccountId(undefined);
+    setTransactionDate("");
   };
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

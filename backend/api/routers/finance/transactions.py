@@ -46,10 +46,14 @@ def get_transactions_list_api() -> List[Transaction]:
     return get_transactions_list()
 
 
-@router.delete("/delete", name="Delete transaction", dependencies=[Depends(get_current_user_from_token)])
-def delete_transaction_api(transaction: Transaction) -> dict:
-    delete_transaction(transaction)
-    return {"success": True}
+@router.delete(
+    "/delete",
+    name="Delete transaction",
+    dependencies=[Depends(get_current_user_from_token)],
+    response_model=Account,
+)
+def delete_transaction_api(transaction: Transaction) -> Account:
+    return delete_transaction(transaction)
 
 
 @router.put(

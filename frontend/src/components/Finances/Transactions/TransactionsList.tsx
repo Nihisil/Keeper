@@ -31,8 +31,9 @@ export default function TransactionsList({
     if (!transaction) {
       throw Error("Not correct transaction id was passed to delete function");
     }
-    await api.finance.deleteTransaction(transaction, { secure: true });
+    const response = await api.finance.deleteTransaction(transaction, { secure: true });
     dispatchTransactions({ type: "delete", transaction });
+    dispatchAccounts({ type: "update", account: response.data });
   };
 
   const transactionRows = transactions.map((item) => (
@@ -57,7 +58,7 @@ export default function TransactionsList({
           onClick={() =>
             setDeleteModal({
               show: true,
-              toDeleteName: item.id as string,
+              toDeleteName: `${displayMoney(item.amount as number)} ${item.currency}`,
               toDeleteId: item.id as string,
             })
           }

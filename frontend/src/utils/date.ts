@@ -1,6 +1,9 @@
 import { Dayjs } from "dayjs";
 import dayjs from "utils/dayjs";
 
+export const DATE_INPUT_FORMAT = "YYYY-MM-DD";
+const DISPLAY_DATE_FORMAT = DATE_INPUT_FORMAT;
+
 /*
   Convert date that we got from server to the user current timezone
  */
@@ -9,9 +12,9 @@ const convertDateToUserTimezone = (date: string): Dayjs => {
 };
 
 export const displayDatetime = (date?: string): string => {
-  return convertDateToUserTimezone(date as string).format("YYYY-MM-DD HH:mm");
+  return convertDateToUserTimezone(date as string).format(`${DISPLAY_DATE_FORMAT} HH:mm`);
 };
 
 export const displayDate = (date?: string): string => {
-  return convertDateToUserTimezone(date as string).format("YYYY-MM-DD");
+  return convertDateToUserTimezone(date as string).format(DISPLAY_DATE_FORMAT);
 };

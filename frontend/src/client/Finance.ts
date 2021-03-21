@@ -215,7 +215,7 @@ export class Finance<SecurityDataType = unknown> {
    * @request DELETE:/finance/transactions/delete
    */
   deleteTransaction = (data: Transaction, params: RequestParams = {}) =>
-    this.http.request<any, void | HTTPValidationError>({
+    this.http.request<Account, void | HTTPValidationError>({
       path: `/finance/transactions/delete`,
       method: "DELETE",
       body: data,
