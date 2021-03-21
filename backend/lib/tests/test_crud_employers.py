@@ -14,15 +14,15 @@ def test_get_employers_list():
     number_of_employers = 4
     for i in range(number_of_employers):
         employer = create_employer(Employer(name=f"Test {i}"))
-        create_transaction_for_tests(amount=i, employer=employer)
+        create_transaction_for_tests(amount=i + 1, employer=employer)
 
     employers = get_employers_list()
     assert len(employers) == number_of_employers
-    assert employers[0].earnings == 3
+    assert employers[0].earnings == 4
     assert employers[0].earnings_currency is not None
-    assert employers[1].earnings == 2
-    assert employers[2].earnings == 1
-    assert employers[3].earnings == 0
+    assert employers[1].earnings == 3
+    assert employers[2].earnings == 2
+    assert employers[3].earnings == 1
 
 
 def test_delete_employer():

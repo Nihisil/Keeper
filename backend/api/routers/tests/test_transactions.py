@@ -45,7 +45,7 @@ def test_get_list_of_transactions_api():
     user, token = create_user_and_token_for_tests()
     number_of_transactions = 4
     for i in range(number_of_transactions):
-        create_transaction_for_tests(i)
+        create_transaction_for_tests(i + 1)
     response = client.get(
         "/finance/transactions/get-list",
         headers={"Authorization": f"Bearer {token}"},

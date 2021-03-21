@@ -37,3 +37,9 @@ class Transaction(DBClass):
         if value != account.currency:
             raise ValueError("account currency didn't match transaction currency")
         return value
+
+    @validator("amount")
+    def validate_amount(cls, value: int, values: Dict) -> int:
+        if value <= 0:
+            raise ValueError(f"amount should be positive value greater than 0, provided ${value}")
+        return value

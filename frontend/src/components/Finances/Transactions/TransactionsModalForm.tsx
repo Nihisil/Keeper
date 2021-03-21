@@ -108,6 +108,7 @@ export default function TransactionsModalForm({
               value={transactionAmount}
               placeholder="Amount"
               step=".01"
+              min="0"
               onChange={(e) => setTransactionAmount((e.target.value as unknown) as number)}
               required
             />

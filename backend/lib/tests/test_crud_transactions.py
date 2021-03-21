@@ -82,6 +82,19 @@ def test_create_income_transaction_without_employer():
     assert "from_employer_id should be set for income transactions" in str(e.value)
 
 
+def test_create_transaction_with_negative_amount():
+    account = create_account_for_tests()
+    with pytest.raises(ValidationError) as e:
+        Transaction(
+            type=TransactionType.INCOME,
+            amount=-100,
+            currency=Currency.USD,
+            account_id=account.id,
+            date=datetime.utcnow(),
+        )
+    assert "amount should be positive value greater than 0" in str(e.value)
+
+
 def test_create_income_transaction_with_not_matched_currency():
     account = create_account_for_tests(currency=Currency.USD)
     employer = create_employer_for_tests()
@@ -100,7 +113,7 @@ def test_create_income_transaction_with_not_matched_currency():
 def test_get_transactions_list():
     number_of_transactions = 4
     for i in range(number_of_transactions):
-        create_transaction_for_tests(i)
+        create_transaction_for_tests(i + 1)
     transactions = get_transactions_list()
     assert len(transactions) == number_of_transactions
 
