@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { Account, AccountType, Currency } from "client/data-contracts";
 import DisplayError from "components/App/DisplayError";
-import { AccountsAction } from "components/Finances/Accounts/AccountsHelpers";
+import { AccountsAction } from "components/Finances/Accounts/AccountsMethods";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";

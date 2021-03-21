@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { Employer } from "client/data-contracts";
 import DisplayError from "components/App/DisplayError";
-import { EmployersAction } from "components/Finances/Employers/Employers";
+import { EmployersAction } from "components/Finances/Employers/EmployersMethods";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";

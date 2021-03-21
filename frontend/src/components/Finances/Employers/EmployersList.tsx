@@ -1,10 +1,13 @@
 import { Employer, Transaction, TransactionType } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
-import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import { EmployersAction } from "components/Finances/Employers/Employers";
+import { AccountsProps } from "components/Finances/Accounts/AccountsMethods";
+import { EmployersAction } from "components/Finances/Employers/EmployersMethods";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
-import { TransactionsAction } from "components/Finances/Transactions/Transactions";
-import { TransactionsModalData } from "components/Finances/Transactions/TransactionsList";
+import {
+  TransactionsAction,
+  TransactionsModalData,
+  TransactionsProps,
+} from "components/Finances/Transactions/TransactionsMethods";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
@@ -12,14 +15,14 @@ import api from "utils/api";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
-interface EmployersListProps extends AccountsProps {
-  employers: Array<Employer>;
-  dispatchEmployers(action: EmployersAction): void;
-}
-
 interface EmployersModalData {
   show: boolean;
   entity?: Employer;
+}
+
+interface EmployersListProps extends AccountsProps, TransactionsProps {
+  employers: Array<Employer>;
+  dispatchEmployers(action: EmployersAction): void;
 }
 
 export default function EmployersList({
@@ -27,6 +30,7 @@ export default function EmployersList({
   dispatchEmployers,
   accounts,
   dispatchAccounts,
+  dispatchTransactions,
 }: EmployersListProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
@@ -51,12 +55,19 @@ export default function EmployersList({
     dispatchEmployers({ type: "delete", employer });
   };
 
-  const updateEmployerEarnings = (action: TransactionsAction) => {
+  const afterIncomeTransactionCreated = (action: TransactionsAction) => {
     if (action.type !== "create") {
       return;
     }
+
+    // update transactions list
+    dispatchTransactions(action);
+
     const employer = employers.find((item) => item.id === action.transaction.from_employer_id);
-    if (employer && employer.earnings) {
+    if (employer) {
+      if (!employer.earnings) {
+        employer.earnings = 0;
+      }
       employer.earnings += action.transaction.amount;
       dispatchEmployers({
         type: "update",
@@ -153,7 +164,7 @@ export default function EmployersList({
         show={transactionModal.show}
         onHide={() => setTransactionModal({ show: false, entity: undefined })}
         afterSubmit={(action) => {
-          updateEmployerEarnings(action);
+          afterIncomeTransactionCreated(action);
         }}
         entity={transactionModal.entity}
         accounts={accounts}

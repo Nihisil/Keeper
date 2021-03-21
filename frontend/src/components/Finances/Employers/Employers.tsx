@@ -1,35 +1,17 @@
-import { Employer } from "client/data-contracts";
-import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import EmployersList from "components/Finances/Employers/EmployersList";
+import { employersReducer } from "components/Finances/Employers/EmployersMethods";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
+import { TransactionsAndAccountsProps } from "components/Finances/Transactions/TransactionsMethods";
 import React, { useEffect, useReducer, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "utils/api";
 
-export type EmployersAction =
-  | { type: "load"; employers: Employer[] }
-  | { type: "create"; employer: Employer }
-  | { type: "update"; employer: Employer }
-  | { type: "delete"; employer: Employer };
-
-function employersReducer(employers: Employer[], action: EmployersAction): Employer[] {
-  switch (action.type) {
-    case "load":
-      return action.employers;
-    case "create":
-      return [action.employer, ...employers];
-    case "update":
-      return employers
-        .map((item) => (item.id === action.employer.id ? action.employer : item))
-        .sort((a, b) => ((a.updated || 0) > (b.updated || 0) ? -1 : 1));
-    case "delete":
-      return employers.filter((item) => item.id !== action.employer.id);
-    default:
-      throw Error("Unknown employers reducer action.");
-  }
-}
-
-export default function Employers({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
+export default function Employers({
+  accounts,
+  dispatchAccounts,
+  transactions,
+  dispatchTransactions,
+}: TransactionsAndAccountsProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
   const [employers, dispatchEmployers] = useReducer(employersReducer, []);
 
@@ -53,6 +35,8 @@ export default function Employers({ accounts, dispatchAccounts }: AccountsProps)
         dispatchEmployers={dispatchEmployers}
         accounts={accounts}
         dispatchAccounts={dispatchAccounts}
+        transactions={transactions}
+        dispatchTransactions={dispatchTransactions}
       />
       <EmployersModalForm
         show={modalShow}

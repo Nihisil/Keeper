@@ -1,7 +1,8 @@
-import { Transaction } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
-import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
-import { TransactionsAction } from "components/Finances/Transactions/Transactions";
+import {
+  TransactionsAndAccountsProps,
+  TransactionsModalData,
+} from "components/Finances/Transactions/TransactionsMethods";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
@@ -9,22 +10,12 @@ import api from "utils/api";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
-interface TransactionsListProps extends AccountsProps {
-  transactions: Array<Transaction>;
-  dispatchTransactions(action: TransactionsAction): void;
-}
-
-export type TransactionsModalData = {
-  show: boolean;
-  entity?: Transaction;
-};
-
 export default function TransactionsList({
   transactions,
   dispatchTransactions,
   accounts,
   dispatchAccounts,
-}: TransactionsListProps): JSX.Element {
+}: TransactionsAndAccountsProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
     toDeleteName: "",

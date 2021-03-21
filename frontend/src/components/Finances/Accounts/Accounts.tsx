@@ -1,5 +1,5 @@
-import { AccountsProps } from "components/Finances/Accounts/AccountsHelpers";
 import AccountsList from "components/Finances/Accounts/AccountsList";
+import { AccountsProps } from "components/Finances/Accounts/AccountsMethods";
 import AccountsModalForm from "components/Finances/Accounts/AccountsModalForm";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
