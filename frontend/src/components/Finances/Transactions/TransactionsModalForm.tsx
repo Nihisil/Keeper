@@ -26,6 +26,7 @@ export default function TransactionsModalForm({
   accounts,
   dispatchAccounts,
 }: TransactionsModalFormProps): JSX.Element {
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [transactionAmount, setTransactionAmount] = useState(entity?.amount);
   const [transactionDate, setTransactionDate] = useState<string>(dayjs().format(DATE_INPUT_FORMAT));
@@ -46,6 +47,12 @@ export default function TransactionsModalForm({
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (requestInProgress) {
+      return;
+    }
+
+    setRequestInProgress(true);
 
     const account = accounts.find((item) => item.id === accountId);
     if (!account) {
@@ -75,6 +82,8 @@ export default function TransactionsModalForm({
     } catch (requestError) {
       setFormError(requestError);
     }
+
+    setRequestInProgress(false);
   };
 
   const accountOptions = accounts.map((item) => (
@@ -137,7 +146,9 @@ export default function TransactionsModalForm({
           >
             Close
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" disabled={requestInProgress}>
+            Save
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>

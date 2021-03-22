@@ -21,6 +21,7 @@ export default function AccountsModalForm({
   afterSubmit,
   entity,
 }: AccountsModalFormProps): JSX.Element {
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [accountName, setAccountName] = useState(entity?.name);
   const [accountCurrency, setAccountCurrency] = useState(entity?.currency);
@@ -45,6 +46,12 @@ export default function AccountsModalForm({
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (requestInProgress) {
+      return;
+    }
+
+    setRequestInProgress(true);
+
     const actionType: "create" | "update" = entity?.id ? "update" : "create";
     const account = {
       ...entity,
@@ -66,6 +73,8 @@ export default function AccountsModalForm({
     } catch (requestError) {
       setFormError(requestError);
     }
+
+    setRequestInProgress(false);
   };
 
   const currencyOptions = Object.keys(Currency).map((item) => (
@@ -147,7 +156,9 @@ export default function AccountsModalForm({
           >
             Close
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" disabled={requestInProgress}>
+            Save
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>

@@ -20,6 +20,7 @@ export default function EmployersModalForm({
   afterSubmit,
   entity,
 }: EmployersModalFormProps): JSX.Element {
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [employerName, setEmployerName] = useState(entity?.name);
 
@@ -35,6 +36,12 @@ export default function EmployersModalForm({
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (requestInProgress) {
+      return;
+    }
+
+    setRequestInProgress(true);
+
     const actionType: "create" | "update" = entity?.id ? "update" : "create";
     const employer = { ...entity, ...{ name: employerName } } as Employer;
     const action = entity?.id ? api.finance.updateEmployer : api.finance.createEmployer;
@@ -48,6 +55,8 @@ export default function EmployersModalForm({
     } catch (requestError) {
       setFormError(requestError);
     }
+
+    setRequestInProgress(false);
   };
 
   return (
@@ -78,7 +87,9 @@ export default function EmployersModalForm({
           >
             Close
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" disabled={requestInProgress}>
+            Save
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>
