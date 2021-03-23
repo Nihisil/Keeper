@@ -38,6 +38,7 @@ export default function TransactionsList({
 
   const transactionRows = transactions.map((item) => (
     <tr key={item.id}>
+      <td>{item.account?.name}</td>
       <td>{displayMoney(item.amount as number)}</td>
       <td>{item.currency}</td>
       <td>{item.type}</td>
@@ -74,6 +75,7 @@ export default function TransactionsList({
       <Table responsive bordered striped size="sm" data-testid="transactions-table">
         <thead>
           <tr>
+            <th>Account</th>
             <th>Amount</th>
             <th>Currency</th>
             <th>Type</th>

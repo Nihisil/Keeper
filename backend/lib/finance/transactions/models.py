@@ -5,6 +5,7 @@ from pydantic import validator
 
 from lib.db import DBClass
 from lib.finance.accounts.crud import get_account_by_id
+from lib.finance.accounts.models import Account
 from lib.finance.constants import Currency, TransactionType
 
 
@@ -16,12 +17,18 @@ class Transaction(DBClass):
 
     # for income transaction
     from_employer_id: Optional[str]
+
     account_id: str
+    account: Optional[Account]
 
     type: TransactionType
     currency: Currency
 
     main_currency_equivalent: Optional[int]
+
+    class CustomConfig:
+        read_only_fields = {"id"}
+        related_models = {"account_id": Account}
 
     @validator("type")
     def validate_type(cls, value: str, values: Dict) -> str:

@@ -107,6 +107,7 @@ export interface Transaction {
   date: string;
   from_employer_id?: string;
   account_id: string;
+  account?: Account;
 
   /** An enumeration. */
   type: TransactionType;

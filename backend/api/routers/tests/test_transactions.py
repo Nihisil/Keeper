@@ -53,6 +53,7 @@ def test_get_list_of_transactions_api():
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
     assert len(response_data) == number_of_transactions
+    assert response_data[0]["account"]["id"] is not None, "Transaction should include account information"
 
 
 def test_delete_transaction_api():

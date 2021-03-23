@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional, Tuple, Type, TypeVar
+from typing import Dict, List, Optional, Tuple, Type, TypeVar
 
 from bson import ObjectId
 from pydantic import BaseModel
@@ -32,6 +32,30 @@ class DBClass(BaseModel):
 
     class CustomConfig:
         read_only_fields = {"id"}
+        related_models: dict = {}
+
+    def dict(self, **kwargs) -> Dict:  # type: ignore
+        data = super(DBClass, self).dict(**kwargs)
+        if hasattr(self.CustomConfig, "related_models"):
+            data = self._serialize_related_model(data)
+        return data
+
+    def _serialize_related_model(self, data: Dict) -> Dict:
+        related_fields = self.CustomConfig.related_models.keys()
+        # TODO it should be one query to load all related models,
+        # not query in the for each (by performance reasons)
+        for related_field_id in related_fields:
+            related_class = self.CustomConfig.related_models[related_field_id]
+            assert related_field_id.endswith("_id")
+            assert issubclass(related_class, DBClass)
+
+            related_field_name = related_field_id.removesuffix("_id")
+            related_data = db_find_one_by_id(related_class, data[related_field_id], {})
+            assert related_data is not None, "Deleted related models are not supported yet"
+
+            data[related_field_name] = related_data.dict()
+
+        return data
 
 
 def db_insert_one(obj: T) -> T:
