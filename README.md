@@ -6,7 +6,7 @@ For backend we are using Python + FastAPI + MongoDB, and for frontend React + Ty
 
 # Hot to run it locally
 
-1. `make build-docker`
+1. `make docker-build`
 1. `make up`
 
 After that you can access project parts:

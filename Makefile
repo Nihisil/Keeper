@@ -12,8 +12,11 @@ up-daemon:
 down:
 	docker-compose -f $(COMPOSE_FILE) down
 
-build-docker:
+docker-build:
 	docker-compose -f $(COMPOSE_FILE) build --no-cache
+
+docker-pull:
+	docker-compose -f $(COMPOSE_FILE) pull
 
 shell:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm api sh
