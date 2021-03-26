@@ -87,6 +87,16 @@ export interface Employer {
   earnings_currency?: Currency;
 }
 
+export interface FinanceCategory {
+  id?: string;
+
+  /** @format date-time */
+  updated?: string;
+  name: string;
+  is_deleted?: boolean;
+  amount?: number;
+}
+
 export interface HTTPValidationError {
   detail?: ValidationError[];
 }

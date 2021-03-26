@@ -1,19 +1,21 @@
-import { Account } from "client/data-contracts";
+import { FinanceCategory } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
-import { AccountsProps } from "components/Finances/Accounts/AccountsMethods";
-import AccountsModalForm from "components/Finances/Accounts/AccountsModalForm";
+import { FinanceCategoriesProps } from "components/Finances/FinanceCategories/FinanceCategoriesMethods";
+import FinanceCategoriesModalForm from "components/Finances/FinanceCategories/FinanceCategoriesModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import { displayDatetime } from "utils/date";
-import { displayMoney } from "utils/finances";
 
-interface AccountsModalData {
+interface FinanceCategoriesModalData {
   show: boolean;
-  entity?: Account;
+  entity?: FinanceCategory;
 }
 
-export default function AccountsList({ accounts, dispatchAccounts }: AccountsProps): JSX.Element {
+export default function FinanceCategoriesList({
+  financeCategories,
+  dispatchFinanceCategories,
+}: FinanceCategoriesProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
     toDeleteName: "",
@@ -22,23 +24,20 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
   const [editModal, setEditModal] = useState({
     show: false,
     entity: undefined,
-  } as AccountsModalData);
+  } as FinanceCategoriesModalData);
 
-  const deleteAccount = async (accountId: string) => {
-    const account = accounts.find((item) => item.id === accountId);
-    if (!account) {
-      throw Error("Not correct account id was passed to delete function");
+  const deleteFinanceCategory = async (financeCategoryId: string) => {
+    const financeCategory = financeCategories.find((item) => item.id === financeCategoryId);
+    if (!financeCategory) {
+      throw Error("Not correct financeCategory id was passed to delete function");
     }
-    await api.finance.deleteAccount(account, { secure: true });
-    dispatchAccounts({ type: "delete", account });
+    await api.finance.deleteFinanceCategory(financeCategory, { secure: true });
+    dispatchFinanceCategories({ type: "delete", financeCategory });
   };
 
-  const accountRows = accounts.map((item) => (
+  const financeCategoryRows = financeCategories.map((item) => (
     <tr key={item.id}>
       <td>{item.name}</td>
-      <td>{displayMoney(item.balance as number)}</td>
-      <td>{item.currency}</td>
-      <td>{item.account_type}</td>
       <td>{displayDatetime(item.updated)}</td>
       <td>
         <Button
@@ -69,23 +68,20 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
 
   return (
     <>
-      <Table responsive bordered striped size="sm" data-testid="accounts-table">
+      <Table responsive bordered striped size="sm" data-testid="finance-categories-table">
         <thead>
           <tr>
             <th>Name</th>
-            <th>Balance</th>
-            <th>Currency</th>
-            <th>Type</th>
             <th>Updated</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {accounts.length ? (
-            accountRows
+          {financeCategories.length ? (
+            financeCategoryRows
           ) : (
             <tr>
-              <td colSpan={6}>No data</td>
+              <td colSpan={3}>No data</td>
             </tr>
           )}
         </tbody>
@@ -95,12 +91,12 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
         onHide={() => setDeleteModal({ show: false, toDeleteName: "", toDeleteId: "" })}
         toDeleteName={deleteModal.toDeleteName}
         toDeleteId={deleteModal.toDeleteId}
-        deleteAction={deleteAccount}
+        deleteAction={deleteFinanceCategory}
       />
-      <AccountsModalForm
+      <FinanceCategoriesModalForm
         show={editModal.show}
         onHide={() => setEditModal({ show: false, entity: undefined })}
-        afterSubmit={dispatchAccounts}
+        afterSubmit={dispatchFinanceCategories}
         entity={editModal.entity}
       />
     </>

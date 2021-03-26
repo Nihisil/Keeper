@@ -4,7 +4,7 @@ from fastapi.routing import APIRoute
 from starlette.responses import JSONResponse
 
 from api.routers import auth, users
-from api.routers.finance import accounts, currency_exchange_rates, employers, transactions
+from api.routers.finance import accounts, currency_exchange_rates, employers, finance_categories, transactions
 from config import get_settings
 
 settings = get_settings()
@@ -58,6 +58,7 @@ def create_app() -> FastAPI:
     _app.include_router(accounts.router)
     _app.include_router(currency_exchange_rates.router)
     _app.include_router(transactions.router)
+    _app.include_router(finance_categories.router)
 
     return _app
 

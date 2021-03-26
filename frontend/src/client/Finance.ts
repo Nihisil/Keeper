@@ -14,6 +14,7 @@ import {
   Currency,
   CurrencyExchangeRateResponseModel,
   Employer,
+  FinanceCategory,
   HTTPValidationError,
   Transaction,
   TransactionUpdatedResponse,
@@ -234,6 +235,72 @@ export class Finance<SecurityDataType = unknown> {
   updateTransaction = (data: Transaction, params: RequestParams = {}) =>
     this.http.request<TransactionUpdatedResponse, void | HTTPValidationError>({
       path: `/finance/transactions/update`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags finance_categories
+   * @name CreateFinanceCategory
+   * @summary Create Finance Category
+   * @request POST:/finance/categories/create
+   */
+  createFinanceCategory = (data: FinanceCategory, params: RequestParams = {}) =>
+    this.http.request<FinanceCategory, void | HTTPValidationError>({
+      path: `/finance/categories/create`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags finance_categories
+   * @name GetListOfFinanceCategories
+   * @summary Get List Of Finance Categories
+   * @request GET:/finance/categories/get-list
+   */
+  getListOfFinanceCategories = (params: RequestParams = {}) =>
+    this.http.request<FinanceCategory[], void>({
+      path: `/finance/categories/get-list`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags finance_categories
+   * @name DeleteFinanceCategory
+   * @summary Delete Finance Category
+   * @request DELETE:/finance/categories/delete
+   */
+  deleteFinanceCategory = (data: FinanceCategory, params: RequestParams = {}) =>
+    this.http.request<any, void | HTTPValidationError>({
+      path: `/finance/categories/delete`,
+      method: "DELETE",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags finance_categories
+   * @name UpdateFinanceCategory
+   * @summary Update Finance Category
+   * @request PUT:/finance/categories/update
+   */
+  updateFinanceCategory = (data: FinanceCategory, params: RequestParams = {}) =>
+    this.http.request<FinanceCategory, void | HTTPValidationError>({
+      path: `/finance/categories/update`,
       method: "PUT",
       body: data,
       type: ContentType.Json,

@@ -1,6 +1,7 @@
 import Accounts from "components/Finances/Accounts/Accounts";
 import { accountsReducer } from "components/Finances/Accounts/AccountsMethods";
 import Employers from "components/Finances/Employers/Employers";
+import FinanceCategories from "components/Finances/FinanceCategories/FinanceCategories";
 import Transactions from "components/Finances/Transactions/Transactions";
 import { transactionsReducer } from "components/Finances/Transactions/TransactionsMethods";
 import React, { useReducer } from "react";
@@ -29,6 +30,11 @@ export default function Finances(): JSX.Element {
             accounts={accounts}
             dispatchAccounts={dispatchAccounts}
           />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <FinanceCategories />
         </div>
       </div>
       <div className="row">
