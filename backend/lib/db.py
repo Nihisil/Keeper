@@ -45,6 +45,9 @@ class DBClass(BaseModel):
         # TODO it should be one query to load all related models,
         # not query in the for each (by performance reasons)
         for related_field_id in related_fields:
+            if not data[related_field_id]:
+                continue
+
             related_class = self.CustomConfig.related_models[related_field_id]
             assert related_field_id.endswith("_id")
             assert issubclass(related_class, DBClass)

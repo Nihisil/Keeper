@@ -7,6 +7,7 @@ from lib.db import DBClass
 from lib.finance.accounts.crud import get_account_by_id
 from lib.finance.accounts.models import Account
 from lib.finance.constants import Currency, TransactionType
+from lib.finance.finance_categories.models import FinanceCategory
 
 
 class Transaction(DBClass):
@@ -21,6 +22,9 @@ class Transaction(DBClass):
     account_id: str
     account: Optional[Account]
 
+    category_id: Optional[str]
+    category: Optional[FinanceCategory]
+
     type: TransactionType
     currency: Currency
 
@@ -28,7 +32,10 @@ class Transaction(DBClass):
 
     class CustomConfig:
         read_only_fields = {"id"}
-        related_models = {"account_id": Account}
+        related_models = {
+            "account_id": Account,
+            "category_id": FinanceCategory,
+        }
 
     @validator("type")
     def validate_type(cls, value: str, values: Dict) -> str:

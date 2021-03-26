@@ -10,6 +10,7 @@ from lib.finance.transactions.models import Transaction
 from lib.tests.utils import (
     create_account_for_tests,
     create_employer_for_tests,
+    create_finance_category_for_tests,
     create_transaction_for_tests,
     create_user_and_token_for_tests,
 )
@@ -21,11 +22,13 @@ def test_create_transaction_api():
     user, token = create_user_and_token_for_tests()
     account = create_account_for_tests()
     employer = create_employer_for_tests()
+    category = create_finance_category_for_tests()
     transaction_data = Transaction(
         type=TransactionType.INCOME,
         amount=100,
         currency=Currency.USD,
         account_id=account.id,
+        category_id=category.id,
         from_employer_id=employer.id,
         date=datetime.utcnow(),
         main_currency_equivalent=123,
@@ -39,6 +42,7 @@ def test_create_transaction_api():
     response_data = response.json()
     assert response_data["transaction"]["id"] is not None
     assert response_data["account"]["id"] == account.id
+    assert response_data["transaction"]["category"]["id"] == category.id
 
 
 def test_get_list_of_transactions_api():
