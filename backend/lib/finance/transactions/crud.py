@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import pymongo
 
@@ -10,7 +10,7 @@ from lib.finance.currency_exchange_rates.crud import get_currency_exchange_rate_
 from lib.finance.transactions.models import Transaction
 
 
-def create_transaction(transaction: Transaction) -> Tuple[Transaction, Account]:
+def create_transaction(transaction: Transaction) -> Transaction:
     if not transaction.main_currency_equivalent:
         # to easier aggregate amount sum, let's duplicate this value here
         transaction.main_currency_equivalent = transaction.amount
@@ -26,7 +26,8 @@ def create_transaction(transaction: Transaction) -> Tuple[Transaction, Account]:
 
     transaction = db_insert_one(transaction)
     account = _update_related_account_balance(transaction.account_id, transaction.amount, increase=True)
-    return transaction, account
+    transaction.account = account
+    return transaction
 
 
 def get_transaction_by_id(transaction_id: str) -> Optional[Transaction]:
@@ -55,11 +56,12 @@ def delete_transaction(transaction: Transaction) -> Account:
     return _update_related_account_balance(transaction.account_id, transaction.amount, increase=False)
 
 
-def update_transaction(transaction: Transaction, old_amount: int) -> Tuple[Transaction, Account]:
+def update_transaction(transaction: Transaction, old_amount: int) -> Transaction:
     transaction = db_update_one(transaction)
     account_amount = -old_amount + transaction.amount
     account = _update_related_account_balance(transaction.account_id, account_amount, increase=True)
-    return transaction, account
+    transaction.account = account
+    return transaction
 
 
 def _update_related_account_balance(account_id: str, amount: int, increase: bool) -> Account:

@@ -1,13 +1,15 @@
 import FinanceCategoriesList from "components/Finances/FinanceCategories/FinanceCategoriesList";
-import { financeCategoriesReducer } from "components/Finances/FinanceCategories/FinanceCategoriesMethods";
+import { FinanceCategoriesProps } from "components/Finances/FinanceCategories/FinanceCategoriesMethods";
 import FinanceCategoriesModalForm from "components/Finances/FinanceCategories/FinanceCategoriesModalForm";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "utils/api";
 
-export default function FinanceCategories(): JSX.Element {
+export default function FinanceCategories({
+  financeCategories,
+  dispatchFinanceCategories,
+}: FinanceCategoriesProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
-  const [financeCategories, dispatchFinanceCategories] = useReducer(financeCategoriesReducer, []);
 
   useEffect(() => {
     (async () => {

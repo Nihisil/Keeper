@@ -2,6 +2,7 @@ import Accounts from "components/Finances/Accounts/Accounts";
 import { accountsReducer } from "components/Finances/Accounts/AccountsMethods";
 import Employers from "components/Finances/Employers/Employers";
 import FinanceCategories from "components/Finances/FinanceCategories/FinanceCategories";
+import { financeCategoriesReducer } from "components/Finances/FinanceCategories/FinanceCategoriesMethods";
 import Transactions from "components/Finances/Transactions/Transactions";
 import { transactionsReducer } from "components/Finances/Transactions/TransactionsMethods";
 import React, { useReducer } from "react";
@@ -10,6 +11,7 @@ import { Link } from "react-router-dom";
 export default function Finances(): JSX.Element {
   const [accounts, dispatchAccounts] = useReducer(accountsReducer, []);
   const [transactions, dispatchTransactions] = useReducer(transactionsReducer, []);
+  const [financeCategories, dispatchFinanceCategories] = useReducer(financeCategoriesReducer, []);
 
   return (
     <>
@@ -29,12 +31,17 @@ export default function Finances(): JSX.Element {
             dispatchTransactions={dispatchTransactions}
             accounts={accounts}
             dispatchAccounts={dispatchAccounts}
+            financeCategories={financeCategories}
+            dispatchFinanceCategories={dispatchFinanceCategories}
           />
         </div>
       </div>
       <div className="row">
         <div className="col">
-          <FinanceCategories />
+          <FinanceCategories
+            financeCategories={financeCategories}
+            dispatchFinanceCategories={dispatchFinanceCategories}
+          />
         </div>
       </div>
       <div className="row">
@@ -49,6 +56,8 @@ export default function Finances(): JSX.Element {
             dispatchTransactions={dispatchTransactions}
             accounts={accounts}
             dispatchAccounts={dispatchAccounts}
+            financeCategories={financeCategories}
+            dispatchFinanceCategories={dispatchFinanceCategories}
           />
         </div>
       </div>

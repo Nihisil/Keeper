@@ -118,6 +118,8 @@ export interface Transaction {
   from_employer_id?: string;
   account_id: string;
   account?: Account;
+  category_id?: string;
+  category?: FinanceCategory;
 
   /** An enumeration. */
   type: TransactionType;
@@ -133,11 +135,6 @@ export interface Transaction {
 export enum TransactionType {
   REGULAR = "REGULAR",
   INCOME = "INCOME",
-}
-
-export interface TransactionUpdatedResponse {
-  transaction: Transaction;
-  account: Account;
 }
 
 export interface User {

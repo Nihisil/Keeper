@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
 import { displayDatetime } from "utils/date";
+import { displayMoney } from "utils/finances";
 
 interface FinanceCategoriesModalData {
   show: boolean;
@@ -38,6 +39,7 @@ export default function FinanceCategoriesList({
   const financeCategoryRows = financeCategories.map((item) => (
     <tr key={item.id}>
       <td>{item.name}</td>
+      <td>{displayMoney(item.amount as number)}</td>
       <td>{displayDatetime(item.updated)}</td>
       <td>
         <Button
@@ -72,6 +74,7 @@ export default function FinanceCategoriesList({
         <thead>
           <tr>
             <th>Name</th>
+            <th>Amount</th>
             <th>Updated</th>
             <th>Actions</th>
           </tr>

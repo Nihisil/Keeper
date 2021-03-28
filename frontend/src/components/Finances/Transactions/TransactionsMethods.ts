@@ -1,7 +1,11 @@
 import { Transaction } from "client/data-contracts";
 import { AccountsProps } from "components/Finances/Accounts/AccountsMethods";
+import { FinanceCategoriesProps } from "components/Finances/FinanceCategories/FinanceCategoriesMethods";
 
-export interface TransactionsAndAccountsProps extends AccountsProps, TransactionsProps {}
+export interface TransactionsAccountsCategoriesProps
+  extends AccountsProps,
+    TransactionsProps,
+    FinanceCategoriesProps {}
 
 export interface TransactionsProps {
   transactions: Array<Transaction>;

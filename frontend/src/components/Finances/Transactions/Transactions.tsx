@@ -1,5 +1,5 @@
 import TransactionsList from "components/Finances/Transactions/TransactionsList";
-import { TransactionsAndAccountsProps } from "components/Finances/Transactions/TransactionsMethods";
+import { TransactionsAccountsCategoriesProps } from "components/Finances/Transactions/TransactionsMethods";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
@@ -10,7 +10,9 @@ export default function Transactions({
   dispatchAccounts,
   transactions,
   dispatchTransactions,
-}: TransactionsAndAccountsProps): JSX.Element {
+  financeCategories,
+  dispatchFinanceCategories,
+}: TransactionsAccountsCategoriesProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
@@ -33,6 +35,8 @@ export default function Transactions({
         dispatchTransactions={dispatchTransactions}
         accounts={accounts}
         dispatchAccounts={dispatchAccounts}
+        financeCategories={financeCategories}
+        dispatchFinanceCategories={dispatchFinanceCategories}
       />
       <TransactionsModalForm
         show={modalShow}
@@ -41,6 +45,8 @@ export default function Transactions({
         entity={undefined}
         accounts={accounts}
         dispatchAccounts={dispatchAccounts}
+        financeCategories={financeCategories}
+        dispatchFinanceCategories={dispatchFinanceCategories}
       />
     </>
   );

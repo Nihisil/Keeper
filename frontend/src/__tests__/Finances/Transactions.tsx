@@ -10,6 +10,8 @@ it("renders list of transactions", () => {
       dispatchTransactions={() => {}}
       accounts={[]}
       dispatchAccounts={() => {}}
+      financeCategories={[]}
+      dispatchFinanceCategories={() => {}}
     />
   );
   expect(screen.getByText("Transactions")).toBeInTheDocument();

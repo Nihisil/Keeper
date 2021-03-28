@@ -40,9 +40,9 @@ def test_create_transaction_api():
     )
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
-    assert response_data["transaction"]["id"] is not None
+    assert response_data["id"] is not None
     assert response_data["account"]["id"] == account.id
-    assert response_data["transaction"]["category"]["id"] == category.id
+    assert response_data["category"]["id"] == category.id
 
 
 def test_get_list_of_transactions_api():
@@ -62,7 +62,7 @@ def test_get_list_of_transactions_api():
 
 def test_delete_transaction_api():
     user, token = create_user_and_token_for_tests()
-    transaction, _ = create_transaction_for_tests(100)
+    transaction = create_transaction_for_tests(100)
     response = client.delete(
         "/finance/transactions/delete",
         data=transaction.json(),
@@ -77,7 +77,7 @@ def test_delete_transaction_api():
 def test_update_transaction_api():
     user, token = create_user_and_token_for_tests()
 
-    transaction, _ = create_transaction_for_tests(100)
+    transaction = create_transaction_for_tests(100)
     account = get_account_by_id(transaction.account_id)
     assert account.balance == transaction.amount
 

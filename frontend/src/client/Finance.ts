@@ -17,7 +17,6 @@ import {
   FinanceCategory,
   HTTPValidationError,
   Transaction,
-  TransactionUpdatedResponse,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
@@ -184,7 +183,7 @@ export class Finance<SecurityDataType = unknown> {
    * @request POST:/finance/transactions/create
    */
   createTransaction = (data: Transaction, params: RequestParams = {}) =>
-    this.http.request<TransactionUpdatedResponse, void | HTTPValidationError>({
+    this.http.request<Transaction, void | HTTPValidationError>({
       path: `/finance/transactions/create`,
       method: "POST",
       body: data,
@@ -233,7 +232,7 @@ export class Finance<SecurityDataType = unknown> {
    * @request PUT:/finance/transactions/update
    */
   updateTransaction = (data: Transaction, params: RequestParams = {}) =>
-    this.http.request<TransactionUpdatedResponse, void | HTTPValidationError>({
+    this.http.request<Transaction, void | HTTPValidationError>({
       path: `/finance/transactions/update`,
       method: "PUT",
       body: data,

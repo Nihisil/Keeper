@@ -1,6 +1,6 @@
 import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
 import {
-  TransactionsAndAccountsProps,
+  TransactionsAccountsCategoriesProps,
   TransactionsModalData,
 } from "components/Finances/Transactions/TransactionsMethods";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
@@ -15,7 +15,9 @@ export default function TransactionsList({
   dispatchTransactions,
   accounts,
   dispatchAccounts,
-}: TransactionsAndAccountsProps): JSX.Element {
+  financeCategories,
+  dispatchFinanceCategories,
+}: TransactionsAccountsCategoriesProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
     toDeleteName: "",
@@ -107,6 +109,8 @@ export default function TransactionsList({
         entity={editModal.entity}
         accounts={accounts}
         dispatchAccounts={dispatchAccounts}
+        financeCategories={financeCategories}
+        dispatchFinanceCategories={dispatchFinanceCategories}
       />
     </>
   );

@@ -1,7 +1,7 @@
 import EmployersList from "components/Finances/Employers/EmployersList";
 import { employersReducer } from "components/Finances/Employers/EmployersMethods";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
-import { TransactionsAndAccountsProps } from "components/Finances/Transactions/TransactionsMethods";
+import { TransactionsAccountsCategoriesProps } from "components/Finances/Transactions/TransactionsMethods";
 import React, { useEffect, useReducer, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "utils/api";
@@ -11,7 +11,9 @@ export default function Employers({
   dispatchAccounts,
   transactions,
   dispatchTransactions,
-}: TransactionsAndAccountsProps): JSX.Element {
+  financeCategories,
+  dispatchFinanceCategories,
+}: TransactionsAccountsCategoriesProps): JSX.Element {
   const [modalShow, setModalShow] = useState(false);
   const [employers, dispatchEmployers] = useReducer(employersReducer, []);
 
@@ -37,6 +39,8 @@ export default function Employers({
         dispatchAccounts={dispatchAccounts}
         transactions={transactions}
         dispatchTransactions={dispatchTransactions}
+        financeCategories={financeCategories}
+        dispatchFinanceCategories={dispatchFinanceCategories}
       />
       <EmployersModalForm
         show={modalShow}

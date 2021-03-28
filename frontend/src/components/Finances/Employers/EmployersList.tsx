@@ -1,12 +1,11 @@
 import { Employer, Transaction, TransactionType } from "client/data-contracts";
 import ConfirmDeleteModal from "components/App/General/ConfirmDeleteModal";
-import { AccountsProps } from "components/Finances/Accounts/AccountsMethods";
 import { EmployersAction } from "components/Finances/Employers/EmployersMethods";
 import EmployersModalForm from "components/Finances/Employers/EmployersModalForm";
 import {
+  TransactionsAccountsCategoriesProps,
   TransactionsAction,
   TransactionsModalData,
-  TransactionsProps,
 } from "components/Finances/Transactions/TransactionsMethods";
 import TransactionsModalForm from "components/Finances/Transactions/TransactionsModalForm";
 import React, { useState } from "react";
@@ -20,7 +19,7 @@ interface EmployersModalData {
   entity?: Employer;
 }
 
-interface EmployersListProps extends AccountsProps, TransactionsProps {
+interface EmployersListProps extends TransactionsAccountsCategoriesProps {
   employers: Array<Employer>;
   dispatchEmployers(action: EmployersAction): void;
 }
@@ -31,6 +30,8 @@ export default function EmployersList({
   accounts,
   dispatchAccounts,
   dispatchTransactions,
+  financeCategories,
+  dispatchFinanceCategories,
 }: EmployersListProps): JSX.Element {
   const [deleteModal, setDeleteModal] = useState({
     show: false,
@@ -169,6 +170,8 @@ export default function EmployersList({
         entity={transactionModal.entity}
         accounts={accounts}
         dispatchAccounts={dispatchAccounts}
+        financeCategories={financeCategories}
+        dispatchFinanceCategories={dispatchFinanceCategories}
       />
     </>
   );

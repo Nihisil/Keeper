@@ -1,7 +1,6 @@
 from typing import List
 
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
 
 from lib.auth import get_current_user_from_token
 from lib.finance.accounts.models import Account
@@ -20,20 +19,15 @@ router = APIRouter(
 )
 
 
-class TransactionUpdatedResponse(BaseModel):
-    transaction: Transaction
-    account: Account
-
-
 @router.post(
     "/create",
     name="Create transaction",
-    response_model=TransactionUpdatedResponse,
+    response_model=Transaction,
     dependencies=[Depends(get_current_user_from_token)],
 )
-def create_transaction_api(data: Transaction) -> TransactionUpdatedResponse:
-    transaction, account = create_transaction(data)
-    return TransactionUpdatedResponse(transaction=transaction, account=account)
+def create_transaction_api(data: Transaction) -> Transaction:
+    transaction = create_transaction(data)
+    return transaction
 
 
 @router.get(
@@ -59,12 +53,12 @@ def delete_transaction_api(transaction: Transaction) -> Account:
 @router.put(
     "/update",
     name="Update transaction",
-    response_model=TransactionUpdatedResponse,
+    response_model=Transaction,
     dependencies=[Depends(get_current_user_from_token)],
 )
-def update_transaction_api(transaction: Transaction) -> TransactionUpdatedResponse:
+def update_transaction_api(transaction: Transaction) -> Transaction:
     assert transaction.id
     old_transaction = get_transaction_by_id(transaction.id)
     assert old_transaction
-    transaction, account = update_transaction(transaction, old_transaction.amount)
-    return TransactionUpdatedResponse(transaction=transaction, account=account)
+    transaction = update_transaction(transaction, old_transaction.amount)
+    return transaction

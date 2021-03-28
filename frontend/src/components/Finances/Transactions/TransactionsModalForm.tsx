@@ -1,7 +1,8 @@
 import { AxiosError } from "axios";
-import { Transaction } from "client/data-contracts";
+import { Transaction, TransactionType } from "client/data-contracts";
 import DisplayError from "components/App/DisplayError";
 import { AccountsProps } from "components/Finances/Accounts/AccountsMethods";
+import { FinanceCategoriesProps } from "components/Finances/FinanceCategories/FinanceCategoriesMethods";
 import { TransactionsAction } from "components/Finances/Transactions/TransactionsMethods";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
@@ -11,7 +12,7 @@ import { DATE_INPUT_FORMAT, displayDate } from "utils/date";
 import dayjs from "utils/dayjs";
 import { convertMoneyToNumber, convertNumberToMoney } from "utils/finances";
 
-interface TransactionsModalFormProps extends AccountsProps {
+interface TransactionsModalFormProps extends AccountsProps, FinanceCategoriesProps {
   show: boolean;
   onHide(): void;
   afterSubmit(action: TransactionsAction): void;
@@ -25,24 +26,32 @@ export default function TransactionsModalForm({
   entity,
   accounts,
   dispatchAccounts,
+  financeCategories,
+  dispatchFinanceCategories,
 }: TransactionsModalFormProps): JSX.Element {
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [formError, setFormError] = useState<Nullish<AxiosError>>(undefined);
   const [transactionAmount, setTransactionAmount] = useState(entity?.amount);
   const [transactionDate, setTransactionDate] = useState<string>(dayjs().format(DATE_INPUT_FORMAT));
   const [accountId, setAccountId] = useState(entity?.account_id);
+  const [categoryId, setCategoryId] = useState(entity?.category_id);
+  const [transactionType, setTransactionType] = useState<TransactionType>(TransactionType.REGULAR);
 
   // set form defaults when edit entity
   useEffect(() => {
     setTransactionAmount(convertMoneyToNumber(entity?.amount as number));
     setTransactionDate(displayDate(entity?.date));
     setAccountId(entity?.account_id);
-  }, [entity?.amount, entity?.date, entity?.account_id]);
+    setCategoryId(entity?.category_id);
+    setTransactionType(entity?.type || TransactionType.REGULAR);
+  }, [entity?.amount, entity?.date, entity?.account_id, entity?.type, entity?.category_id]);
 
   const cleanUpForm = () => {
     setTransactionAmount(undefined);
-    setAccountId(undefined);
     setTransactionDate("");
+    setAccountId(undefined);
+    setCategoryId(undefined);
+    setTransactionType(TransactionType.REGULAR);
   };
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,6 +68,11 @@ export default function TransactionsModalForm({
       return;
     }
 
+    const category = financeCategories.find((item) => item.id === categoryId);
+    if (!category) {
+      return;
+    }
+
     const actionType: "create" | "update" = entity?.id ? "update" : "create";
     const transaction = {
       ...entity,
@@ -66,7 +80,9 @@ export default function TransactionsModalForm({
         amount: convertNumberToMoney(transactionAmount as number),
         date: dayjs(transactionDate).toISOString(),
         account_id: accountId,
+        category_id: categoryId,
         currency: account.currency,
+        type: transactionType,
       },
     } as Transaction;
     const action = entity?.id ? api.finance.updateTransaction : api.finance.createTransaction;
@@ -74,8 +90,14 @@ export default function TransactionsModalForm({
     try {
       const response = await action(transaction, { secure: true });
 
-      afterSubmit({ type: actionType, transaction: response.data.transaction });
-      dispatchAccounts({ type: "update", account: response.data.account });
+      afterSubmit({ type: actionType, transaction: response.data });
+      if (response.data.account) {
+        dispatchAccounts({ type: "update", account: response.data.account });
+      }
+      dispatchFinanceCategories({
+        type: "update",
+        financeCategory: { ...category, ...{ amount: transaction.main_currency_equivalent } },
+      });
 
       onHide();
       cleanUpForm();
@@ -92,6 +114,18 @@ export default function TransactionsModalForm({
     </option>
   ));
 
+  const categoriesOptions = financeCategories.map((item) => (
+    <option key={item.id} value={item.id}>
+      {item.name}
+    </option>
+  ));
+
+  const typesOptions = Object.keys(TransactionType).map((item) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+
   return (
     <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
@@ -100,6 +134,20 @@ export default function TransactionsModalForm({
       <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
           <DisplayError error={formError} />
+          <Form.Group controlId="type">
+            <Form.Label>Type</Form.Label>
+            <Form.Control
+              as="select"
+              value={transactionType}
+              onChange={(e) => setTransactionType(e.target.value as TransactionType)}
+              required
+            >
+              <option disabled selected>
+                -- select an option --
+              </option>
+              {typesOptions}
+            </Form.Control>
+          </Form.Group>
           <Form.Group controlId="account">
             <Form.Label>Account</Form.Label>
             <Form.Control
@@ -112,6 +160,19 @@ export default function TransactionsModalForm({
                 -- select an option --
               </option>
               {accountOptions}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="category">
+            <Form.Label>Category</Form.Label>
+            <Form.Control
+              as="select"
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value as string)}
+            >
+              <option disabled selected>
+                -- select an option --
+              </option>
+              {categoriesOptions}
             </Form.Control>
           </Form.Group>
           <Form.Group controlId="amount">
