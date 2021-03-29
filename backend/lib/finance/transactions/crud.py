@@ -35,7 +35,7 @@ def get_transaction_by_id(transaction_id: str) -> Optional[Transaction]:
 
 
 def get_transactions_list(
-    transaction_type: TransactionType = None, employer_ids: List[str] = None
+    transaction_type: TransactionType = None, employer_ids: List[str] = None, category_ids: List[str] = None
 ) -> List[Transaction]:
     sorting = ["updated", pymongo.DESCENDING]
 
@@ -46,6 +46,9 @@ def get_transactions_list(
 
     if employer_ids:
         filter_query["from_employer_id"] = {"$in": employer_ids}
+
+    if category_ids:
+        filter_query["category_id"] = {"$in": category_ids}
 
     data, _ = db_find_all(Transaction, filter_query, sorting)
     return data

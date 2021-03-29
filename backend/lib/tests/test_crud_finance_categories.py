@@ -1,3 +1,4 @@
+from lib.finance.constants import TransactionType
 from lib.finance.finance_categories.crud import (
     create_finance_category,
     delete_finance_category,
@@ -5,6 +6,7 @@ from lib.finance.finance_categories.crud import (
     update_finance_category,
 )
 from lib.finance.finance_categories.models import FinanceCategory
+from lib.tests.utils import create_transaction_for_tests
 
 
 def test_create_finance_category():
@@ -17,10 +19,13 @@ def test_create_finance_category():
 def test_get_finance_categories_list():
     number_of_finance_categories = 4
     for i in range(number_of_finance_categories):
-        finance_category_data = FinanceCategory(name=f"Test {i}")
-        create_finance_category(finance_category_data)
+        category = create_finance_category(FinanceCategory(name=f"Test {i}"))
+        create_transaction_for_tests(
+            amount=i + 1, category=category, transaction_type=TransactionType.REGULAR
+        )
     finance_categories = get_finance_categories_list()
     assert len(finance_categories) == number_of_finance_categories
+    assert finance_categories[0].amount is not None
 
 
 def test_delete_finance_category():

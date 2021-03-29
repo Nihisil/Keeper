@@ -89,15 +89,23 @@ export default function TransactionsModalForm({
 
     try {
       const response = await action(transaction, { secure: true });
+      const transactionResponse = response.data;
 
-      afterSubmit({ type: actionType, transaction: response.data });
-      if (response.data.account) {
-        dispatchAccounts({ type: "update", account: response.data.account });
+      afterSubmit({ type: actionType, transaction: transactionResponse });
+      if (transactionResponse.account) {
+        dispatchAccounts({ type: "update", account: transactionResponse.account });
       }
-      dispatchFinanceCategories({
-        type: "update",
-        financeCategory: { ...category, ...{ amount: transaction.main_currency_equivalent } },
-      });
+
+      if (transactionResponse.main_currency_equivalent) {
+        if (!category.amount) {
+          category.amount = 0;
+        }
+        category.amount += transactionResponse.main_currency_equivalent;
+        dispatchFinanceCategories({
+          type: "update",
+          financeCategory: category,
+        });
+      }
 
       onHide();
       cleanUpForm();

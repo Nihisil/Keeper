@@ -35,19 +35,25 @@ def create_account_for_tests(currency: Optional[Currency] = None):
     return create_account(Account(name="Test", currency=currency, account_type=AccountType.BANK))
 
 
-def create_transaction_for_tests(amount: int, employer: Optional[Employer] = None):
+def create_transaction_for_tests(
+    amount: int,
+    transaction_type=TransactionType.INCOME,
+    employer: Optional[Employer] = None,
+    category: Optional[FinanceCategory] = None,
+):
     account = create_account_for_tests()
     if not employer:
         employer = create_employer_for_tests()
     return create_transaction(
         Transaction(
-            type=TransactionType.INCOME,
+            type=transaction_type,
             amount=amount,
             currency=Currency.USD,
             account_id=account.id,
             from_employer_id=employer.id,
             date=datetime.utcnow(),
             main_currency_equivalent=100,
+            category_id=category and category.id,
         )
     )
 
