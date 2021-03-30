@@ -24,7 +24,7 @@ def test_create_income_transaction_without_main_currency_equivalent():
     rate = 80
     create_currency_exchange_rate_for_tests(rate)
 
-    amount = 100
+    amount = 100 * MONEY_DIGITS
     account = create_account_for_tests()
     employer = create_employer_for_tests()
     transaction_data = Transaction(
@@ -38,7 +38,7 @@ def test_create_income_transaction_without_main_currency_equivalent():
     transaction = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
-    assert transaction.main_currency_equivalent == (rate * amount) * MONEY_DIGITS
+    assert transaction.main_currency_equivalent == rate * amount
 
     account = get_account_by_id(transaction.account_id)
     assert account.balance == amount

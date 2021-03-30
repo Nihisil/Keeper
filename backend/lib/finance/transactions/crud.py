@@ -5,7 +5,7 @@ import pymongo
 from lib.db import db_delete_one_by_id, db_find_all, db_find_one_by_id, db_insert_one, db_update_one
 from lib.finance.accounts.crud import get_account_by_id, update_account
 from lib.finance.accounts.models import Account
-from lib.finance.constants import MAIN_CURRENCY, MONEY_DIGITS, TransactionType
+from lib.finance.constants import MAIN_CURRENCY, TransactionType
 from lib.finance.currency_exchange_rates.crud import get_currency_exchange_rate_for_nearest_date
 from lib.finance.transactions.models import Transaction
 
@@ -20,9 +20,7 @@ def create_transaction(transaction: Transaction) -> Transaction:
             )
             assert currency_exchange_rate, f"Can't find currency exchange rate on {transaction.date}"
 
-            transaction.main_currency_equivalent = int(
-                (transaction.amount * currency_exchange_rate.rate) * MONEY_DIGITS
-            )
+            transaction.main_currency_equivalent = int(transaction.amount * currency_exchange_rate.rate)
 
     transaction = db_insert_one(transaction)
     account = _update_related_account_balance(transaction.account_id, transaction.amount, increase=True)
