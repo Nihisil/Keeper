@@ -35,7 +35,9 @@ export default function TransactionsList({
     }
     const response = await api.finance.deleteTransaction(transaction, { secure: true });
     dispatchTransactions({ type: "delete", transaction });
-    dispatchAccounts({ type: "update", account: response.data });
+    if (response.data.account) {
+      dispatchAccounts({ type: "update", account: response.data.account });
+    }
   };
 
   const transactionRows = transactions.map((item) => (

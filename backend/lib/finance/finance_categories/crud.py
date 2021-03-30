@@ -33,10 +33,9 @@ def get_finance_categories_list(include_deleted: bool = False) -> List[FinanceCa
     return data
 
 
-def delete_finance_category(finance_category: FinanceCategory) -> None:
+def delete_finance_category(finance_category: FinanceCategory) -> FinanceCategory:
     finance_category.is_deleted = True
-    db_update_one(finance_category)
-    return None
+    return db_update_one(finance_category)
 
 
 def update_finance_category(finance_category: FinanceCategory) -> FinanceCategory:

@@ -38,9 +38,8 @@ def get_finance_categories_list_api() -> List[FinanceCategory]:
 
 
 @router.delete("/delete", name="Delete finance_category", dependencies=[Depends(get_current_user_from_token)])
-def delete_finance_category_api(finance_category: FinanceCategory) -> dict:
-    delete_finance_category(finance_category)
-    return {"success": True}
+def delete_finance_category_api(finance_category: FinanceCategory) -> FinanceCategory:
+    return delete_finance_category(finance_category)
 
 
 @router.put(

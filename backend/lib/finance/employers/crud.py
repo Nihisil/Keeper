@@ -38,10 +38,9 @@ def get_employers_list(include_deleted: bool = False) -> List[Employer]:
     return results
 
 
-def delete_employer(employer: Employer) -> None:
+def delete_employer(employer: Employer) -> Employer:
     employer.is_deleted = True
-    db_update_one(employer)
-    return None
+    return db_update_one(employer)
 
 
 def update_employer(employer: Employer) -> Employer:

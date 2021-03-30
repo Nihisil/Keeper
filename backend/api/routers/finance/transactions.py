@@ -3,7 +3,6 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from lib.auth import get_current_user_from_token
-from lib.finance.accounts.models import Account
 from lib.finance.transactions.crud import (
     create_transaction,
     delete_transaction,
@@ -44,9 +43,9 @@ def get_transactions_list_api() -> List[Transaction]:
     "/delete",
     name="Delete transaction",
     dependencies=[Depends(get_current_user_from_token)],
-    response_model=Account,
+    response_model=Transaction,
 )
-def delete_transaction_api(transaction: Transaction) -> Account:
+def delete_transaction_api(transaction: Transaction) -> Transaction:
     return delete_transaction(transaction)
 
 

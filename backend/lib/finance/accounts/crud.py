@@ -21,10 +21,9 @@ def get_accounts_list(include_deleted: bool = False) -> List[Account]:
     return data
 
 
-def delete_account(account: Account) -> None:
+def delete_account(account: Account) -> Account:
     account.is_deleted = True
-    db_update_one(account)
-    return None
+    return db_update_one(account)
 
 
 def update_account(account: Account) -> Account:

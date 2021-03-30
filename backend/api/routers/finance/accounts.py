@@ -33,9 +33,8 @@ def get_accounts_list_api() -> List[Account]:
 
 
 @router.delete("/delete", name="Delete account", dependencies=[Depends(get_current_user_from_token)])
-def delete_account_api(account: Account) -> dict:
-    delete_account(account)
-    return {"success": True}
+def delete_account_api(account: Account) -> Account:
+    return delete_account(account)
 
 
 @router.put(

@@ -71,7 +71,7 @@ def test_delete_transaction_api():
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
     # updated account is present in response
-    assert response_data["id"] == transaction.account_id
+    assert response_data["account"]["id"] == transaction.account_id
 
 
 def test_update_transaction_api():

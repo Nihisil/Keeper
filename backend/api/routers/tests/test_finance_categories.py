@@ -47,8 +47,6 @@ def test_delete_finance_category_api():
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == status.HTTP_200_OK
-    response_data = response.json()
-    assert response_data["success"]
 
 
 def test_update_finance_category_api():

@@ -33,9 +33,8 @@ def get_employers_list_api() -> List[Employer]:
 
 
 @router.delete("/delete", name="Delete employer", dependencies=[Depends(get_current_user_from_token)])
-def delete_employer_api(employer: Employer) -> dict:
-    delete_employer(employer)
-    return {"success": True}
+def delete_employer_api(employer: Employer) -> Employer:
+    return delete_employer(employer)
 
 
 @router.put(
