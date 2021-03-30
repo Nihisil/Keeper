@@ -26,6 +26,8 @@ services:
       - .envs/.local
     volumes:
       - mongodb_data:/data/db
+    logging:
+      driver: none
     command: mongod --auth --quiet
 
   frontend:
