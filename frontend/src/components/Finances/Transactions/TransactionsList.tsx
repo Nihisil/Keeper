@@ -7,6 +7,7 @@ import TransactionsModalForm from "components/Finances/Transactions/Transactions
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
+import getById from "utils/crud";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
@@ -29,17 +30,21 @@ export default function TransactionsList({
   } as TransactionsModalData);
 
   const deleteTransaction = async (transactionId: string) => {
-    const transaction = transactions.find((item) => item.id === transactionId);
-    if (!transaction) {
-      throw Error("Not correct transaction id was passed to delete function");
-    }
+    const transaction = getById(transactions, transactionId);
     const response = await api.finance.deleteTransaction(transaction, { secure: true });
-    const { category } = response.data;
     dispatchTransactions({ type: "delete", transaction });
-    if (response.data.account) {
-      dispatchAccounts({ type: "update", account: response.data.account });
+
+    const { account } = response.data;
+    if (account) {
+      dispatchAccounts({ type: "update", account });
     }
-    if (category) {
+
+    if (transaction.category_id && transaction.main_currency_equivalent) {
+      const category = getById(financeCategories, transaction.category_id);
+      if (!category.amount) {
+        category.amount = 0;
+      }
+      category.amount -= transaction.main_currency_equivalent;
       dispatchFinanceCategories({ type: "update", financeCategory: category });
     }
   };

@@ -65,7 +65,6 @@ export default function TransactionsModalForm({
     setRequestInProgress(true);
 
     const account = getById(accounts, accountId as string);
-    const category = getById(financeCategories, categoryId as string);
     const actionType: "create" | "update" = entity?.id ? "update" : "create";
     const transaction = {
       ...entity,
@@ -89,7 +88,8 @@ export default function TransactionsModalForm({
         dispatchAccounts({ type: "update", account: transactionResponse.account });
       }
 
-      if (transactionResponse.main_currency_equivalent) {
+      if (categoryId && transactionResponse.main_currency_equivalent) {
+        const category = getById(financeCategories, categoryId as string);
         if (!category.amount) {
           category.amount = 0;
         }
