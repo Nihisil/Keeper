@@ -5,6 +5,7 @@ import FinanceCategoriesModalForm from "components/Finances/FinanceCategories/Fi
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
+import getById from "utils/crud";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
@@ -28,10 +29,7 @@ export default function FinanceCategoriesList({
   } as FinanceCategoriesModalData);
 
   const deleteFinanceCategory = async (financeCategoryId: string) => {
-    const financeCategory = financeCategories.find((item) => item.id === financeCategoryId);
-    if (!financeCategory) {
-      throw Error("Not correct financeCategory id was passed to delete function");
-    }
+    const financeCategory = getById(financeCategories, financeCategoryId);
     await api.finance.deleteFinanceCategory(financeCategory, { secure: true });
     dispatchFinanceCategories({ type: "delete", financeCategory });
   };

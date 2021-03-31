@@ -11,6 +11,7 @@ import TransactionsModalForm from "components/Finances/Transactions/Transactions
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
+import getById from "utils/crud";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
@@ -48,10 +49,7 @@ export default function EmployersList({
   } as TransactionsModalData);
 
   const deleteEmployer = async (employerId: string) => {
-    const employer = employers.find((item) => item.id === employerId);
-    if (!employer) {
-      throw Error("Not correct employer id was passed to delete function");
-    }
+    const employer = getById(employers, employerId);
     await api.finance.deleteEmployer(employer, { secure: true });
     dispatchEmployers({ type: "delete", employer });
   };
@@ -64,17 +62,16 @@ export default function EmployersList({
     // update transactions list
     dispatchTransactions(action);
 
-    const employer = employers.find((item) => item.id === action.transaction.from_employer_id);
-    if (employer) {
-      if (!employer.earnings) {
-        employer.earnings = 0;
-      }
-      employer.earnings += action.transaction.amount;
-      dispatchEmployers({
-        type: "update",
-        employer,
-      });
+    const employer = getById(employers, action.transaction.from_employer_id as string);
+    if (!employer.earnings) {
+      employer.earnings = 0;
     }
+    employer.earnings += action.transaction.amount;
+
+    dispatchEmployers({
+      type: "update",
+      employer,
+    });
   };
 
   const employerRows = employers.map((item) => (

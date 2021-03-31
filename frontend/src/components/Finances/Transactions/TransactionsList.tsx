@@ -34,9 +34,13 @@ export default function TransactionsList({
       throw Error("Not correct transaction id was passed to delete function");
     }
     const response = await api.finance.deleteTransaction(transaction, { secure: true });
+    const { category } = response.data;
     dispatchTransactions({ type: "delete", transaction });
     if (response.data.account) {
       dispatchAccounts({ type: "update", account: response.data.account });
+    }
+    if (category) {
+      dispatchFinanceCategories({ type: "update", financeCategory: category });
     }
   };
 

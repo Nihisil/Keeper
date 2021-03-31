@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
 import { Nullish } from "utils/base";
+import getById from "utils/crud";
 import { DATE_INPUT_FORMAT, displayDate } from "utils/date";
 import dayjs from "utils/dayjs";
 import { convertMoneyToNumber, convertNumberToMoney } from "utils/finances";
@@ -63,16 +64,8 @@ export default function TransactionsModalForm({
 
     setRequestInProgress(true);
 
-    const account = accounts.find((item) => item.id === accountId);
-    if (!account) {
-      return;
-    }
-
-    const category = financeCategories.find((item) => item.id === categoryId);
-    if (!category) {
-      return;
-    }
-
+    const account = getById(accounts, accountId as string);
+    const category = getById(financeCategories, categoryId as string);
     const actionType: "create" | "update" = entity?.id ? "update" : "create";
     const transaction = {
       ...entity,

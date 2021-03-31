@@ -5,6 +5,7 @@ import AccountsModalForm from "components/Finances/Accounts/AccountsModalForm";
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
+import getById from "utils/crud";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
@@ -25,10 +26,7 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
   } as AccountsModalData);
 
   const deleteAccount = async (accountId: string) => {
-    const account = accounts.find((item) => item.id === accountId);
-    if (!account) {
-      throw Error("Not correct account id was passed to delete function");
-    }
+    const account = getById(accounts, accountId);
     await api.finance.deleteAccount(account, { secure: true });
     dispatchAccounts({ type: "delete", account });
   };
