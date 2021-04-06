@@ -66,7 +66,7 @@ export default function TransactionsModalForm({
 
     const account = getById(accounts, accountId as string);
     const actionType: "create" | "update" = entity?.id ? "update" : "create";
-    const transaction = {
+    const originalTransaction = {
       ...entity,
       ...{
         amount: convertNumberToMoney(transactionAmount as number),
@@ -80,17 +80,27 @@ export default function TransactionsModalForm({
     const action = entity?.id ? api.finance.updateTransaction : api.finance.createTransaction;
 
     try {
-      const response = await action(transaction, { secure: true });
-      const transactionResponse = response.data;
+      const response = await action(originalTransaction, { secure: true });
+      const updatedTransaction = response.data;
 
-      afterSubmit({ type: actionType, transaction: transactionResponse });
-      if (transactionResponse.account) {
-        dispatchAccounts({ type: "update", account: transactionResponse.account });
+      afterSubmit({ type: actionType, transaction: updatedTransaction });
+      if (updatedTransaction.account) {
+        dispatchAccounts({ type: "update", account: updatedTransaction.account });
       }
 
       if (categoryId) {
         let category = getById(financeCategories, categoryId as string);
-        category = updateCategoryAmountFromTransaction(category, transactionResponse, true);
+
+        // when we edit transaction, we need to smartly update category balance
+        if (entity?.amount && category.amount) {
+          if (entity?.main_currency_exchange_rate) {
+            category.amount -= entity?.main_currency_exchange_rate * entity?.amount;
+          } else {
+            category.amount -= entity?.amount;
+          }
+        }
+
+        category = updateCategoryAmountFromTransaction(category, updatedTransaction, true);
         dispatchFinanceCategories({
           type: "update",
           financeCategory: category,
