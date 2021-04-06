@@ -36,6 +36,8 @@ export interface ApiConfig<SecurityDataType = unknown>
   securityWorker?: (
     securityData: SecurityDataType | null
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
+  secure?: boolean;
+  format?: ResponseType;
 }
 
 export enum ContentType {
@@ -48,9 +50,13 @@ export class HttpClient<SecurityDataType = unknown> {
   private instance: AxiosInstance;
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
+  private secure?: boolean;
+  private format?: ResponseType;
 
-  constructor({ securityWorker, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
+  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
+    this.secure = secure;
+    this.format = format;
     this.securityWorker = securityWorker;
   }
 
@@ -71,18 +77,22 @@ export class HttpClient<SecurityDataType = unknown> {
     };
   }
 
-  public request = async <T = any, E = any>({
+  public request = async <T = any, _E = any>({
     secure,
     path,
     type,
     query,
-    format = "json",
+    format,
     body,
     ...params
   }: FullRequestParams): Promise<AxiosResponse<T>> => {
     const secureParams =
-      (secure && this.securityWorker && (await this.securityWorker(this.securityData))) || {};
+      ((typeof secure === "boolean" ? secure : this.secure) &&
+        this.securityWorker &&
+        (await this.securityWorker(this.securityData))) ||
+      {};
     const requestParams = this.mergeRequestParams(params, secureParams);
+    const responseFormat = (format && this.format) || void 0;
 
     return this.instance.request({
       ...requestParams,
@@ -91,7 +101,7 @@ export class HttpClient<SecurityDataType = unknown> {
         ...(requestParams.headers || {}),
       },
       params: query,
-      responseType: format,
+      responseType: responseFormat,
       data: body,
       url: path,
     });
