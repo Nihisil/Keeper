@@ -14,7 +14,7 @@ from lib.users.models import User, UserWithHashedPassword
 
 settings = get_settings()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["sha512_crypt"], deprecated="auto")
 
 
 class AuthRequest(BaseModel):
@@ -64,10 +64,10 @@ def authenticate_user(username: str, password: str) -> Optional[User]:
 
 def create_jwt_token_for_user(user: User) -> str:
     to_encode = {
-        "sub": user.username,
+        "username": user.username,
         "exp": datetime.utcnow() + timedelta(minutes=settings.jwt_expire_minutes),
     }
-    encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.jwt_algorithm)
+    encoded_jwt = jwt.encode(to_encode, key=settings.secret_key, algorithm=settings.jwt_algorithm)
     return str(encoded_jwt)
 
 
@@ -75,13 +75,11 @@ def get_current_user_from_token(request: Request) -> User:
     token = verify_request_has_auth_token(request)
 
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
-        username: str = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        payload = jwt.decode(token, key=settings.secret_key, algorithms=[settings.jwt_algorithm])
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
+    username: str = payload.get("username")
     user = get_user(username)
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

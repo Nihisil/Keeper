@@ -12,8 +12,8 @@ up-daemon:
 down:
 	docker-compose -f $(COMPOSE_FILE) down
 
-docker-build:
-	docker-compose -f $(COMPOSE_FILE) build --no-cache
+docker-build: down
+	docker-compose -f $(COMPOSE_FILE) build
 
 docker-pull:
 	docker-compose -f $(COMPOSE_FILE) pull

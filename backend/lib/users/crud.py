@@ -16,6 +16,8 @@ def create_user(username: str, email: str, plain_password: str) -> User:
 
 
 def get_user(username: str) -> Optional[User]:
+    if not username:
+        return None
     return db_find_one(User, {"username": username})
 
 
