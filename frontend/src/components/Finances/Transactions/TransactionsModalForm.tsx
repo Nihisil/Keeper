@@ -49,7 +49,7 @@ export default function TransactionsModalForm({
 
   const cleanUpForm = () => {
     setTransactionAmount(undefined);
-    setTransactionDate("");
+    setTransactionDate(dayjs().format(DATE_INPUT_FORMAT));
     setAccountId(undefined);
     setCategoryId(undefined);
     setTransactionType(TransactionType.REGULAR);
