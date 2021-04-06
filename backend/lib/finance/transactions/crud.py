@@ -58,7 +58,8 @@ def delete_transaction(transaction: Transaction) -> Transaction:
 def update_transaction(transaction: Transaction, old_amount: int) -> Transaction:
     transaction = db_update_one(transaction)
     account_amount = -old_amount + transaction.amount
-    account = _update_related_account_balance(transaction.account_id, account_amount, increase=True)
+    increase = transaction.type == TransactionType.INCOME.value
+    account = _update_related_account_balance(transaction.account_id, account_amount, increase=increase)
     transaction.account = account
     return transaction
 

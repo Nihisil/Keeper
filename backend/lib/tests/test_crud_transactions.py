@@ -143,12 +143,12 @@ def test_delete_transaction():
 
 def test_update_transaction_amount():
     old_amount = 100
-    transaction = create_transaction_for_tests(old_amount)
+    transaction = create_transaction_for_tests(old_amount, TransactionType.REGULAR)
     account = get_account_by_id(transaction.account_id)
-    assert account.balance == old_amount
+    assert account.balance == old_amount * -1
 
-    new_amount = 200
+    new_amount = 50
     transaction.amount = new_amount
     update_transaction(transaction, old_amount)
     account = get_account_by_id(transaction.account_id)
-    assert account.balance == new_amount
+    assert account.balance == new_amount * -1
