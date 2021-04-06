@@ -128,6 +128,25 @@ export default function TransactionsModalForm({
     </option>
   ));
 
+  const categoryFormGroup =
+    transactionType !== TransactionType.INCOME ? (
+      <Form.Group controlId="category">
+        <Form.Label>Category</Form.Label>
+        <Form.Control
+          as="select"
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value as string)}
+        >
+          <option disabled selected>
+            -- select an option --
+          </option>
+          {categoriesOptions}
+        </Form.Control>
+      </Form.Group>
+    ) : (
+      ""
+    );
+
   const typesOptions = Object.keys(TransactionType).map((item) => (
     <option key={item} value={item}>
       {item}
@@ -170,19 +189,7 @@ export default function TransactionsModalForm({
               {accountOptions}
             </Form.Control>
           </Form.Group>
-          <Form.Group controlId="category">
-            <Form.Label>Category</Form.Label>
-            <Form.Control
-              as="select"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value as string)}
-            >
-              <option disabled selected>
-                -- select an option --
-              </option>
-              {categoriesOptions}
-            </Form.Control>
-          </Form.Group>
+          {categoryFormGroup}
           <Form.Group controlId="amount">
             <Form.Label>Amount</Form.Label>
             <Form.Control
