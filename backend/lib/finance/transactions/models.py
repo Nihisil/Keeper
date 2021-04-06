@@ -43,12 +43,6 @@ class Transaction(DBClass):
             return self.amount
         return int(self.main_currency_exchange_rate * self.amount)
 
-    @validator("type")
-    def validate_type(cls, value: str, values: Dict) -> str:
-        if value == TransactionType.INCOME.value and not values.get("from_employer_id"):
-            raise ValueError("from_employer_id should be set for income transactions")
-        return value
-
     @validator("currency")
     def validate_currency(cls, value: str, values: Dict) -> str:
         # could be better to get account from context, but pydantic doesn't support it yet

@@ -71,19 +71,6 @@ def test_create_income_transaction_with_manually_set_main_currency_equivalent():
     assert account.balance == amount
 
 
-def test_create_income_transaction_without_employer():
-    account = create_account_for_tests()
-    with pytest.raises(ValidationError) as e:
-        Transaction(
-            type=TransactionType.INCOME,
-            amount=100,
-            currency=Currency.USD,
-            account_id=account.id,
-            date=datetime.utcnow(),
-        )
-    assert "from_employer_id should be set for income transactions" in str(e.value)
-
-
 def test_create_transaction_with_negative_amount():
     account = create_account_for_tests()
     with pytest.raises(ValidationError) as e:
