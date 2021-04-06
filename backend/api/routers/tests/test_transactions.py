@@ -21,7 +21,7 @@ client = TestClient(app)
 def test_create_transaction_api():
     user, token = create_user_and_token_for_tests()
     account = create_account_for_tests()
-    employer = create_employer_for_tests()
+    employer = create_employer_for_tests(account)
     category = create_finance_category_for_tests()
     transaction_data = Transaction(
         type=TransactionType.INCOME,

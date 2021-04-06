@@ -27,9 +27,10 @@ def test_create_employer_api():
 
 def test_get_list_of_employers_api():
     user, token = create_user_and_token_for_tests()
+    account = create_account_for_tests()
     number_of_employers = 4
     for i in range(number_of_employers):
-        employer_data = Employer(name=f"Test {i}")
+        employer_data = Employer(name=f"Test {i}", associated_account_id=account.id)
         create_employer(employer_data)
     response = client.get(
         "/finance/employers/get-list",
@@ -42,7 +43,8 @@ def test_get_list_of_employers_api():
 
 def test_delete_employer_api():
     user, token = create_user_and_token_for_tests()
-    employer = create_employer(Employer(name="Test"))
+    account = create_account_for_tests()
+    employer = create_employer(Employer(name="Test", associated_account_id=account.id))
     response = client.delete(
         "/finance/employers/delete",
         data=employer.json(),
@@ -53,7 +55,8 @@ def test_delete_employer_api():
 
 def test_update_employer_api():
     user, token = create_user_and_token_for_tests()
-    employer = create_employer(Employer(name="Test"))
+    account = create_account_for_tests()
+    employer = create_employer(Employer(name="Test", associated_account_id=account.id))
     new_data = Employer(**employer.dict())
     new_data.name = "Updated"
     response = client.put(

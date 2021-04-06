@@ -26,7 +26,7 @@ def test_create_income_transaction_and_set_main_currency_equivalent():
 
     amount = 100 * MONEY_DIGITS
     account = create_account_for_tests()
-    employer = create_employer_for_tests()
+    employer = create_employer_for_tests(account)
     transaction_data = Transaction(
         type=TransactionType.INCOME,
         amount=amount,
@@ -51,7 +51,7 @@ def test_create_income_transaction_with_manually_set_main_currency_equivalent():
 
     amount = 100
     account = create_account_for_tests()
-    employer = create_employer_for_tests()
+    employer = create_employer_for_tests(account)
     transaction_data = Transaction(
         type=TransactionType.INCOME,
         amount=amount,
@@ -74,7 +74,7 @@ def test_create_income_transaction_with_manually_set_main_currency_equivalent():
 def test_create_regular_transaction():
     amount = 100
     account = create_account_for_tests()
-    employer = create_employer_for_tests()
+    employer = create_employer_for_tests(account)
     transaction_data = Transaction(
         type=TransactionType.REGULAR,
         amount=amount,
@@ -106,7 +106,7 @@ def test_create_transaction_with_negative_amount():
 
 def test_create_income_transaction_with_not_matched_currency():
     account = create_account_for_tests(currency=Currency.USD)
-    employer = create_employer_for_tests()
+    employer = create_employer_for_tests(account)
     with pytest.raises(ValidationError) as e:
         Transaction(
             type=TransactionType.INCOME,

@@ -12,7 +12,7 @@ class Employer(DBClass):
     archived: bool = False
     is_deleted: bool = False
 
-    associated_account_id: Optional[str]
+    associated_account_id: str
     associated_account: Optional[Account]
 
     earnings: int = 0

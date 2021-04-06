@@ -81,7 +81,7 @@ export interface Employer {
   name: string;
   archived?: boolean;
   is_deleted?: boolean;
-  associated_account_id?: string;
+  associated_account_id: string;
   associated_account?: Account;
   earnings?: number;
 

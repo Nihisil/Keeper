@@ -43,7 +43,7 @@ def create_transaction_for_tests(
 ):
     account = create_account_for_tests()
     if not employer:
-        employer = create_employer_for_tests()
+        employer = create_employer_for_tests(account)
     return create_transaction(
         Transaction(
             type=transaction_type,
@@ -58,8 +58,8 @@ def create_transaction_for_tests(
     )
 
 
-def create_employer_for_tests():
-    return create_employer(Employer(name="Test"))
+def create_employer_for_tests(account: Account):
+    return create_employer(Employer(name="Test", associated_account_id=account.id))
 
 
 def create_finance_category_for_tests():
