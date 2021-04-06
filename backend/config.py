@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 from pydantic import BaseSettings
+from typing import Optional
 
 
 class Settings(BaseSettings):
@@ -18,6 +19,8 @@ class Settings(BaseSettings):
     mongo_initdb_root_username: str
     mongo_initdb_root_password: str
     mongo_initdb_database: str
+
+    sentry_dsn: Optional[str]
 
 
 @lru_cache()

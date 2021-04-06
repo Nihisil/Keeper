@@ -12,11 +12,12 @@ from lib.finance.currency_exchange_rates.crud import (
 )
 from lib.finance.currency_exchange_rates.models import CurrencyExchangeRate
 from lib.logger import set_up_logging
+from lib.sentry import init_sentry
 
 DATE_FORMAT = "%Y-%m-%d"
 BASE_URL = "https://api.exchangeratesapi.io"
 
-
+init_sentry()
 logger = set_up_logging()
 
 

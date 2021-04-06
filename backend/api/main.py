@@ -1,11 +1,13 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.responses import JSONResponse
 
 from api.routers import auth, users
 from api.routers.finance import accounts, currency_exchange_rates, employers, finance_categories, transactions
 from config import get_settings
+from lib.sentry import init_sentry
 
 settings = get_settings()
 
@@ -31,8 +33,9 @@ def use_route_names_as_operation_ids(app: FastAPI) -> None:
 
 
 def create_app() -> FastAPI:
-
     default_responses = {status.HTTP_401_UNAUTHORIZED: {"description": "Incorrect auth credentials"}}
+
+    init_sentry()
 
     _app = FastAPI(
         title="Keeper",
@@ -50,6 +53,11 @@ def create_app() -> FastAPI:
         _app.add_middleware(
             CORSMiddleware,
             **cors_settings,
+        )
+
+    if settings.sentry_dsn:
+        _app.add_middleware(
+            SentryAsgiMiddleware
         )
 
     _app.include_router(auth.router)

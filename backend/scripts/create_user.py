@@ -1,8 +1,10 @@
 import argparse
 
 from lib.logger import set_up_logging
+from lib.sentry import init_sentry
 from lib.users.crud import create_user
 
+init_sentry()
 logger = set_up_logging()
 
 
