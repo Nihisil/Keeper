@@ -77,6 +77,7 @@ export default function EmployersList({
   const employerRows = employers.map((item) => (
     <tr key={item.id}>
       <td>{item.name}</td>
+      <td>{item.associated_account ? item.associated_account.name : "-"}</td>
       <td>{displayMoney(item.earnings as number)}</td>
       <td>{item.earnings_currency ? item.earnings_currency : "-"}</td>
       <td>{displayDatetime(item.updated)}</td>
@@ -100,6 +101,7 @@ export default function EmployersList({
               entity: {
                 from_employer_id: item.id as string,
                 type: TransactionType.INCOME,
+                account_id: item.associated_account_id,
               } as Transaction,
             });
           }}
@@ -129,6 +131,7 @@ export default function EmployersList({
         <thead>
           <tr>
             <th>Name</th>
+            <th>Associated account</th>
             <th>Earnings</th>
             <th>Currency</th>
             <th>Updated</th>
@@ -140,7 +143,7 @@ export default function EmployersList({
             employerRows
           ) : (
             <tr>
-              <td colSpan={5}>No data</td>
+              <td colSpan={6}>No data</td>
             </tr>
           )}
         </tbody>
@@ -157,6 +160,8 @@ export default function EmployersList({
         onHide={() => setEditModal({ show: false, entity: undefined })}
         afterSubmit={dispatchEmployers}
         entity={editModal.entity}
+        accounts={accounts}
+        dispatchAccounts={dispatchAccounts}
       />
       <TransactionsModalForm
         show={transactionModal.show}

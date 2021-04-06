@@ -47,6 +47,8 @@ export default function Employers({
         onHide={() => setModalShow(false)}
         afterSubmit={dispatchEmployers}
         entity={undefined}
+        accounts={accounts}
+        dispatchAccounts={dispatchAccounts}
       />
     </>
   );

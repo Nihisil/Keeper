@@ -4,14 +4,15 @@ from fastapi.testclient import TestClient
 from api.main import app
 from lib.finance.employers.crud import create_employer
 from lib.finance.employers.models import Employer
-from lib.tests.utils import create_user_and_token_for_tests
+from lib.tests.utils import create_account_for_tests, create_user_and_token_for_tests
 
 client = TestClient(app)
 
 
 def test_create_employer_api():
     user, token = create_user_and_token_for_tests()
-    employer_data = Employer(name="Test")
+    account = create_account_for_tests()
+    employer_data = Employer(name="Test", associated_account_id=account.id)
     response = client.post(
         "/finance/employers/create",
         data=employer_data.json(),
@@ -21,6 +22,7 @@ def test_create_employer_api():
     response_data = response.json()
     assert response_data["id"] is not None
     assert response_data["name"] == employer_data.name
+    assert response_data["associated_account"]["id"] == account.id
 
 
 def test_get_list_of_employers_api():
