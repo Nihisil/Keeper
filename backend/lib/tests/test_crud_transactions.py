@@ -20,7 +20,7 @@ from lib.tests.utils import (
 )
 
 
-def test_create_income_transaction_without_main_currency_equivalent():
+def test_create_income_transaction_and_set_main_currency_equivalent():
     rate = 80
     create_currency_exchange_rate_for_tests(rate)
 
@@ -38,6 +38,8 @@ def test_create_income_transaction_without_main_currency_equivalent():
     transaction = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
+    assert transaction.main_currency_exchange_rate is not None
+    # it was automatically set
     assert transaction.main_currency_equivalent == rate * amount
 
     account = get_account_by_id(transaction.account_id)
@@ -45,8 +47,7 @@ def test_create_income_transaction_without_main_currency_equivalent():
 
 
 def test_create_income_transaction_with_manually_set_main_currency_equivalent():
-    rate = 80
-    create_currency_exchange_rate_for_tests(rate)
+    create_currency_exchange_rate_for_tests(80)
 
     amount = 100
     account = create_account_for_tests()
@@ -58,12 +59,13 @@ def test_create_income_transaction_with_manually_set_main_currency_equivalent():
         account_id=account.id,
         from_employer_id=employer.id,
         date=datetime.utcnow(),
-        main_currency_equivalent=123,
+        main_currency_exchange_rate=10,
     )
     transaction = create_transaction(transaction_data)
     assert transaction.id is not None
     assert transaction.updated is not None
-    assert transaction.main_currency_equivalent == 123
+    assert transaction.main_currency_exchange_rate is not None
+    assert transaction.main_currency_equivalent == 10 * amount
 
     account = get_account_by_id(transaction.account_id)
     assert account.balance == amount

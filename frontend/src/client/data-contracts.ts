@@ -126,7 +126,7 @@ export interface Transaction {
 
   /** An enumeration. */
   currency: Currency;
-  main_currency_equivalent?: number;
+  main_currency_exchange_rate?: number;
 }
 
 /**

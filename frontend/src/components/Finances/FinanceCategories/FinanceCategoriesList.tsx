@@ -5,7 +5,7 @@ import FinanceCategoriesModalForm from "components/Finances/FinanceCategories/Fi
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
-import getById from "utils/crud";
+import { getById } from "utils/crud";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 

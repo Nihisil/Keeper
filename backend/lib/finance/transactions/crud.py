@@ -11,16 +11,12 @@ from lib.finance.transactions.models import Transaction
 
 
 def create_transaction(transaction: Transaction) -> Transaction:
-    if not transaction.main_currency_equivalent:
-        # to easier aggregate amount sum, let's duplicate this value here
-        transaction.main_currency_equivalent = transaction.amount
-        if transaction.currency != MAIN_CURRENCY:
-            currency_exchange_rate = get_currency_exchange_rate_for_nearest_date(
-                MAIN_CURRENCY, transaction.currency, transaction.date
-            )
-            assert currency_exchange_rate, f"Can't find currency exchange rate on {transaction.date}"
-
-            transaction.main_currency_equivalent = int(transaction.amount * currency_exchange_rate.rate)
+    if not transaction.main_currency_exchange_rate and transaction.currency != MAIN_CURRENCY:
+        currency_exchange_rate = get_currency_exchange_rate_for_nearest_date(
+            MAIN_CURRENCY, transaction.currency, transaction.date
+        )
+        assert currency_exchange_rate
+        transaction.main_currency_exchange_rate = currency_exchange_rate.rate
 
     transaction = db_insert_one(transaction)
     account = _update_related_account_balance(transaction.account_id, transaction.amount, increase=True)

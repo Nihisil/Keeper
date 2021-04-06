@@ -52,7 +52,7 @@ def create_transaction_for_tests(
             account_id=account.id,
             from_employer_id=employer.id,
             date=datetime.utcnow(),
-            main_currency_equivalent=100,
+            main_currency_exchange_rate=100,
             category_id=category and category.id,
         )
     )

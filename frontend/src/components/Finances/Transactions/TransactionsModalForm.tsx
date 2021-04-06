@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import api from "utils/api";
 import { Nullish } from "utils/base";
-import getById from "utils/crud";
+import { getById, updateCategoryAmountFromTransaction } from "utils/crud";
 import { DATE_INPUT_FORMAT, displayDate } from "utils/date";
 import dayjs from "utils/dayjs";
 import { convertMoneyToNumber, convertNumberToMoney } from "utils/finances";
@@ -88,12 +88,9 @@ export default function TransactionsModalForm({
         dispatchAccounts({ type: "update", account: transactionResponse.account });
       }
 
-      if (categoryId && transactionResponse.main_currency_equivalent) {
-        const category = getById(financeCategories, categoryId as string);
-        if (!category.amount) {
-          category.amount = 0;
-        }
-        category.amount += transactionResponse.main_currency_equivalent;
+      if (categoryId) {
+        let category = getById(financeCategories, categoryId as string);
+        category = updateCategoryAmountFromTransaction(category, transactionResponse, true);
         dispatchFinanceCategories({
           type: "update",
           financeCategory: category,

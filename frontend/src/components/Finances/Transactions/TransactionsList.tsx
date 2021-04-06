@@ -7,7 +7,7 @@ import TransactionsModalForm from "components/Finances/Transactions/Transactions
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import api from "utils/api";
-import getById from "utils/crud";
+import { getById, updateCategoryAmountFromTransaction } from "utils/crud";
 import { displayDatetime } from "utils/date";
 import { displayMoney } from "utils/finances";
 
@@ -39,12 +39,9 @@ export default function TransactionsList({
       dispatchAccounts({ type: "update", account });
     }
 
-    if (transaction.category_id && transaction.main_currency_equivalent) {
-      const category = getById(financeCategories, transaction.category_id);
-      if (!category.amount) {
-        category.amount = 0;
-      }
-      category.amount -= transaction.main_currency_equivalent;
+    if (transaction.category_id) {
+      let category = getById(financeCategories, transaction.category_id);
+      category = updateCategoryAmountFromTransaction(category, transaction, false);
       dispatchFinanceCategories({ type: "update", financeCategory: category });
     }
   };

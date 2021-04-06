@@ -31,7 +31,7 @@ def test_create_transaction_api():
         category_id=category.id,
         from_employer_id=employer.id,
         date=datetime.utcnow(),
-        main_currency_equivalent=123,
+        main_currency_exchange_rate=1,
     )
     response = client.post(
         "/finance/transactions/create",

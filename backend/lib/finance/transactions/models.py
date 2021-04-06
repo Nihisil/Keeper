@@ -28,7 +28,7 @@ class Transaction(DBClass):
     type: TransactionType
     currency: Currency
 
-    main_currency_equivalent: Optional[int]
+    main_currency_exchange_rate: Optional[float]
 
     class CustomConfig:
         read_only_fields = {"id"}
@@ -36,6 +36,12 @@ class Transaction(DBClass):
             "account_id": Account,
             "category_id": FinanceCategory,
         }
+
+    @property
+    def main_currency_equivalent(self) -> int:
+        if not self.main_currency_exchange_rate:
+            return self.amount
+        return int(self.main_currency_exchange_rate * self.amount)
 
     @validator("type")
     def validate_type(cls, value: str, values: Dict) -> str:
