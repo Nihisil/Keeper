@@ -1,7 +1,7 @@
 from functools import lru_cache
+from typing import Optional
 
 from pydantic import BaseSettings
-from typing import Optional
 
 
 class Settings(BaseSettings):

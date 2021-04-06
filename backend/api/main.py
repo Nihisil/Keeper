@@ -56,9 +56,7 @@ def create_app() -> FastAPI:
         )
 
     if settings.sentry_dsn:
-        _app.add_middleware(
-            SentryAsgiMiddleware
-        )
+        _app.add_middleware(SentryAsgiMiddleware)
 
     _app.include_router(auth.router)
     _app.include_router(users.router)

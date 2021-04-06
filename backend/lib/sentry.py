@@ -1,5 +1,6 @@
-from config import get_settings
 import sentry_sdk
+
+from config import get_settings
 
 settings = get_settings()
 
