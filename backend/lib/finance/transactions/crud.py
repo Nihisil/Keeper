@@ -19,7 +19,8 @@ def create_transaction(transaction: Transaction) -> Transaction:
         transaction.main_currency_exchange_rate = currency_exchange_rate.rate
 
     transaction = db_insert_one(transaction)
-    account = _update_related_account_balance(transaction.account_id, transaction.amount, increase=True)
+    increase = transaction.type == TransactionType.INCOME.value
+    account = _update_related_account_balance(transaction.account_id, transaction.amount, increase)
     transaction.account = account
     return transaction
 

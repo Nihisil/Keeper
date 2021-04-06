@@ -71,6 +71,26 @@ def test_create_income_transaction_with_manually_set_main_currency_equivalent():
     assert account.balance == amount
 
 
+def test_create_regular_transaction():
+    amount = 100
+    account = create_account_for_tests()
+    employer = create_employer_for_tests()
+    transaction_data = Transaction(
+        type=TransactionType.REGULAR,
+        amount=amount,
+        currency=Currency.USD,
+        account_id=account.id,
+        from_employer_id=employer.id,
+        date=datetime.utcnow(),
+        main_currency_exchange_rate=10,
+    )
+    transaction = create_transaction(transaction_data)
+
+    account = get_account_by_id(transaction.account_id)
+    # amount was deducted from account
+    assert account.balance == amount * -1
+
+
 def test_create_transaction_with_negative_amount():
     account = create_account_for_tests()
     with pytest.raises(ValidationError) as e:
