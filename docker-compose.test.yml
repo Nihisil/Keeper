@@ -5,3 +5,13 @@ services:
     env_file:
       - .envs/.local
       - .envs/.test
+  cypress:
+    image: "cypress/included:7.0.0"
+    depends_on:
+      - api
+      - frontend
+    env_file:
+      - .envs/.test
+    working_dir: /e2e
+    volumes:
+      - ./frontend/:/e2e

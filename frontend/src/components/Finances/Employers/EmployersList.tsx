@@ -127,7 +127,7 @@ export default function EmployersList({
 
   return (
     <>
-      <Table responsive bordered striped size="sm" data-testid="employers-table">
+      <Table responsive bordered striped size="sm">
         <thead>
           <tr>
             <th>Name</th>
