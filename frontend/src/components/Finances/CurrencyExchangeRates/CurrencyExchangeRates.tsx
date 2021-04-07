@@ -73,14 +73,7 @@ export default function CurrencyExchangeRates(): JSX.Element {
 
       {currencyOptions}
 
-      <Table
-        responsive
-        bordered
-        striped
-        size="sm"
-        data-testid="currency-exchange-rates-table"
-        className="mt-2"
-      >
+      <Table responsive bordered striped size="sm" className="mt-2">
         <thead>
           <tr>
             <th>Date</th>

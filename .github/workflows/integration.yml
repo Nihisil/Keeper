@@ -1,0 +1,26 @@
+name: e2e tests
+on: [push]
+jobs:
+  lint_and_test:
+    name: Run e2e cypress tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # without it cypress can't compile typescript
+      - name: Install packages
+        working-directory: ./frontend
+        run: yarn
+
+      - name: Build docker container
+        run: make docker-build
+
+      - name: Run test server
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d frontend
+
+      - name: Run tests in chrome
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run cypress --browser chrome
+
+      - name: Run tests in firefox
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run cypress --browser firefox
+
