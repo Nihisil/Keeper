@@ -67,7 +67,7 @@ export default function AccountsList({ accounts, dispatchAccounts }: AccountsPro
 
   return (
     <>
-      <Table responsive bordered striped size="sm" data-testid="accounts-table">
+      <Table responsive bordered striped size="sm">
         <thead>
           <tr>
             <th>Name</th>

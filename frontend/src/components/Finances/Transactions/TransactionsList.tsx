@@ -82,7 +82,7 @@ export default function TransactionsList({
 
   return (
     <>
-      <Table responsive bordered striped size="sm" data-testid="transactions-table">
+      <Table responsive bordered striped size="sm">
         <thead>
           <tr>
             <th>Account</th>

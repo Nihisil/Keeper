@@ -39,7 +39,9 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
         <div className="row justify-content-md-center">
           <div className="col-md-5 text-center">
             <form className="login-form" onSubmit={handleSubmit}>
-              <h2 className="h3 mb-3 font-weight-normal">Please log in</h2>
+              <h2 className="h3 mb-3 font-weight-normal" data-cy="login-header">
+                Please log in
+              </h2>
               {errorBlock}
               <input
                 type="text"

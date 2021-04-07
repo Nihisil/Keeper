@@ -2,11 +2,6 @@
   "name": "keeper",
   "private": true,
   "dependencies": {
-    "@testing-library/dom": "^7.30.3",
-    "@testing-library/jest-dom": "^5.11.10",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.1",
-    "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
@@ -15,12 +10,13 @@
     "@typescript-eslint/parser": "^4.21.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "cypress": "^7.0.0",
     "dayjs": "^1.10.4",
     "eslint": "^7.23.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.3.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.23.1",
@@ -41,17 +37,9 @@
   "scripts": {
     "start": "REACT_APP_VERSION=$VERSION react-scripts start",
     "build": "REACT_APP_VERSION=$VERSION react-scripts build",
-    "//": "Linters and tests:",
     "analyze": "source-map-explorer 'build/static/js/*.js' --html tree.html",
-    "test": "CI=true react-scripts test",
-    "format": "eslint src/**/*.ts{,x} --fix && prettier --write src/**/*.ts{,x}",
-    "lint": "tsc --noEmit && eslint src/**/*.ts{,x} --max-warnings=0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "format": "eslint {src,cypress}/**/*.{ts,tsx} --fix && prettier --write {src,cypress}/**/*.{ts,tsx}",
+    "lint": "tsc --noEmit && eslint {src,cypress}/**/*.{ts,tsx} --max-warnings=0"
   },
   "browserslist": {
     "production": [

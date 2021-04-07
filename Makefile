@@ -81,5 +81,12 @@ format-fe:
 lint-fe:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn lint
 
-test-fe:
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn test
+test-fe: test-fe-chrome test-fe-firefox
+
+test-fe-chrome:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d frontend
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm cypress --browser chrome
+
+test-fe-firefox:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d frontend
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm cypress --browser firefox

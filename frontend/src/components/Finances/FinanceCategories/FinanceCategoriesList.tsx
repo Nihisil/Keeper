@@ -68,7 +68,7 @@ export default function FinanceCategoriesList({
 
   return (
     <>
-      <Table responsive bordered striped size="sm" data-testid="finance-categories-table">
+      <Table responsive bordered striped size="sm">
         <thead>
           <tr>
             <th>Name</th>
