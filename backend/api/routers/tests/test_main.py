@@ -7,7 +7,13 @@ client = TestClient(app)
 
 
 def test_endpoints_are_not_available_without_auth():
-    exclude_endpoints = ["openapi", "swagger_ui_html", "swagger_ui_redirect", "Authenticate"]
+    exclude_endpoints = [
+        "openapi",
+        "swagger_ui_html",
+        "swagger_ui_redirect",
+        "Authenticate",
+        "Clean up DB and seed it with tests data",
+    ]
     url_list = [
         {"path": route.path, "name": route.name, "methods": route.methods}
         for route in app.routes

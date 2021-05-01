@@ -4,7 +4,7 @@ from fastapi.routing import APIRoute
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.responses import JSONResponse
 
-from api.routers import auth, users
+from api.routers import auth, tests_helpers, users
 from api.routers.finance import accounts, currency_exchange_rates, employers, finance_categories, transactions
 from config import get_settings
 from lib.sentry import init_sentry
@@ -49,7 +49,7 @@ def create_app() -> FastAPI:
     )
 
     # there is no need to include these middlewares to the unit tests
-    if settings.environment != "TEST":
+    if not settings.is_test_env:
         _app.add_middleware(
             CORSMiddleware,
             **cors_settings,
@@ -65,6 +65,9 @@ def create_app() -> FastAPI:
     _app.include_router(currency_exchange_rates.router)
     _app.include_router(transactions.router)
     _app.include_router(finance_categories.router)
+
+    if settings.is_test_env:
+        _app.include_router(tests_helpers.router)
 
     return _app
 

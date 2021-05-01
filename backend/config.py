@@ -22,6 +22,10 @@ class Settings(BaseSettings):
 
     sentry_dsn: Optional[str]
 
+    @property
+    def is_test_env(self) -> bool:
+        return self.environment == "TEST_ENV"
+
 
 @lru_cache()
 def get_settings() -> Settings:

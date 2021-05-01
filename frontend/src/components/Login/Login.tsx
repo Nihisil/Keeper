@@ -28,7 +28,7 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
       actions.setSubmitting(false);
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        actions.setStatus("Incorrect login or password.");
+        actions.setStatus("Username or password is invalid.");
         actions.setSubmitting(false);
       } else {
         throw error;
@@ -59,7 +59,7 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
                 {(props: FormikProps<Values>) => (
                   <Form>
                     {props.status && (
-                      <div className="alert alert-danger" role="alert">
+                      <div className="alert alert-danger" role="alert" data-test="login-error-message">
                         {props.status}
                       </div>
                     )}
@@ -73,12 +73,15 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
                                 type="text"
                                 className={`form-control ${meta.error ? "is-invalid" : ""}`}
                                 placeholder="Username"
+                                data-test="login-username-input"
                                 name={field.name}
                                 value={field.value}
                                 onChange={field.onChange}
                               />
                               {meta.touched && meta.error && (
-                                <div className="invalid-feedback">{meta.error}</div>
+                                <div data-test="login-username-error" className="invalid-feedback">
+                                  {meta.error}
+                                </div>
                               )}
                             </div>
                           </>
@@ -95,12 +98,15 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
                                 type="password"
                                 className={`form-control ${meta.error ? "is-invalid" : ""}`}
                                 placeholder="Password"
+                                data-test="login-password-input"
                                 name={field.name}
                                 value={field.value}
                                 onChange={field.onChange}
                               />
                               {meta.touched && meta.error && (
-                                <div className="invalid-feedback">{meta.error}</div>
+                                <div data-test="login-password-error" className="invalid-feedback">
+                                  {meta.error}
+                                </div>
                               )}
                             </div>
                           </>
@@ -109,7 +115,12 @@ export default function Login({ setToken }: LoginProps): JSX.Element {
                     </div>
 
                     <div className="form-group">
-                      <button type="submit" className="btn btn-primary" disabled={props.isSubmitting}>
+                      <button
+                        data-test="login-submit-button"
+                        type="submit"
+                        className="btn btn-primary"
+                        disabled={!props.isValid || props.isSubmitting}
+                      >
                         Sign in
                       </button>
                     </div>

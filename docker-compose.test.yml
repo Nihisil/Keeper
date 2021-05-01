@@ -1,10 +1,27 @@
 version: '3'
 
+volumes:
+  mongodb_test_data: {}
+
 services:
   api:
     env_file:
       - .envs/.local
       - .envs/.test
+
+  frontend:
+    env_file:
+      - .envs/.local
+      - .envs/.test
+
+  mongodb:
+    env_file:
+      - .envs/.local
+      - .envs/.test
+    volumes:
+      - mongodb_test_data:/data/db
+    command: mongod --auth --quiet
+
   cypress:
     image: cypress/included:7.2.0
     depends_on:
@@ -13,5 +30,6 @@ services:
     env_file:
       - .envs/.test
     working_dir: /e2e
+    user: root
     volumes:
       - ./frontend/:/e2e

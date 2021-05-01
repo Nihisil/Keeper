@@ -48,8 +48,8 @@ test: test-be test-fe
 test-be:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm api sh -c "pytest"
 
-# usage example "make test-single-be test=test_get_access_token_by_username_and_password"
-test-single-be:
+# usage example "make test-be-single test=test_get_access_token_by_username_and_password"
+test-be-single:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm api sh -c "pytest -k $(test)"
 
 format-be: format-isort format-black
@@ -81,12 +81,11 @@ format-fe:
 lint-fe:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm frontend yarn lint
 
-test-fe: test-fe-chrome test-fe-firefox
-
-test-fe-chrome:
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d frontend
+test-fe:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm cypress --browser chrome
 
-test-fe-firefox:
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d frontend
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml run -u `id -u` --rm cypress --browser firefox
+# usage example "make test-fe-single test=cypress/integration/login.spec.ts"
+test-fe-single:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml run --user=root --rm cypress --browser chrome --spec $(test)

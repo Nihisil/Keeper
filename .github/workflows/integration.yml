@@ -21,6 +21,3 @@ jobs:
       - name: Run tests in chrome
         run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run cypress --browser chrome
 
-      - name: Run tests in firefox
-        run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run cypress --browser firefox
-
