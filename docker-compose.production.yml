@@ -38,7 +38,7 @@ services:
     command: [ 'crond', '-f' ]
 
   mongodb:
-    image: mongo:4.4.4-bionic
+    image: mongo:4.4.5-bionic
     restart: always
     logging:
       driver: json-file
